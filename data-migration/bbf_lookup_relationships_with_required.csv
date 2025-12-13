@@ -1,0 +1,225 @@
+Child Object,Lookup Field API Name,Lookup Field Label,Parent Object (Inferred),Is Custom Field,Is Required,Is Nillable,Migration Priority,Notes
+BAN_Contact__c,BAN__c,BAN,BAN__c,Yes,Yes,No,CRITICAL,MUST have value on initial load
+Account,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Account,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Account,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Account,Billing_Location__c,Billing Location,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Account,Campaign__c,Campaign,Campaign,Yes,No,Yes,MEDIUM,Can be populated later
+Account,Location__c,Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Account,proposalmanager__Billing_Contact__c,Billing Contact,Contact,Yes,No,Yes,MEDIUM,Can be populated later
+Account,MasterRecordId,Master Record ID,Unknown,No,No,Yes,LOW,Can be populated later
+Account,OperatingHoursId,Operating Hour ID,Unknown,No,No,Yes,LOW,Can be populated later
+Account,ParentId,Parent Account ID,Unknown,No,No,Yes,LOW,Can be populated later
+Account,RecordTypeId,Record Type ID,RecordType,No,No,Yes,LOW,Can be populated later
+BAN__c,Account__c,Account,Account,Yes,Yes,No,CRITICAL,MUST have value on initial load
+BAN__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+BAN__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+BAN__c,BAN_Team_Leader__c,BAN Team Director/VP,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Manager__c,BAN Team Manager,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Person_1__c,BAN Team Person 1,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Person_2__c,BAN Team Person 2,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Person_3__c,BAN Team Person 3,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Person_4__c,BAN Team Person 4,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Person_5__c,BAN Team Person 5,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Person_6__c,BAN Team Person 6,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Person_7__c,BAN Team Person 7,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,BAN_Team_Person_8__c,BAN Team Person 8,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN__c,Billing_Location__c,Billing Location,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+BAN_Contact__c,Contact__c,Contact,Contact,Yes,Yes,No,CRITICAL,MUST have value on initial load
+BAN_Contact__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+BAN_Contact__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+BAN_Team__c,BAN__c,BAN,BAN__c,Yes,Yes,No,CRITICAL,MUST have value on initial load
+BAN_Team__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+BAN_Team__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+BAN_Team__c,User__c,User,User,Yes,No,Yes,MEDIUM,Can be populated later
+Charge__c,Service_Order_Line__c,Service Order Line,Service_Order_Line__c,Yes,Yes,No,CRITICAL,MUST have value on initial load
+Charge__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Charge__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Charge__c,Off_Net__c,Off-Net,Off_Net__c,Yes,No,Yes,MEDIUM,Can be populated later
+Charge__c,Product__c,Charge Type,Product2,Yes,No,Yes,MEDIUM,Can be populated later
+Charge__c,RecordTypeId,Record Type ID,RecordType,No,No,Yes,LOW,Can be populated later
+Contact,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Contact,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Contact,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Contact,rh2__Describe__c,Describe,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Contact,AccountId,Account ID,Account,No,No,Yes,LOW,Can be populated later
+Contact,IndividualId,Individual ID,Unknown,No,No,Yes,LOW,Can be populated later
+Contact,MasterRecordId,Master Record ID,Unknown,No,No,Yes,LOW,Can be populated later
+Contact,ReportsToId,Reports To ID,Unknown,No,No,Yes,LOW,Can be populated later
+Lead,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Lead,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Lead,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Lead,Business_Partner__c,Business Partner,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Lead,Master_Agent__c,Master Agent,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Lead,Sub_Agent__c,Sub Agent,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Lead,ConvertedAccountId,Converted Account ID,Unknown,No,No,Yes,LOW,Can be populated later
+Lead,ConvertedContactId,Converted Contact ID,Unknown,No,No,Yes,LOW,Can be populated later
+Lead,ConvertedOpportunityId,Converted Opportunity ID,Unknown,No,No,Yes,LOW,Can be populated later
+Lead,IndividualId,Individual ID,Unknown,No,No,Yes,LOW,Can be populated later
+Lead,MasterRecordId,Master Record ID,Unknown,No,No,Yes,LOW,Can be populated later
+Location__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Location__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Location__c,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Location__c,Market_Mapping_Name__c,Market Mapping Name,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Location__c,ROE_Contact_Name_Lookup__c,ROE Contact Name,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Location__c,Ring__c,Ring,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Location__c,Wire_Center__c,Wire Center,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Location__c,RecordTypeId,Record Type ID,RecordType,No,No,Yes,LOW,Can be populated later
+Node__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Node__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Node__c,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Node__c,Location__c,Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Node__c,VPRN__c,VPRN,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Off_Net__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Off_Net__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Off_Net__c,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Off_Net__c,AA_Location__c,AA Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Off_Net__c,Service_Order_Line__c,Service Order Line,Service_Order_Line__c,Yes,No,Yes,MEDIUM,Can be populated later
+Off_Net__c,Service__c,Service,Service__c,Yes,No,Yes,MEDIUM,Can be populated later
+Off_Net__c,ZZ_Location__c,ZZ Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Opportunity,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Opportunity,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Opportunity,Agency__c,Master Agent,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,BAN__c,Billing Account Number,BAN__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Business_Partner__c,Business Partner,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Contract_Management_Approved_By__c,Contract Management Approved By,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,ISP_Engineering_Approved_By__c,ISP Engineering Approved By,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,OSP_Engineering_Approved_By__c,OSP Engineering Approved By,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Operations_Approved_By__c,Operations Approved By,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Opportunity_Engineering_Contact__c,Engineering Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Opportunity_Main_Contact__c,Primary Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Opportunity_Maintenance_Contact__c,Maintenance Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Owner_at_Close__c,Owner at Close,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Quote__c,Quote,Quote,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Related_Opportunity__c,Related Opportunity,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Sales_Engineer__c,Sales Engineer,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Service_Delivery_Approved_By__c,Service Delivery Approved By,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Service_Delivery_Coordinator__c,Service Delivery Coordinator,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Service_Order_Contact__c,Service Order Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,Sub_Agent__c,Sub Agent,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,TeamMember__c,Team Member Name,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity,AccountId,Account ID,Account,No,No,Yes,LOW,Can be populated later
+Opportunity,CampaignId,Campaign ID,Campaign,No,No,Yes,LOW,Can be populated later
+Opportunity,ContactId,Contact ID,Contact,No,No,Yes,LOW,Can be populated later
+Opportunity,ContractId,Contract ID,Unknown,No,No,Yes,LOW,Can be populated later
+Opportunity,LastAmountChangedHistoryId,Opportunity History ID,Unknown,No,No,Yes,LOW,Can be populated later
+Opportunity,LastCloseDateChangedHistoryId,Opportunity History ID,Unknown,No,No,Yes,LOW,Can be populated later
+Opportunity,Pricebook2Id,Price Book ID,Pricebook2,No,No,Yes,LOW,Can be populated later
+Opportunity,RecordTypeId,Record Type ID,RecordType,No,No,Yes,LOW,Can be populated later
+Opportunity,SyncedQuoteId,Quote ID,Unknown,No,No,Yes,LOW,Can be populated later
+Opportunity_Site__c,Opportunity__c,Opportunity,Opportunity,Yes,Yes,No,CRITICAL,MUST have value on initial load
+Opportunity_Site__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Opportunity_Site__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Opportunity_Site__c,A_Node__c,(dep) A Node,Node__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,Alternate_Local_Contact__c,(dep) AA LOC Alternate Local Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,Loc_A__c,AA Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,Local_Contact__c,A LOC Local Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,Parent_Service__c,Parent Service,Service__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,Provider__c,Provider,Account,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,Service__c,Service,Service__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,Site__c,ZZ Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,ZZ_LOC_Alternate_Local_Contact__c,(dep) ZZ LOC Alternate Local Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,ZZ_LOC_Local_Contact__c,Z LOC Local Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,Z_Node__c,(dep) Z Node,Node__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,aLoc__c,A Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,aNode__c,A Node,Node__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,zLoc__c,Z Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,zNode__c,Z Node,Node__c,Yes,No,Yes,MEDIUM,Can be populated later
+Opportunity_Site__c,RecordTypeId,Record Type ID,RecordType,No,No,Yes,LOW,Can be populated later
+Optional_Products__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Optional_Products__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Optional_Products__c,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Optional_Products__c,Product__c,Product,Product2,Yes,No,Yes,MEDIUM,Can be populated later
+Optional_Products__c,Service_Category__c,Service Category,Service_Category__c,Yes,No,Yes,MEDIUM,Can be populated later
+Pricebook2,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Pricebook2,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+PricebookEntry,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+PricebookEntry,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+PricebookEntry,Pricebook2Id,Price Book ID,Pricebook2,No,Yes,No,HIGH,MUST have value on initial load
+PricebookEntry,Product2Id,Product ID,Product2,No,Yes,No,HIGH,MUST have value on initial load
+Product2,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Product2,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Product2,svcCategory__c,Service Category,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Product2,udbChargeCode__c,Unified Charge Code,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Product2,ExternalDataSourceId,External Data Source ID,Unknown,No,No,Yes,LOW,Can be populated later
+Product2,RecordTypeId,Record Type ID,RecordType,No,No,Yes,LOW,Can be populated later
+Quote,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Quote,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Quote,OpportunityId,Opportunity ID,Opportunity,No,Yes,No,HIGH,MUST have value on initial load
+Quote,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Quote,Approver__c,Approver,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Quote,AccountId,Account ID,Account,No,No,Yes,LOW,Can be populated later
+Quote,ContactId,Contact ID,Contact,No,No,Yes,LOW,Can be populated later
+Quote,ContractId,Contract ID,Unknown,No,No,Yes,LOW,Can be populated later
+Quote,Pricebook2Id,Price Book ID,Pricebook2,No,No,Yes,LOW,Can be populated later
+QuoteLineItem,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+QuoteLineItem,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+QuoteLineItem,PricebookEntryId,Price Book Entry ID,PricebookEntry,No,Yes,No,HIGH,MUST have value on initial load
+QuoteLineItem,Product2Id,Product ID,Product2,No,Yes,No,HIGH,MUST have value on initial load
+QuoteLineItem,QuoteId,Quote ID,Quote,No,Yes,No,HIGH,MUST have value on initial load
+QuoteLineItem,A_Location__c,A-Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+QuoteLineItem,Opportunity__c,Opportunity,Opportunity,Yes,No,Yes,MEDIUM,Can be populated later
+QuoteLineItem,Service_Detail__c,Service Detail,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+QuoteLineItem,Service_Option__c,Service Option,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+QuoteLineItem,Z_Location__c,Z-Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+QuoteLineItem,OpportunityLineItemId,Line Item ID,OpportunityLineItem,No,No,Yes,LOW,Can be populated later
+Service__c,Billing_Account_Number__c,Billing Account Number,BAN__c or Account,Yes,Yes,No,CRITICAL,MUST have value on initial load
+Service__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service__c,A_Location__c,A Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service__c,A_Node__c,A Node,Node__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service__c,Account__c,Account,Account,Yes,No,Yes,MEDIUM,Can be populated later
+Service__c,Service_Order_Line__c,Service Order Line,Service_Order_Line__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service__c,Z_Location__c,Z Location,Location__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service__c,Z_Node__c,Z Node,Node__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Category__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service_Category__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service_Category__c,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Service_Charge__c,Service__c,Service,Service__c,Yes,Yes,No,CRITICAL,MUST have value on initial load
+Service_Charge__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service_Charge__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service_Charge__c,Charge__c,(dep) Charge Type,Charge__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Charge__c,Off_Net__c,Off-Net,Off_Net__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Charge__c,Product__c,(dep) Product,Product2,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Charge__c,Service_Order_Line_Charge__c,Service Order Line Charge,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service_Order__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service_Order__c,OwnerId,Owner ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Service_Order__c,Account__c,Account,Account,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,BAN__c,Billing Account Number,BAN__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,Customer_Contact__c,Customer Contact,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,DC_Engineer__c,DC Engineer,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,ISP_Engineer__c,ISP Engineer,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,Job_Number__c,Job Number (Business Central WO #),Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,OSP_Engineer__c,OSP Engineer,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,Opportunity__c,Opportunity,Opportunity,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,Related_Opportunity_Lookup__c,Related Opportunity,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order__c,RecordTypeId,Record Type ID,RecordType,No,No,Yes,LOW,Can be populated later
+Service_Order_Line__c,Service_Order__c,Service Order,Service_Order__c,Yes,Yes,No,CRITICAL,MUST have value on initial load
+Service_Order_Line__c,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service_Order_Line__c,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Service_Order_Line__c,Billing_Account_Number__c,Billing Account Number,BAN__c or Account,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,DC_Engineer__c,DC Engineer,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,Employee__c,Employee,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,ISP_Engineer__c,ISP Engineer,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,Inside_Transloc__c,Inside Transloc,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,OSP_Engineer__c,OSP Engineer,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,Opportunity__c,Opportunity,Opportunity,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,Outside_Transloc__c,Outside Transloc,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,Provider__c,Account Name,Account,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,Service_Detail__c,Service Detail,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,Service__c,Service,Service__c,Yes,No,Yes,MEDIUM,Can be populated later
+Service_Order_Line__c,TaskRay_Principal_Template__c,TaskRay Principal Template,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Task,CreatedById,Created By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Task,LastModifiedById,Last Modified By ID,User (System),No,Yes,No,HIGH,MUST have value on initial load
+Task,OwnerId,Assigned To ID,User,No,Yes,No,HIGH,MUST have value on initial load
+Task,Opportunity__c,Opportunity,Opportunity,Yes,No,Yes,MEDIUM,Can be populated later
+Task,Related_Service__c,Related Service,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Task,Service_Order_Line__c,Service Order Line,Service_Order_Line__c,Yes,No,Yes,MEDIUM,Can be populated later
+Task,Service_Orders__c,Service Orders,Unknown,Yes,No,Yes,MEDIUM,Can be populated later
+Task,AccountId,Account ID,Account,No,No,Yes,LOW,Can be populated later
+Task,RecordTypeId,Task Record Type ID,RecordType,No,No,Yes,LOW,Can be populated later
+Task,RecurrenceActivityId,Recurrence Activity ID,Unknown,No,No,Yes,LOW,Can be populated later
+Task,WhatId,Related To ID,Polymorphic (Contact/Lead or Object),No,No,Yes,LOW,Can be populated later
+Task,WhoId,Name ID,Polymorphic (Contact/Lead or Object),No,No,Yes,LOW,Can be populated later
