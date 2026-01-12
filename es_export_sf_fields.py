@@ -140,7 +140,7 @@ for obj_name in object_list:
     dataframes[obj_name] = df
 
     if args.csv:
-        filename = f"{obj_name}_fields.csv"
+        filename = f"es_{obj_name}_salesforce_fields.csv"
         df.to_csv(filename, index=False)
         print(f"📁 CSV export complete → {filename}")
 

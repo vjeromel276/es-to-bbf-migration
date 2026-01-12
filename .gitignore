@@ -1,0 +1,5 @@
+*/*.xlsx
+*.xlsx
+*.log
+*.docx
+*.tmp

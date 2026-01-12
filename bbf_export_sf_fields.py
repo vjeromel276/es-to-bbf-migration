@@ -149,7 +149,7 @@ for obj_name in object_list:
 # Write single Excel workbook (if not CSV)
 # ---------------------------------------------------------------------
 if not args.csv:
-    filename = f"bbf_salesforce_fields-{obj_name}.xlsx"
+    filename = f"bbf_{obj_name}_salesforce_fields.xlsx"
     with pd.ExcelWriter(filename, engine="openpyxl") as writer:
         for obj_name, df in dataframes.items():
             safe_name = obj_name[:31]  # Excel sheet name limit
