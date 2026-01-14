@@ -173,6 +173,32 @@ WHERE Id IN (
 **Impact:** Can't run standard prep process in UAT without OSS
 **Solution Needed:** Alternative way to mark BANs for migration in UAT
 
+### Issue 5: Common Customers Exist in Both Orgs
+**Problem:** During UAT testing of 20 accounts, 1 Account was blocked by BBF's duplicate detection
+**Impact:** Some customers already exist in BOTH the ES org AND the BBF org ("common customers")
+**Discovery:** Identified during UAT Account migration testing on 2026-01-14
+
+**Migration Requirements for Common Customers:**
+Even when a customer already exists in BBF, we still need to:
+1. Create BAN__c records in BBF for their ES billing relationships
+2. Migrate their ES Orders as Service__c records to represent current services
+
+**Stakeholder Decision Required:**
+- How should we handle these common customer records?
+- Options include:
+  - Link to existing BBF Account (requires matching logic)
+  - Skip Account creation but proceed with BAN/Service migration
+  - Manual review queue for human verification
+  - Override duplicate rules for migration
+
+**Matching Strategy Needed:**
+- What key should be used to identify common customers?
+  - EIN/Tax ID
+  - Account Name (fuzzy matching?)
+  - External ID field
+  - Custom matching logic
+- How to handle false positives?
+
 ---
 
 ## UAT Testing Strategy
@@ -230,6 +256,47 @@ WHERE Id IN (
 
 ## Action Items
 
+### Current POC Pipeline Execution - IN PROGRESS
+
+**Running full migration pipeline with 20 BANs (≤5 orders each):**
+
+- [x] **BAN Prep** - COMPLETED
+  - Marked 20 BANs with `BBF_Ban__c = true` in ES UAT
+  - Limited to BANs with ≤5 orders each for manageable POC scope
+
+- [x] **Account Migration** - COMPLETED (19/20 success)
+  - Migrated: 19 accounts successfully created in BBF Sandbox
+  - Blocked: 1 account blocked by BBF duplicate detection rule
+  - Issue: Common customer exists in both ES and BBF orgs
+  - Requires stakeholder decision on handling strategy
+
+- [x] **Location Migration** - COMPLETED
+  - Migrated: 31 locations successfully created in BBF Sandbox
+  - Fixed variable name error (FILTER_ACTIVE_ORDERS_ONLY → FILTER_BY_BBF_BAN)
+  - All addresses from qualifying Orders migrated successfully
+
+- [x] **Contact Migration** - COMPLETED
+  - All contacts for migrated accounts successfully created in BBF Sandbox
+  - Inherited filtering from migrated Account records
+
+- [x] **BAN Migration** - COMPLETED (with 2 failures)
+  - Most BANs migrated successfully
+  - Failed: 2 BANs due to Payment Terms field picklist value issues
+  - Issue: Payment Terms corrections not applied before migration
+  - Resolution needed: Update Payment Terms in ES, then re-run for failed BANs
+
+- [ ] **Service Migration** - IN PROGRESS
+  - TEST_MODE = False enabled for POC execution
+  - Ready to migrate Order → Service__c
+
+- [ ] **Service Charge Migration** - IN PROGRESS
+  - TEST_MODE = False enabled for POC execution
+  - Ready to migrate OrderItem → Service_Charge__c
+
+- [ ] **Off-Net Migration** - IN PROGRESS
+  - TEST_MODE = False enabled for POC execution
+  - Ready to migrate Off_Net__c → Off_Net__c
+
 ### Immediate (for UAT Testing) - COMPLETED
 
 - [x] **Create UAT BAN Prep Notebook** (`00_uat_ban_prep.ipynb`) ✅
@@ -254,6 +321,12 @@ WHERE Id IN (
   - Only migrates Addresses from qualifying Orders
 
 ### Future (for Production Consistency)
+
+- [ ] **Stakeholder Decision: Common Customer Handling**
+  - Need decision on how to handle customers that exist in both ES and BBF orgs
+  - Define matching strategy (EIN, Account Name, External ID, etc.)
+  - Determine workflow: link to existing, skip, manual review, or override duplicates
+  - Even if Account exists, must still create BAN__c and migrate Service__c records
 
 - [ ] **Create Migration Scope Notebook** (`00_migration_scope.ipynb`)
   - Master notebook that identifies ALL IDs to migrate
@@ -351,3 +424,19 @@ Order (the source of truth)
 | | Added `MAX_ORDERS_PER_BAN` option to UAT prep (default: 5) for smaller POC scope |
 | | UAT Testing: Marked 20 BANs (≤5 orders each) with BBF_Ban__c = true |
 | | Set TEST_MODE = False on migration notebooks to migrate all records in scope |
+| | **Issue 5 Discovered:** During UAT Account migration testing, 1 of 20 accounts blocked by BBF duplicate detection |
+| | Common customers exist in both ES and BBF orgs - requires stakeholder decision on handling |
+| | Added action item: Need matching strategy and workflow for common customer accounts |
+| | **POC Pipeline Execution Started:** Running full migration pipeline with 20 BANs |
+| | Account migration completed: 19/20 accounts migrated successfully, 1 blocked by duplicate detection |
+| | **Created migration-docs-sync agent** - For keeping all migration documentation synchronized |
+| | **Created MIGRATION_FILTERING_GUARDRAILS.md** - Quick reference for all filtering logic across the pipeline |
+| | Location migration completed: 31 locations migrated successfully |
+| | Contact migration completed: All contacts for 19 accounts migrated |
+| | BAN migration completed: Most BANs successful, 2 failures due to Payment Terms picklist issues |
+| | **Updated notebooks 05, 06, 07** - Converted to Day 1 required-fields-only approach |
+| | Service__c: Only Name, Billing_Account_Number__c (master-detail), OwnerId, ES_Legacy_ID__c |
+| | Service_Charge__c: Only Name, Service__c (master-detail), Product_Simple__c, Service_Type_Charge__c, ES_Legacy_ID__c |
+| | Off_Net__c: Only Name, OwnerId, ES_Legacy_ID__c, Service__c (optional) |
+| | Removed all boolean fields (default to False), corrected field names based on actual BBF metadata |
+| | User added ES_Legacy_ID__c field to Service__c, Service_Charge__c, Off_Net__c in BBF org |
