@@ -2,6 +2,8 @@
 
 Quick reference for data filtering logic across all ES-to-BBF migration notebooks.
 
+**Last Synchronized:** 2026-01-14 (All 8 notebooks reviewed and documented)
+
 ## Overview
 
 All migrations are driven by the **`BBF_Ban__c = true`** flag set during the prep phase.
@@ -24,60 +26,190 @@ Only migrate data connected to **actively billing Orders** that meet ALL criteri
 |--------|----------|
 | Status | `IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')` |
 | Project Group | `NOT LIKE '%PA MARKET DECOM%'` (exclude decommissioned markets) |
-| Record Type | `Service_Order_Record_Type__c = 'Service Order Agreement'` |
-| OSS State | `order_state_cd IN ('CL', 'OA')` (Closed, Open Active) |
-| Billing Status | `bill_start_date <= TODAY AND (bill_end_date IS NULL OR bill_end_date > TODAY)` |
 | BAN Flag | `Billing_Invoice__r.BBF_Ban__c = true` |
 
 **NO ORPHAN DATA** - If it's not connected to a qualifying Order, it doesn't migrate.
 
-## Filtering by Notebook
+---
 
-### 01_location_migration.ipynb
+## 00_uat_ban_prep.ipynb (BAN Prep - UAT Only)
 
-**Purpose:** Migrate ES Address__c → BBF Location__c
+**Purpose:** Mark ES BANs for migration by setting `BBF_Ban__c = true`
 
 **SOQL Filter:**
 ```sql
-SELECT Id, Address_A__c, Address_Z__c
+SELECT Id, OrderNumber, Name, Service_ID__c,
+       Status, Project_Group__c,
+       Billing_Invoice__c, Billing_Invoice__r.Name, Billing_Invoice__r.Account__c,
+       Billing_Invoice__r.Account__r.Name, Billing_Invoice__r.BBF_Ban__c,
+       AccountId, Account.Name,
+       Address_A__c, Address_A__r.Name,
+       Address_Z__c, Address_Z__r.Name
 FROM Order
-WHERE Billing_Invoice__r.BBF_Ban__c = true
-  AND (Address_A__c != null OR Address_Z__c != null)
+WHERE Status IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')
+  AND (Project_Group__c = null OR (NOT Project_Group__c LIKE '%PA MARKET DECOM%'))
+  AND Billing_Invoice__c != null
+ORDER BY Billing_Invoice__r.Name
+```
+
+**Configuration Variables:**
+```python
+ACTIVE_STATUSES = ["Activated", "Suspended (Late Payment)", "Disconnect in Progress"]
+WD_PROJECT_GROUP = "PA MARKET DECOM"  # Orders with this are EXCLUDED
+DRY_RUN = False  # Set to False to actually update BANs
+BAN_LIMIT = 20  # Max BANs to mark (0 = no limit)
+MAX_ORDERS_PER_BAN = 5  # Max orders per BAN (0 = no limit) - keeps POC small
 ```
 
 **Logic:**
-- Queries Orders with `BBF_Ban__c = true` flag on parent BAN
+1. Query all Orders meeting migration criteria (Active + NOT PA MARKET DECOM)
+2. Extract unique Billing_Invoice__c (BAN) IDs from those Orders
+3. Optionally filter BANs by order count (`MAX_ORDERS_PER_BAN`)
+4. Optionally limit total BANs (`BAN_LIMIT`)
+5. Update selected BANs: `BBF_Ban__c = true`
+
+**Output:**
+- Excel file with BAN IDs, Account IDs, Address IDs for downstream notebooks
+- Updates ES Billing_Invoice__c records with `BBF_Ban__c = true`
+
+**Notes:**
+- **UAT Only** - Production uses `es_to_bbf_ban_creation_v12.ipynb` which creates -BBF BANs
+- This mimics production prep without requiring OSS access
+- All downstream notebooks filter by `BBF_Ban__c = true` set by this notebook
+
+---
+
+## 01_location_migration.ipynb
+
+**Purpose:** Migrate ES Address__c → BBF Location__c
+
+**SOQL Filter - Step 1 (Get Address IDs):**
+```sql
+SELECT Address_A__c, Address_Z__c
+FROM Order
+WHERE Status IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')
+  AND (Project_Group__c = null OR (NOT Project_Group__c LIKE '%PA MARKET DECOM%'))
+  AND Billing_Invoice__r.BBF_Ban__c = true
+  AND (Address_A__c != null OR Address_Z__c != null)
+```
+
+**SOQL Filter - Step 2 (Query Addresses):**
+```sql
+SELECT Id, Name,
+       Address__c, City__c, State__c, County__c, Zip__c,
+       Complete_Address__c, Clean_Street__c,
+       Geocode_Lat_Long__c, Geocode_Lat_Long__Latitude__s, Geocode_Lat_Long__Longitude__s,
+       CLLI__c, Building_Status__c, Building_Type__c,
+       On_Net__c, NNI__c, Headend__c,
+       Address_Type__c, Address_Status__c,
+       Country__c, County_FIPS__c,
+       RecordTypeId, OwnerId
+FROM Address__c
+WHERE Id IN ('{ids_from_step1}')
+  AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
+```
+
+**Configuration Variables:**
+```python
+TEST_MODE = False  # Set to False to migrate ALL Locations
+TEST_LIMIT = 10  # Only used when TEST_MODE = True
+FILTER_BY_BBF_BAN = True  # Filter by Orders on BBF BANs (DEFAULT)
+OWNER_ID = "005Ea00000ZOGFZIA5"
+DEFAULT_BUS_UNIT = "EVS"
+```
+
+**BBF Field Mapping (Day 1):**
+```python
+bbf_location = {
+    "Name": es_addr.get("Name", "Unknown Address")[:80],
+    "Name_Is_Set_Manually__c": False,  # REQUIRED
+    "City__c": es_addr.get("City__c"),
+    "State__c": es_addr.get("State__c"),
+    "County__c": es_addr.get("County__c"),
+    "PostalCode__c": es_addr.get("Zip__c"),
+    "Street__c": street,
+    "Full_Address__c": full_address,
+    "CLLICode__c": es_addr.get("CLLI__c"),
+    "businessUnit__c": DEFAULT_BUS_UNIT,
+    "OwnerId": OWNER_ID,
+    "ES_Legacy_ID__c": es_addr["Id"]
+}
+```
+
+**Logic:**
+- Queries Orders with `BBF_Ban__c = true` on parent BAN
 - Extracts unique Address_A__c and Address_Z__c IDs
-- Queries Address__c records for those IDs
-- Deduplicates addresses (same address may be used by multiple Orders)
+- Queries Address__c records for those IDs (not yet migrated)
+- Transforms to BBF Location__c schema
+- Inserts to BBF, updates ES with `BBF_New_Id__c`
 
 **Parent Dependencies:** None (Location is standalone)
 
 **Skip Conditions:**
 - Address already migrated (`BBF_New_Id__c != null`) → SKIPPED
-- Address record not found → SKIPPED (logged as error)
+- Address not found → SKIPPED (logged as error)
 
-**Excel Output:** `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/results/location_migration_results_YYYYMMDD_HHMMSS.xlsx`
+**Runtime Stats (POC):**
+- 20 Orders → 31 unique Address IDs → 31 Locations migrated successfully
 
 ---
 
-### 02_account_migration.ipynb
+## 02_account_migration.ipynb
 
 **Purpose:** Migrate ES Account → BBF Account
 
-**SOQL Filter:**
+**SOQL Filter - Step 1 (Get Account IDs):**
 ```sql
-SELECT Id, Name, Account__c
+SELECT Account__c
 FROM Billing_Invoice__c
 WHERE BBF_Ban__c = true
   AND Account__c != null
 ```
 
+**SOQL Filter - Step 2 (Query Accounts):**
+```sql
+SELECT Id, Name, Type, BillingStreet, BillingCity, BillingState,
+       BillingPostalCode, BillingCountry, Phone, Website, Industry,
+       AnnualRevenue, NumberOfEmployees, Description,
+       ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode,
+       ShippingCountry, AccountNumber, Site, TickerSymbol, Ownership,
+       Rating, Sic, SicDesc
+FROM Account
+WHERE Id IN ('{ids_from_step1}')
+  AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
+```
+
+**Configuration Variables:**
+```python
+TEST_MODE = False  # Set to False to migrate ALL accounts
+TEST_LIMIT = 10  # Only used when TEST_MODE = True
+FILTER_BY_BBF_BAN = True  # Filter by Accounts on BBF BANs (DEFAULT)
+OWNER_ID = "005Ea00000ZOGFZIA5"
+```
+
+**BBF Field Mapping (Day 1):**
+```python
+bbf_account = {
+    "Name": es_account.get("Name"),
+    "Type": es_account.get("Type"),
+    "BillingStreet": es_account.get("BillingStreet"),
+    "BillingCity": es_account.get("BillingCity"),
+    "BillingState": es_account.get("BillingState"),
+    "BillingPostalCode": es_account.get("BillingPostalCode"),
+    "BillingCountry": es_account.get("BillingCountry"),
+    # ... (27 fields total mapped)
+    "OwnerId": OWNER_ID,
+    "ES_Legacy_ID__c": es_account["Id"]
+}
+```
+
 **Logic:**
-- Queries BANs with `BBF_Ban__c = true` flag
+- Queries BANs with `BBF_Ban__c = true`
 - Extracts unique Account__c IDs
-- Queries Account records for those IDs
-- Deduplicates accounts (same account may have multiple BANs)
+- Queries Account records for those IDs (not yet migrated)
+- Transforms to BBF Account schema
+- Inserts to BBF in batches of 10 (to avoid CPQ trigger limits)
+- Updates ES with `BBF_New_Id__c`
 
 **Parent Dependencies:** None (Account is root object)
 
@@ -85,29 +217,55 @@ WHERE BBF_Ban__c = true
 - Account already migrated (`BBF_New_Id__c != null`) → SKIPPED
 - Duplicate Account detected by BBF → FAILED (logged with error)
 
-**Excel Output:** `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/results/account_migration_results_YYYYMMDD_HHMMSS.xlsx`
+**Runtime Stats (POC):**
+- 20 BANs → 20 unique Account IDs → 19 Accounts migrated, 1 blocked by duplicate detection
 
 ---
 
-### 03_contact_migration.ipynb
+## 03_contact_migration.ipynb
 
 **Purpose:** Migrate ES Contact → BBF Contact
 
 **SOQL Filter:**
 ```sql
-SELECT Id, FirstName, LastName, Email, Phone, AccountId
+SELECT Id, AccountId, Account.BBF_New_Id__c,
+       FirstName, LastName, Email, Phone, Title,
+       MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry,
+       OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry,
+       MobilePhone, HomePhone, Fax,
+       Department, Description, Birthdate,
+       AssistantName, AssistantPhone, LeadSource
 FROM Contact
-WHERE AccountId IN (
-  SELECT Id FROM Account
-  WHERE BBF_New_Id__c != null
-    AND BBF_New_Id__c != ''
-)
+WHERE Account.BBF_New_Id__c != null
+  AND Account.BBF_New_Id__c != ''
+  AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
+```
+
+**Configuration Variables:**
+```python
+TEST_MODE = False  # Set to False to migrate ALL contacts
+TEST_LIMIT = 10  # Only used when TEST_MODE = True
+OWNER_ID = "005Ea00000ZOGFZIA5"
+```
+
+**BBF Field Mapping (Day 1):**
+```python
+bbf_contact = {
+    "AccountId": bbf_account_id,  # From Account.BBF_New_Id__c
+    "FirstName": es_contact.get("FirstName"),
+    "LastName": es_contact.get("LastName"),
+    "Email": es_contact.get("Email"),
+    "Phone": es_contact.get("Phone"),
+    # ... (27 fields total mapped)
+    "OwnerId": OWNER_ID,
+    "ES_Legacy_ID__c": es_contact["Id"]
+}
 ```
 
 **Logic:**
-- Queries ONLY Contacts whose parent Account was successfully migrated
-- Account must have `BBF_New_Id__c` populated (proof of migration)
-- Maps to migrated Account ID in BBF
+- Queries Contacts where parent Account has `BBF_New_Id__c` (Account migrated)
+- Maps to BBF Account ID via `Account.BBF_New_Id__c`
+- Inserts to BBF, updates ES with `BBF_New_Id__c`
 
 **Parent Dependencies:**
 - **REQUIRED:** Account must have `BBF_New_Id__c`
@@ -117,114 +275,173 @@ WHERE AccountId IN (
 - Contact already migrated (`BBF_New_Id__c != null`) → SKIPPED
 - Missing required field (LastName) → FAILED
 
-**Excel Output:** `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/results/contact_migration_results_YYYYMMDD_HHMMSS.xlsx`
+**Runtime Stats (POC):**
+- 19 migrated Accounts → 193 Contacts queried → 192 Contacts migrated, 1 blocked by duplicate detection
 
 ---
 
-### 04_ban_migration.ipynb
+## 04_ban_migration.ipynb
 
 **Purpose:** Migrate ES Billing_Invoice__c → BBF BAN__c
 
 **SOQL Filter:**
 ```sql
-SELECT Id, Name, Account__c, InvoiceNumber__c
+SELECT Id, Name, Account__c, Account__r.BBF_New_Id__c, Account__r.Name,
+       Account_Number__c, Account_Name__c,
+       Billing_Address_1__c, Billing_Address_2__c,
+       Billing_City__c, Billing_State__c, Billing_ZIP__c,
+       Billing_E_mail__c, Additional_Emails__c,
+       Payment_Terms__c, Invoice_Delivery_Preference__c, Invoice_cycle_cd__c,
+       Disable_Late_Fees__c, Late_Fee_Percentage__c,
+       Suppress_Invoice_Generation__c, Suppress_Past_Due_Notifications__c,
+       Address_Verified__c, Address_Verified_On__c, AddressReturnCode__c,
+       Disabled__c, Description__c, Billing_Notes__c,
+       Automatic_Bill_Payment_Authorized__c,
+       Detailed_Tax_Breakout__c, Sent_to_Third_party__c,
+       AP_Contact__c, BBF_Ban__c
 FROM Billing_Invoice__c
 WHERE BBF_Ban__c = true
   AND Account__r.BBF_New_Id__c != null
   AND Account__r.BBF_New_Id__c != ''
+  AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
+```
+
+**Configuration Variables:**
+```python
+TEST_MODE = False  # Set to False to migrate ALL BANs
+TEST_LIMIT = 10  # Only used when TEST_MODE = True
+OWNER_ID = "005Ea00000ZOGFZIA5"
+DEFAULT_BUS_UNIT = "EVS"
+PAYMENT_TERMS_MAP = {
+    "NET30": "NET 30",
+    "NET45": "NET 45",
+    "NET60": "NET 60",
+    "NET30,NET45,NET60 (default)": "NET 30",
+    "Due On Receipt": "Due On Receipt"
+}
+```
+
+**BBF Field Mapping (Day 1):**
+```python
+bbf_ban = {
+    "Account__c": bbf_account_id,  # From Account.BBF_New_Id__c
+    "busUnit__c": DEFAULT_BUS_UNIT,  # REQUIRED picklist
+    "Name": "EV-" + es_ban.get("Name"),
+    "Billing_Street__c": billing_street,
+    "Billing_City__c": es_ban.get("Billing_City__c"),
+    "Billing_State__c": es_ban.get("Billing_State__c"),
+    "Billing_PostalCode__c": es_ban.get("Billing_ZIP__c"),
+    "Billing_Company_Name__c": es_ban.get("Account_Name__c"),
+    "BAN_Description__c": es_ban.get("Description__c"),
+    "Payment_Terms__c": bbf_payment_terms,  # Translated
+    "General_Description__c": es_ban.get("Billing_Notes__c"),
+    "ES_Legacy_ID__c": es_ban["Id"]
+}
 ```
 
 **Logic:**
-- Queries BANs with `BBF_Ban__c = true` flag
-- ONLY includes BANs whose parent Account was successfully migrated
-- Maps to migrated Account ID in BBF
-- Sets `busUnit__c = 'EVS'` for EverStream
+- Queries BANs with `BBF_Ban__c = true`
+- ONLY includes BANs where parent Account migrated
+- Translates Payment Terms (NET30 → NET 30, etc.)
+- Skips BANs with invalid Payment Terms values
+- Inserts to BBF, updates ES with `BBF_New_Id__c`
 
 **Parent Dependencies:**
 - **REQUIRED:** Account must have `BBF_New_Id__c`
 
 **Skip Conditions:**
-- Parent Account not migrated (`BBF_New_Id__c = null`) → NEVER QUERIED (implicit skip)
+- Parent Account not migrated → NEVER QUERIED (implicit skip)
 - BAN already migrated (`BBF_New_Id__c != null`) → SKIPPED
-- Missing Account__c lookup → FAILED
+- Invalid Payment Terms value → SKIPPED (logged as error)
 
-**Excel Output:** `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/results/ban_migration_results_YYYYMMDD_HHMMSS.xlsx`
+**Runtime Stats (POC):**
+- 19 migrated Accounts → 19 BANs queried → 17 BANs migrated, 2 failed (invalid Payment Terms)
 
 ---
 
-### 05_service_migration.ipynb
+## 05_service_migration.ipynb
 
 **Purpose:** Migrate ES Order → BBF Service__c
 
-**SOQL Filter (Initial Query):**
+**SOQL Filter:**
 ```sql
-SELECT Id, Billing_Invoice__r.BBF_New_Id__c
+SELECT Id,
+    Billing_Invoice__r.BBF_New_Id__c,
+    Address_A__c, Address_A__r.BBF_New_Id__c,
+    Address_Z__c, Address_Z__r.BBF_New_Id__c
 FROM Order
 WHERE Status IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')
-  AND (Project_Group__c = null OR (NOT Project_Group__c LIKE '%PA MARKET DECOM%'))
-  AND Service_Order_Record_Type__c = 'Service Order Agreement'
-  AND Billing_Invoice__r.BBF_New_Id__c != null
-  AND Billing_Invoice__r.BBF_New_Id__c != ''
-  AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
+AND (Project_Group__c = null OR (NOT Project_Group__c LIKE '%PA MARKET DECOM%'))
+AND Service_Order_Record_Type__c = 'Service Order Agreement'
+AND Billing_Invoice__r.BBF_New_Id__c != null
+AND Billing_Invoice__r.BBF_New_Id__c != ''
+AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
 ```
 
-**Day 1 Migration - REQUIRED FIELDS ONLY:**
+**Configuration Variables:**
 ```python
+TEST_MODE = False  # Set to False to migrate ALL Services
+TEST_LIMIT = 10  # Only used when TEST_MODE = True
+OWNER_ID = "005Ea00000ZOGFZIA5"  # Not used - Service__c has no OwnerId
+DEFAULT_BUS_UNIT = "EVS"  # Not used - Service__c has no busUnit__c
+```
+
+**BBF Field Mapping (Day 1 - Required Fields Only):**
+```python
+# Step 1: Initial insert with Master-Detail only
 bbf_service = {
-    "Billing_Account_Number__c": bbf_ban_id,        # Master-Detail to BAN__c (REQUIRED)
-    "ES_Legacy_ID__c": es_order["Id"]               # Tracking field
+    "Billing_Account_Number__c": bbf_ban_id,  # Master-Detail to BAN__c (REQUIRED)
+    "ES_Legacy_ID__c": es_order["Id"]         # Tracking field
 }
+
+# Optional: Location lookups (if migrated)
+if bbf_a_location:
+    bbf_service["A_Location__c"] = bbf_a_location
+if bbf_z_location:
+    bbf_service["Z_Location__c"] = bbf_z_location
 ```
 
 **Account Population (Post-Insert Step):**
-After Services are inserted and ES is updated with BBF IDs, a separate step populates Account__c:
 ```sql
+-- Step 2: Query Services with BAN relationship
 SELECT Id, Billing_Account_Number__c, Billing_Account_Number__r.Account__c, Account__c
 FROM Service__c
 WHERE ES_Legacy_ID__c != null AND Account__c = null
-```
 
-Then updates each Service:
-```python
-{
-    "Id": service_id,
-    "Account__c": ban_account_id  # Derived from BAN.Account__c
-}
+-- Step 3: Update Services with Account from BAN
+UPDATE Service__c SET Account__c = BAN.Account__c
 ```
 
 **Logic:**
-- Queries Orders with full migration criteria (Active + NOT PA MARKET DECOM)
-- REQUIRES parent BAN successfully migrated (Master-Detail relationship - BLOCKING)
-- **Day 1 Approach:** Only migrate required fields (Master-Detail, Tracking)
-- **Account Population:** Separate update step pulls Account from BAN relationship after insert
-- **Boolean fields default to False** - no need to set explicitly
-- **Name field is AUTONUMBER** - BBF generates automatically, don't set on insert
-- **OwnerId not present** - Service__c object doesn't have OwnerId field
-- **Enrichment Pass (Day 2+):** Add optional fields like Status, Circuit_ID, MRC, NRC, Bandwidth, etc.
+1. Queries Orders with full criteria (Active + NOT PA MARKET DECOM)
+2. REQUIRES parent BAN migrated (Master-Detail - BLOCKING)
+3. Optionally includes Location lookups if migrated
+4. Inserts Services with Billing_Account_Number__c (master-detail) + ES_Legacy_ID__c
+5. Updates ES Orders with `BBF_New_Id__c`
+6. **NEW:** Queries Services and populates Account__c from BAN.Account__c relationship
+7. Updates Services with Account__c
 
-**Process Flow:**
-1. Insert Services with Billing_Account_Number__c (master-detail) + ES_Legacy_ID__c
-2. Update ES Orders with BBF_New_Id__c
-3. **NEW STEP:** Query Services with BAN relationship, update Account__c from BAN.Account__c
-4. Result: Services have proper Account relationship populated automatically
+**Fields NOT Set (Why):**
+- Name: Autonumber (auto-generated by BBF)
+- OwnerId: Service__c doesn't have this field
+- All boolean fields: Default to False
+- Optional fields: Status, Circuit_ID, MRC, NRC, Bandwidth, etc. (Day 2+ enrichment)
 
 **Parent Dependencies:**
 - **REQUIRED (Master-Detail):** BAN must have `BBF_New_Id__c`
-- **REQUIRED (Filter):** Account must have `BBF_New_Id__c`
-- **REQUIRED (Filter):** Address_A must have `BBF_New_Id__c`
+- **OPTIONAL:** Location_A and Location_Z (if available)
 
 **Skip Conditions:**
 - Parent BAN not migrated → NEVER QUERIED (implicit skip)
-- Parent Account not migrated → NEVER QUERIED (implicit skip)
-- Parent Location A not migrated → NEVER QUERIED (implicit skip)
 - Service already migrated (`BBF_New_Id__c != null`) → SKIPPED
 - Missing Master-Detail BAN__c → FAILED (Salesforce blocks insert)
 
-**Excel Output:** `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/results/service_migration_results_YYYYMMDD_HHMMSS.xlsx`
+**Runtime Stats (POC):**
+- 17 migrated BANs → 17 Orders queried → 17 Services migrated successfully
 
 ---
 
-### 06_service_charge_migration.ipynb
+## 06_service_charge_migration.ipynb
 
 **Purpose:** Migrate ES OrderItem → BBF Service_Charge__c
 
@@ -233,24 +450,29 @@ Then updates each Service:
 SELECT Id, Order.BBF_New_Id__c
 FROM OrderItem
 WHERE Order.BBF_New_Id__c != null
-  AND Order.BBF_New_Id__c != ''
-  AND Order.Status IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')
-  AND (Order.Project_Group__c = null OR (NOT Order.Project_Group__c LIKE '%PA MARKET DECOM%'))
-  AND Order.Service_Order_Record_Type__c = 'Service Order Agreement'
-  AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
+AND Order.BBF_New_Id__c != ''
+AND Order.Status IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')
+AND (Order.Project_Group__c = null OR (NOT Order.Project_Group__c LIKE '%PA MARKET DECOM%'))
+AND Order.Service_Order_Record_Type__c = 'Service Order Agreement'
+AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
 ```
 
-**Day 1 Migration - REQUIRED FIELDS ONLY + PLACEHOLDER VALUES:**
+**Configuration Variables:**
 ```python
-# PLACEHOLDER VALUES until business provides ES Product → BBF Product mapping
-PLACEHOLDER_PRODUCT = "ANNUAL"  # Temporary placeholder
-PLACEHOLDER_SERVICE_TYPE = "Power"  # Temporary placeholder
+TEST_MODE = False  # Set to False to migrate ALL Service Charges
+TEST_LIMIT = 10  # Only used when TEST_MODE = True
+OWNER_ID = "005Ea00000ZOGFZIA5"  # Not used - Service_Charge__c has no OwnerId
+PLACEHOLDER_PRODUCT = "ANNUAL"  # Temporary placeholder until business provides mapping
+PLACEHOLDER_SERVICE_TYPE = "Power"  # Temporary placeholder until business provides mapping
+```
 
+**BBF Field Mapping (Day 1 - Required Fields + Placeholders):**
+```python
 bbf_service_charge = {
-    "Service__c": bbf_service_id,                   # Master-Detail to Service__c (REQUIRED)
-    "Product_Simple__c": PLACEHOLDER_PRODUCT,       # PLACEHOLDER - to be enriched
+    "Service__c": bbf_service_id,                    # Master-Detail to Service__c (REQUIRED)
+    "Product_Simple__c": PLACEHOLDER_PRODUCT,        # PLACEHOLDER - to be enriched
     "Service_Type_Charge__c": PLACEHOLDER_SERVICE_TYPE,  # PLACEHOLDER - to be enriched
-    "ES_Legacy_ID__c": es_orderitem["Id"]           # Tracking field
+    "ES_Legacy_ID__c": es_orderitem["Id"]            # Tracking field
 }
 ```
 
@@ -258,38 +480,44 @@ bbf_service_charge = {
 - **Product_Simple__c = "ANNUAL"** - Temporary value, will be updated via enrichment
 - **Service_Type_Charge__c = "Power"** - Temporary value, will be updated via enrichment
 - **Rationale:** ES Product → BBF Product mapping not ready yet; use placeholders for Day 1, enrich later
-- **Name field:** Autonumber (auto-generated by BBF, don't set on insert)
-- **OwnerId field:** Does not exist on Service_Charge__c object
+- **Enrichment Tool:** Run `08_es_product_mapping_export.ipynb` to export ES products for mapping analysis
+- **Day 2:** Update placeholder values with actual mappings once business provides them
 
 **Logic:**
-- Queries ONLY OrderItems whose parent Order was successfully migrated
-- Order must have `BBF_New_Id__c` populated (proof of Service migration)
-- **Day 1 Approach:** Only migrate required fields with PLACEHOLDER picklist values
-- **Product Mapping Export:** New notebook `08_es_product_mapping_export.ipynb` exports ES products for mapping analysis
-- **Boolean fields default to False** - no need to set explicitly (11 boolean fields omitted)
-- **Enrichment Pass (Day 2+):**
-  - Update Product_Simple__c and Service_Type_Charge__c with actual mapped values
-  - Add optional fields like Description, Amount, Unit_Rate, Start_Date, etc.
+- Queries OrderItems where parent Order migrated (Service exists)
+- Order must have `BBF_New_Id__c` (proof of Service migration)
+- Inserts with PLACEHOLDER values for required picklist fields
+- Updates ES with `BBF_New_Id__c`
+
+**Fields NOT Set (Why):**
+- Name: Autonumber (auto-generated by BBF)
+- OwnerId: Service_Charge__c doesn't have this field
+- All boolean fields: Default to False (11 boolean fields omitted)
+- Optional fields: Description, Amount, Unit_Rate, Start_Date, etc. (Day 2+ enrichment)
 
 **Parent Dependencies:**
 - **REQUIRED (Master-Detail):** Service (Order) must have `BBF_New_Id__c`
 
 **Skip Conditions:**
-- Parent Service not migrated (`BBF_New_Id__c = null`) → NEVER QUERIED (implicit skip)
+- Parent Service not migrated → NEVER QUERIED (implicit skip)
 - Charge already migrated (`BBF_New_Id__c != null`) → SKIPPED
 - Missing Master-Detail Service__c → FAILED (Salesforce blocks insert)
 
-**Excel Output:** `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/results/service_charge_migration_results_YYYYMMDD_HHMMSS.xlsx`
+**Runtime Stats (POC):**
+- 17 migrated Services → 44 OrderItems queried → 44 Service_Charges migrated successfully
 
 ---
 
-### 07_offnet_migration.ipynb
+## 07_offnet_migration.ipynb
 
 **Purpose:** Migrate ES Off_Net__c → BBF Off_Net__c
 
 **SOQL Filter:**
 ```sql
-SELECT Id, Name, SOF1__c, SOF1__r.BBF_New_Id__c, SOF1__r.OrderNumber
+SELECT Id, Name,
+    SOF1__c, SOF1__r.BBF_New_Id__c, SOF1__r.OrderNumber,
+    Location_1__c, Location_1__r.BBF_New_Id__c,
+    Location_2__c, Location_2__r.BBF_New_Id__c
 FROM Off_Net__c
 WHERE SOF1__c != null
   AND SOF1__r.BBF_New_Id__c != null
@@ -297,41 +525,100 @@ WHERE SOF1__c != null
   AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
 ```
 
-**Day 1 Migration - REQUIRED FIELDS ONLY:**
+**Configuration Variables:**
+```python
+TEST_MODE = False  # Set to False to migrate ALL Off-Net records
+TEST_LIMIT = 10  # Only used when TEST_MODE = True
+OWNER_ID = "005Ea00000ZOGFZIA5"  # ONLY required field
+```
+
+**BBF Field Mapping (Day 1 - Required Fields Only):**
 ```python
 bbf_offnet = {
-    "OwnerId": OWNER_ID,                            # Owner (REQUIRED - ONLY required field)
-    "ES_Legacy_ID__c": es_offnet["Id"],             # Tracking field
-    "Service__c": bbf_service_id                    # Lookup to Service__c (OPTIONAL but populated from SOF1__r.BBF_New_Id__c)
+    "OwnerId": OWNER_ID,                # Owner (REQUIRED - ONLY required field)
+    "ES_Legacy_ID__c": es_offnet["Id"]  # Tracking field
 }
+
+# Optional: Service lookup (if Order migrated)
+if bbf_service_id:
+    bbf_offnet["Service__c"] = bbf_service_id
+
+# Optional: Location lookups (if migrated)
+if bbf_aa_location:
+    bbf_offnet["AA_Location__c"] = bbf_aa_location
+if bbf_zz_location:
+    bbf_offnet["ZZ_Location__c"] = bbf_zz_location
 ```
 
 **Key Relationship Change:**
-- **OLD (DEPRECATED):** `Implementation__c` → `IMPLEMENTATION_Project__c` (not the Order object!)
+- **OLD (DEPRECATED):** `Implementation__c` → `IMPLEMENTATION_Project__c` (not the Order!)
 - **NEW (CORRECT):** `SOF1__c` → Order object (links directly to the Order)
-- **Service Population:** Off_Net__c.Service__c is populated from Order.BBF_New_Id__c (which IS the BBF Service ID)
+- **Service Population:** Off_Net__c.Service__c populated from `SOF1__r.BBF_New_Id__c` (Order's BBF Service ID)
 
 **Logic:**
-- Queries ONLY Off_Net__c records whose SOF1__c (Order) was successfully migrated
-- Order must have `BBF_New_Id__c` populated (proof of Service migration)
-- **Day 1 Approach:** Only migrate required fields (OwnerId, Tracking)
-- **Service__c lookup** populated from SOF1__r.BBF_New_Id__c (Order's BBF Service ID)
-- **Name field:** Autonumber (auto-generated by BBF, don't set on insert)
-- **All other fields omitted for Day 1** - no location lookups, no cost fields, no circuit details
-- **Enrichment Pass (Day 2+):** Add Location lookups (AA_Location__c, ZZ_Location__c), cost fields (COGS_MRC__c, COGS_NRC__c), circuit identifiers, vendor details, dates, etc.
+- Queries Off_Net__c records where `SOF1__c` (Order) migrated
+- Order must have `BBF_New_Id__c` (proof of Service migration)
+- Populates Service__c from Order.BBF_New_Id__c
+- Optionally includes Location lookups if migrated
+- Inserts to BBF, updates ES with `BBF_New_Id__c`
+
+**Fields NOT Set (Why):**
+- Name: Autonumber (auto-generated by BBF)
+- All optional fields: AA_Location__c, ZZ_Location__c, Circuit_ID, COGS, Vendor details, dates (Day 2+ enrichment)
 
 **Parent Dependencies:**
 - **REQUIRED (Filter):** Service (SOF1__c Order) must have `BBF_New_Id__c`
+- **OPTIONAL:** Location_1 and Location_2 (if available)
 
 **Skip Conditions:**
-- Parent Service not migrated (`BBF_New_Id__c = null`) → NEVER QUERIED (implicit skip)
+- Parent Service not migrated → NEVER QUERIED (implicit skip)
 - Off_Net already migrated (`BBF_New_Id__c != null`) → SKIPPED
 
-**Excel Output:** `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/results/offnet_migration_results_YYYYMMDD_HHMMSS.xlsx`
+**Runtime Stats (POC):**
+- 17 migrated Services → 6 Off_Net records queried → 6 Off_Net records migrated successfully
 
 ---
 
-## Cascade Effect Diagram
+## 08_es_product_mapping_export.ipynb (Export Tool - Not a Migration)
+
+**Purpose:** Export ES Products for mapping analysis (NOT a migration notebook)
+
+**SOQL Filter:**
+```sql
+SELECT Order.Id, Order.OrderNumber, Order.Name, Order.Status, Order.Billing_Invoice__c,
+       Id, Total_MRC_Amortized__c, NRC_IRU_FEE__c, UnitPrice, TotalPrice,
+       Product2.ProductCode, Product2.Family, Product2.Name
+FROM OrderItem
+WHERE Order.Status IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')
+  AND (Order.Project_Group__c = null OR (NOT Order.Project_Group__c LIKE '%PA MARKET DECOM%'))
+  AND Order.Service_Order_Record_Type__c = 'Service Order Agreement'
+  AND Order.Billing_Invoice__c != null
+ORDER BY Order.OrderNumber
+```
+
+**Purpose:**
+- Exports all active OrderItems with Product2 details
+- Provides data for business to build ES Product → BBF Product mapping
+- Outputs CSV file with unique product families and product names
+- Analysis summary shows top products by volume
+
+**Output:**
+- CSV file: `es_active_orders_products_{YYYYMMDD}_{HHMMSS}.csv`
+- Console analysis: Unique product families, top 30 products, total counts
+
+**Usage:**
+- Run against ES PRODUCTION (not UAT) to get complete product catalog
+- Share CSV with business stakeholders for mapping decisions
+- Use mapping results to update Service_Charge enrichment logic
+
+**NOT Part of Migration Pipeline:**
+- This is a data export tool, not a migration notebook
+- Run separately to prepare for Service_Charge enrichment
+- Does not modify any records
+
+---
+
+## Cascade Effect Diagrams
 
 ### Scenario 1: Account Migration Fails
 
@@ -369,24 +656,7 @@ Account: ✅ Migrated
 
 ---
 
-### Scenario 3: Location A Migration Fails
-
-```
-Account: ✅ Migrated
-BAN: ✅ Migrated
-Location A: ❌ FAILED (no BBF_New_Id__c)
-    └── Service: ⏭️ SKIPPED (never queried - requires Location A)
-        ├── Service_Charge: ⏭️ SKIPPED (never queried)
-        └── Off_Net: ⏭️ SKIPPED (never queried)
-```
-
-**Impact:** Customer and BAN migrated, but Services requiring that Location blocked
-
-**Mitigation:** Fix Location issue and re-run from 01_location_migration forward, then 05_service_migration
-
----
-
-### Scenario 4: Service Migration Fails
+### Scenario 3: Service Migration Fails
 
 ```
 Account: ✅ Migrated
@@ -415,7 +685,8 @@ Service: ❌ FAILED (no BBF_New_Id__c)
 | `Address_A__c` | Order | Lookup | Links Service to A-side Location |
 | `Address_Z__c` | Order | Lookup | Links Service to Z-side Location |
 | `Billing_Invoice__c` | Order | Lookup | Links Service to BAN |
-| `Implementation__c` | Off_Net__c | Lookup | Links Off-Net to Service (Order) |
+| `SOF1__c` | Off_Net__c | Lookup | Links Off-Net to Order (correct relationship) |
+| `Implementation__c` | Off_Net__c | Lookup | DEPRECATED - links to Project, not Order |
 
 ### BBF Org Fields (Target)
 
@@ -424,191 +695,10 @@ Service: ❌ FAILED (no BBF_New_Id__c)
 | `ES_Legacy_ID__c` | All objects | Text(18) | Stores original ES SFID for tracking and deduplication |
 | `Billing_Account_Number__c` | Service__c | Master-Detail | **REQUIRED** - Links Service to BAN |
 | `Service__c` | Service_Charge__c | Master-Detail | **REQUIRED** - Links Charge to Service |
-| `Service__c` | Off_Net__c | Lookup | **REQUIRED** - Links Off-Net to Service |
+| `Service__c` | Off_Net__c | Lookup | Links Off-Net to Service |
+| `Account__c` | Service__c | Lookup | Links Service to Account (populated post-insert from BAN) |
 | `busUnit__c` | BAN__c | Picklist | Set to 'EVS' for all EverStream BANs |
-
----
-
-## Excel Output Reference
-
-All notebooks output Excel files with standardized structure:
-
-### 08_es_product_mapping_export.ipynb
-
-**Purpose:** Export ES Products for mapping analysis (NOT a migration notebook)
-
-**SOQL Filter:**
-```sql
-SELECT Order.Id, Order.OrderNumber, Order.Name, Order.Status, Order.Billing_Invoice__c,
-       Id, Total_MRC_Amortized__c, NRC_IRU_FEE__c, UnitPrice, TotalPrice,
-       Product2.ProductCode, Product2.Family, Product2.Name
-FROM OrderItem
-WHERE Order.Status IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')
-  AND (Order.Project_Group__c = null OR (NOT Order.Project_Group__c LIKE '%PA MARKET DECOM%'))
-  AND Order.Service_Order_Record_Type__c = 'Service Order Agreement'
-  AND Order.Billing_Invoice__c != null
-ORDER BY Order.OrderNumber
-```
-
-**Purpose:**
-- Exports all active OrderItems with their Product2 details
-- Provides data for business to build ES Product → BBF Product mapping
-- Outputs CSV file with unique product families and product names
-- Analysis summary shows top products by volume
-
-**Output:**
-- CSV file: `es_active_orders_products_{YYYYMMDD}_{HHMMSS}.csv`
-- Console analysis: Unique product families, top 30 products, total counts
-
-**Usage:**
-- Run against ES PRODUCTION (not UAT) to get complete product catalog
-- Share CSV with business stakeholders for mapping decisions
-- Use mapping results to update Service_Charge enrichment logic
-
-**NOT Part of Migration Pipeline:**
-- This is a data export tool, not a migration notebook
-- Run separately to prepare for Service_Charge enrichment
-- Does not modify any records
-
----
-
-## Excel Output Reference
-
-All notebooks output Excel files with standardized structure:
-
-### File Naming Convention
-
-```
-/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/results/
-    {object}_migration_results_{YYYYMMDD}_{HHMMSS}.xlsx
-```
-
-### Standard Sheets
-
-| Sheet | Purpose | Color Coding |
-|-------|---------|--------------|
-| **Migration Results** | Line-by-line status of all records | 🟢 Green = Success<br>🔴 Red = Failed<br>🟡 Yellow = Skipped |
-| **Summary** | Metrics and counts | Counts, percentages, timing |
-| **ID Mapping** | Successful mappings only | ES ID → BBF ID pairs |
-| **Failed Inserts** | All failures and skipped records | Includes error messages and skip reasons |
-
-### Key Columns in Migration Results Sheet
-
-| Column | Description |
-|--------|-------------|
-| `ES_ID` | Original ES Salesforce ID (18-char) |
-| `BBF_ID` | New BBF Salesforce ID (18-char) - blank if failed/skipped |
-| `Status` | Success / Failed / Skipped |
-| `Error_Message` | Salesforce error or skip reason |
-| `Skip_Reason_*` | Specific parent dependency that failed (Service migration only) |
-| Object-specific fields | Name, key identifiers for manual review |
-
-### Summary Sheet Metrics
-
-- Total Records Queried
-- Total Successful
-- Total Failed
-- Total Skipped (already migrated)
-- Total Skipped (missing parent)
-- Success Rate %
-- Execution Time
-- Timestamp
-
----
-
-## Testing Strategy
-
-### UAT Sandbox Testing
-
-**Prep Notebook Controls:**
-- `MAX_ORDERS_PER_BAN = 2` → Limits Service/Charge volume per customer
-- `TEST_MODE = False` → Required for full-scale UAT (limits removed)
-
-**ES UAT Credentials:**
-- Instance: `https://everstream--uat.sandbox.my.salesforce.com`
-- Username: stored in `.env` as `ES_UAT_USERNAME`
-- Password: stored in `.env` as `ES_UAT_PASSWORD`
-- Security Token: stored in `.env` as `ES_UAT_SECURITY_TOKEN`
-
-**BBF Sandbox Credentials:**
-- Instance: `https://test.salesforce.com` (sandbox domain)
-- Username: stored in `.env` as `BBF_SANDBOX_USERNAME`
-- Password: stored in `.env` as `BBF_SANDBOX_PASSWORD`
-- Security Token: stored in `.env` as `BBF_SANDBOX_SECURITY_TOKEN`
-
-### Production Execution
-
-**When to Run:**
-- After sale closes (Day 1)
-- All notebooks tested successfully in sandbox
-- Excel outputs reviewed and approved
-
-**Credentials:**
-- ES Production: `https://everstream.my.salesforce.com`
-- BBF Production: (production domain)
-- Stored separately in `.env` (never commit to git)
-
----
-
-## Troubleshooting Guide
-
-### Issue: High Skip Rate in Contact Migration
-
-**Symptom:** Contact notebook shows many skipped records
-
-**Root Cause:** Parent Accounts not migrated (missing `BBF_New_Id__c`)
-
-**Resolution:**
-1. Review Account migration Excel output
-2. Identify failed Accounts
-3. Fix Account issues (duplicates, missing fields)
-4. Re-run 02_account_migration.ipynb
-5. Re-run 03_contact_migration.ipynb
-
----
-
-### Issue: Service Migration Shows Zero Records
-
-**Symptom:** Service notebook queries 0 Orders
-
-**Root Cause:** One or more parent dependencies not met:
-- BANs not migrated (`Billing_Invoice__r.BBF_New_Id__c = null`)
-- Accounts not migrated (`Account__r.BBF_New_Id__c = null`)
-- Locations not migrated (`Address_A__r.BBF_New_Id__c = null`)
-
-**Resolution:**
-1. Check BAN migration Excel output → Confirm BANs have `BBF_New_Id__c`
-2. Check Account migration Excel output → Confirm Accounts have `BBF_New_Id__c`
-3. Check Location migration Excel output → Confirm Locations have `BBF_New_Id__c`
-4. Re-run any failed parent migrations
-5. Re-run 05_service_migration.ipynb
-
----
-
-### Issue: Master-Detail Insert Failures
-
-**Symptom:** Salesforce error: "Required fields are missing: [Billing_Account_Number__c]"
-
-**Root Cause:** Master-Detail field is null or invalid
-
-**Resolution:**
-- Service__c: Verify BAN migration completed and `BBF_New_Id__c` is populated
-- Service_Charge__c: Verify Service migration completed and `BBF_New_Id__c` is populated
-- Master-Detail relationships CANNOT be null - parent must exist in BBF
-
----
-
-### Issue: Duplicate Account Detection
-
-**Symptom:** Account migration fails with "duplicate value found: <field_name>"
-
-**Root Cause:** BBF already has Account with same unique field (Name, External ID, etc.)
-
-**Resolution:**
-1. Review BBF Account to determine if it's legitimate duplicate
-2. Option A: Skip ES Account, manually map to existing BBF Account ID
-3. Option B: Modify ES Account unique field to differentiate
-4. Document decision in migration notes
+| `Name_Is_Set_Manually__c` | Location__c | Boolean | **REQUIRED** - Set to False for migrated Locations |
 
 ---
 
@@ -624,17 +714,20 @@ Use this checklist for Day 1 production migration:
 - [ ] Excel outputs reviewed and approved
 - [ ] Backup plan documented
 - [ ] Rollback plan documented
+- [ ] Product mapping export completed (08)
+- [ ] Business provided ES → BBF product mappings
 
 ### Execution Order
 
-- [ ] 00_uat_ban_prep.ipynb (sets `BBF_Ban__c = true`)
-- [ ] 01_location_migration.ipynb
-- [ ] 02_account_migration.ipynb
-- [ ] 03_contact_migration.ipynb
-- [ ] 04_ban_migration.ipynb
-- [ ] 05_service_migration.ipynb
-- [ ] 06_service_charge_migration.ipynb
-- [ ] 07_offnet_migration.ipynb
+- [ ] **00_uat_ban_prep.ipynb** (UAT only - marks BANs with `BBF_Ban__c = true`)
+  - OR for production: `es_to_bbf_ban_creation_v12.ipynb` (creates -BBF BANs)
+- [ ] **01_location_migration.ipynb** (31 Locations in POC)
+- [ ] **02_account_migration.ipynb** (19/20 Accounts in POC)
+- [ ] **03_contact_migration.ipynb** (192 Contacts in POC)
+- [ ] **04_ban_migration.ipynb** (17/19 BANs in POC)
+- [ ] **05_service_migration.ipynb** (17 Services in POC)
+- [ ] **06_service_charge_migration.ipynb** (44 Charges in POC with placeholders)
+- [ ] **07_offnet_migration.ipynb** (6 Off_Net in POC)
 
 ### Post-Migration
 
@@ -644,6 +737,7 @@ Use this checklist for Day 1 production migration:
 - [ ] Document any issues for follow-up
 - [ ] Archive Excel outputs to permanent storage
 - [ ] Update migration tracking spreadsheet
+- [ ] **NEW:** Run Service_Charge enrichment to update placeholder values
 
 ---
 
@@ -651,14 +745,17 @@ Use this checklist for Day 1 production migration:
 
 | Resource | Location |
 |----------|----------|
-| Migration Analysis | `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/es_bbf_migration_analysis_v5_*.xlsx` |
-| Object Tracking | `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/es_bbf_migration_object_tracking.xlsx` |
-| BBF Lookup Relationships | `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/bbf_lookup_relationships_with_required.xlsx` |
+| Migration Plan | `ES_BBF_MIGRATION_PLAN.md` |
+| Progress Log | `MIGRATION_PROGRESS.md` |
+| Migration Analysis | `es_bbf_migration_analysis_v5_*.xlsx` |
+| Object Tracking | `es_bbf_migration_object_tracking.xlsx` |
+| BBF Lookup Relationships | `bbf_lookup_relationships_with_required.xlsx` |
 | Field Metadata Scripts | `es_export_sf_fields.py`, `bbf_export_sf_fields.py` |
 | Migration Template | `migration_script_template.py` |
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** 2026-01-14
+**Document Version:** 2.0
+**Last Synchronized:** 2026-01-14
+**Notebooks Reviewed:** 00, 01, 02, 03, 04, 05, 06, 07, 08 (all 8 migration notebooks + 1 export tool)
 **Maintained By:** ES-to-BBF Migration Team
