@@ -435,8 +435,10 @@ Order (the source of truth)
 | | Contact migration completed: All contacts for 19 accounts migrated |
 | | BAN migration completed: Most BANs successful, 2 failures due to Payment Terms picklist issues |
 | | **Updated notebooks 05, 06, 07** - Converted to Day 1 required-fields-only approach |
-| | Service__c: Only Name, Billing_Account_Number__c (master-detail), OwnerId, ES_Legacy_ID__c |
+| | Service__c: Only Billing_Account_Number__c (master-detail) + ES_Legacy_ID__c; Name is autonumber, no OwnerId field |
 | | Service_Charge__c: Only Name, Service__c (master-detail), Product_Simple__c, Service_Type_Charge__c, ES_Legacy_ID__c |
 | | Off_Net__c: Only Name, OwnerId, ES_Legacy_ID__c, Service__c (optional) |
 | | Removed all boolean fields (default to False), corrected field names based on actual BBF metadata |
 | | User added ES_Legacy_ID__c field to Service__c, Service_Charge__c, Off_Net__c in BBF org |
+| | **Updated 05_service_migration.ipynb** - Added Account population from BAN relationship after Service insert |
+| | Service migration now: 1) Insert Services, 2) Update ES, 3) Populate Account__c from BAN.Account__c automatically |

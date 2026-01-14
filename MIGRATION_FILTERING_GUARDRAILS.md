@@ -156,44 +156,57 @@ WHERE BBF_Ban__c = true
 
 **Purpose:** Migrate ES Order → BBF Service__c
 
-**SOQL Filter:**
+**SOQL Filter (Initial Query):**
 ```sql
-SELECT Id, Name, OrderNumber, Service_ID__c, Status, AccountId,
-       Account.BBF_New_Id__c, Billing_Invoice__c,
-       Billing_Invoice__r.BBF_New_Id__c, Address_A__c,
-       Address_A__r.BBF_New_Id__c
+SELECT Id, Billing_Invoice__r.BBF_New_Id__c
 FROM Order
 WHERE Status IN ('Activated', 'Suspended (Late Payment)', 'Disconnect in Progress')
   AND (Project_Group__c = null OR (NOT Project_Group__c LIKE '%PA MARKET DECOM%'))
   AND Service_Order_Record_Type__c = 'Service Order Agreement'
   AND Billing_Invoice__r.BBF_New_Id__c != null
   AND Billing_Invoice__r.BBF_New_Id__c != ''
-  AND Account.BBF_New_Id__c != null
-  AND Account.BBF_New_Id__c != ''
-  AND Address_A__r.BBF_New_Id__c != null
-  AND Address_A__r.BBF_New_Id__c != ''
   AND (BBF_New_Id__c = null OR BBF_New_Id__c = '')
 ```
 
 **Day 1 Migration - REQUIRED FIELDS ONLY:**
 ```python
 bbf_service = {
-    "Name": service_name[:80],                      # From Service_ID__c/Name/OrderNumber
     "Billing_Account_Number__c": bbf_ban_id,        # Master-Detail to BAN__c (REQUIRED)
-    "OwnerId": OWNER_ID,                            # Owner
     "ES_Legacy_ID__c": es_order["Id"]               # Tracking field
+}
+```
+
+**Account Population (Post-Insert Step):**
+After Services are inserted and ES is updated with BBF IDs, a separate step populates Account__c:
+```sql
+SELECT Id, Billing_Account_Number__c, Billing_Account_Number__r.Account__c, Account__c
+FROM Service__c
+WHERE ES_Legacy_ID__c != null AND Account__c = null
+```
+
+Then updates each Service:
+```python
+{
+    "Id": service_id,
+    "Account__c": ban_account_id  # Derived from BAN.Account__c
 }
 ```
 
 **Logic:**
 - Queries Orders with full migration criteria (Active + NOT PA MARKET DECOM)
-- REQUIRES all parent objects successfully migrated:
-  - BAN (Master-Detail relationship - BLOCKING)
-  - Account (via BAN, for context)
-  - Location A (for service location)
-- **Day 1 Approach:** Only migrate required fields (Name, Master-Detail, Owner, Tracking)
+- REQUIRES parent BAN successfully migrated (Master-Detail relationship - BLOCKING)
+- **Day 1 Approach:** Only migrate required fields (Master-Detail, Tracking)
+- **Account Population:** Separate update step pulls Account from BAN relationship after insert
 - **Boolean fields default to False** - no need to set explicitly
+- **Name field is AUTONUMBER** - BBF generates automatically, don't set on insert
+- **OwnerId not present** - Service__c object doesn't have OwnerId field
 - **Enrichment Pass (Day 2+):** Add optional fields like Status, Circuit_ID, MRC, NRC, Bandwidth, etc.
+
+**Process Flow:**
+1. Insert Services with Billing_Account_Number__c (master-detail) + ES_Legacy_ID__c
+2. Update ES Orders with BBF_New_Id__c
+3. **NEW STEP:** Query Services with BAN relationship, update Account__c from BAN.Account__c
+4. Result: Services have proper Account relationship populated automatically
 
 **Parent Dependencies:**
 - **REQUIRED (Master-Detail):** BAN must have `BBF_New_Id__c`
