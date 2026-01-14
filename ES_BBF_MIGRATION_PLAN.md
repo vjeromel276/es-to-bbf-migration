@@ -109,8 +109,9 @@ WD_PROJECT_GROUP = "PA MARKET DECOM"  # The ONLY exclusion criterion for Project
 | 3 | `03_contact_migration` | ✅ **YES** | `Account.BBF_New_Id__c != null` - inherits from Account | Works if Account is filtered |
 | 4 | `04_ban_migration` | ✅ **YES** | `BBF_Ban__c = true` | Works via prep notebook |
 | 5 | `05_service_migration` | ✅ **YES** | Full Order criteria in query | Correct |
-| 6 | `06_service_charge_migration` | ✅ **YES** | Inherits via `Order.` prefix | Correct |
-| 7 | `07_offnet_migration` | ✅ **YES** | `Implementation__r.BBF_New_Id__c != null` | Inherits from Service |
+| 6 | `06_service_charge_migration` | ✅ **YES** | Inherits via `Order.` prefix; uses PLACEHOLDER values | Correct |
+| 7 | `07_offnet_migration` | ✅ **YES** | `SOF1__r.BBF_New_Id__c != null` (fixed from deprecated Implementation__c) | Inherits from Service |
+| 8 | `08_es_product_mapping_export` | N/A | Export only - not a migration notebook | Analysis tool |
 
 ### Summary
 - **ALL notebooks now enforce the Order-based policy** ✅
@@ -285,17 +286,27 @@ Even when a customer already exists in BBF, we still need to:
   - Issue: Payment Terms corrections not applied before migration
   - Resolution needed: Update Payment Terms in ES, then re-run for failed BANs
 
-- [ ] **Service Migration** - IN PROGRESS
+- [ ] **Service Migration** - READY TO RUN
   - TEST_MODE = False enabled for POC execution
   - Ready to migrate Order → Service__c
+  - Includes Account__c population from BAN relationship
 
-- [ ] **Service Charge Migration** - IN PROGRESS
+- [ ] **Service Charge Migration** - READY TO RUN
   - TEST_MODE = False enabled for POC execution
   - Ready to migrate OrderItem → Service_Charge__c
+  - Uses PLACEHOLDER values (Product_Simple__c="ANNUAL", Service_Type_Charge__c="Power")
+  - Enrichment needed after business provides product mapping
 
-- [ ] **Off-Net Migration** - IN PROGRESS
+- [ ] **Off-Net Migration** - READY TO RUN
   - TEST_MODE = False enabled for POC execution
   - Ready to migrate Off_Net__c → Off_Net__c
+  - Fixed to use SOF1__c (Order) relationship instead of deprecated Implementation__c
+  - Populates Service__c from Order.BBF_New_Id__c
+
+- [ ] **Product Mapping Export** - NEW
+  - Run 08_es_product_mapping_export.ipynb to export ES products
+  - Share CSV with business for mapping decisions
+  - Required for Service_Charge enrichment
 
 ### Immediate (for UAT Testing) - COMPLETED
 
@@ -321,6 +332,14 @@ Even when a customer already exists in BBF, we still need to:
   - Only migrates Addresses from qualifying Orders
 
 ### Future (for Production Consistency)
+
+- [ ] **Stakeholder Decision: Product Mapping** 🔴 NEW - BLOCKING Service_Charge Enrichment
+  - Run 08_es_product_mapping_export.ipynb against ES PRODUCTION
+  - Share CSV export with business stakeholders
+  - Business provides ES Product2 → BBF Product_Simple__c mapping
+  - Business provides ES Charge Type → BBF Service_Type_Charge__c mapping
+  - Create enrichment script to update placeholder values
+  - Test enrichment with POC data
 
 - [ ] **Stakeholder Decision: Common Customer Handling**
   - Need decision on how to handle customers that exist in both ES and BBF orgs
@@ -388,6 +407,7 @@ Order (the source of truth)
 | Service Migration | `initial-day/05_service_migration.ipynb` |
 | Service Charge Migration | `initial-day/06_service_charge_migration.ipynb` |
 | Off-Net Migration | `initial-day/07_offnet_migration.ipynb` |
+| Product Mapping Export | `initial-day/08_es_product_mapping_export.ipynb` |
 
 ### Key Fields
 
@@ -413,6 +433,11 @@ Order (the source of truth)
 
 | Date | Change |
 |------|--------|
+| 2026-01-14 | Service_Charge migration updated to use PLACEHOLDER values for Product_Simple__c and Service_Type_Charge__c |
+| | Off_Net migration fixed to use SOF1__c (Order) relationship instead of deprecated Implementation__c |
+| | Off_Net now populates Service__c lookup from Order.BBF_New_Id__c |
+| | Created 08_es_product_mapping_export.ipynb for exporting ES products for mapping analysis |
+| | Added product mapping decision to stakeholder requirements |
 | 2026-01-14 | Initial document created |
 | | Documented complete production flow |
 | | Identified issues with upstream notebooks |
@@ -436,9 +461,12 @@ Order (the source of truth)
 | | BAN migration completed: Most BANs successful, 2 failures due to Payment Terms picklist issues |
 | | **Updated notebooks 05, 06, 07** - Converted to Day 1 required-fields-only approach |
 | | Service__c: Only Billing_Account_Number__c (master-detail) + ES_Legacy_ID__c; Name is autonumber, no OwnerId field |
-| | Service_Charge__c: Only Name, Service__c (master-detail), Product_Simple__c, Service_Type_Charge__c, ES_Legacy_ID__c |
-| | Off_Net__c: Only Name, OwnerId, ES_Legacy_ID__c, Service__c (optional) |
+| | Service_Charge__c: Service__c (master-detail) + PLACEHOLDER values (Product_Simple__c="ANNUAL", Service_Type_Charge__c="Power") + ES_Legacy_ID__c; Name is autonumber, no OwnerId field |
+| | Off_Net__c: Only OwnerId (ONLY required field) + ES_Legacy_ID__c + Service__c (optional from SOF1__c); Name is autonumber |
 | | Removed all boolean fields (default to False), corrected field names based on actual BBF metadata |
 | | User added ES_Legacy_ID__c field to Service__c, Service_Charge__c, Off_Net__c in BBF org |
 | | **Updated 05_service_migration.ipynb** - Added Account population from BAN relationship after Service insert |
 | | Service migration now: 1) Insert Services, 2) Update ES, 3) Populate Account__c from BAN.Account__c automatically |
+| | **Updated 06_service_charge_migration.ipynb** - Uses PLACEHOLDER values until product mapping provided by business |
+| | **Fixed 07_offnet_migration.ipynb** - Corrected to use SOF1__c (Order) instead of deprecated Implementation__c field |
+| | **Created 08_es_product_mapping_export.ipynb** - Export tool for ES products to support business mapping decisions |
