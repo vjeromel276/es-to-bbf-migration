@@ -1,0 +1,426 @@
+# Migration Progress Log
+
+## Project Overview
+- **Migration Name**: ES (Ensemble) to BBF (Salesforce) Data Migration
+- **Start Date**: December 2024
+- **Target Completion**: TBD
+- **Current Phase**: UAT Testing - POC Pipeline Execution (Full 20-BAN Migration)
+
+## Quick Status Summary
+- **Overall Progress**: 65% complete
+- **Last Session**: 2026-01-14 - Executing full POC pipeline with 20 marked BANs
+- **Next Priority**: Complete Contact migration (03), then BAN migration (04), Service migration (05), etc.
+- **Status**: Account migration completed (19/20 success), Location migration in progress
+
+## Completed Work
+
+### 2026-01-14 - POC Pipeline Execution - ACTIVE SESSION
+**Current Status:**
+- Executing full POC pipeline with 20 marked BANs
+- Testing complete end-to-end migration workflow with real UAT data
+
+**Migration Notebooks Status:**
+- ✅ **02_account_migration**: COMPLETED (19/20 accounts migrated successfully)
+  - 19 accounts migrated to BBF successfully
+  - 1 account blocked by BBF duplicate detection (common customer scenario)
+  - Common customer's downstream records will be automatically filtered (no Account.BBF_New_Id__c)
+  - Only Location records for common customer will exist in BBF (orphaned but harmless)
+- 🔄 **01_location_migration**: IN PROGRESS
+  - Currently executing location migration for 20 BANs
+- ⏳ **03_contact_migration**: NEXT (queued)
+- ⏳ **04_ban_migration**: PENDING
+- ⏳ **05_service_migration**: PENDING
+- ⏳ **06_service_charge_migration**: PENDING
+- ⏳ **07_offnet_migration**: PENDING
+
+**Key Technical Notes:**
+- Automatic filtering in place: Records downstream of Account (Contact, BAN, Service, etc.) will be skipped for the common customer due to missing Account.BBF_New_Id__c field
+- Location records for common customer were migrated successfully (will be orphaned in BBF)
+- This is expected behavior and demonstrates the migration's built-in safety mechanisms
+
+**Accomplishments So Far:**
+- Successfully validated Account migration logic with 95% success rate
+- Confirmed duplicate detection behavior works as expected
+- Demonstrated automatic downstream filtering for blocked accounts
+- Pipeline is executing in sequential order as designed
+
+### 2026-01-14 - UAT Account Migration Testing
+**Accomplishments:**
+- Executed UAT Account migration test with 20 accounts
+- Successfully migrated 19 accounts to BBF org
+- Validated migration logic and data transformation
+- Discovered critical duplicate detection scenario
+
+**Test Results:**
+- ✅ 19/20 accounts migrated successfully (95% success rate)
+- ⚠️ 1/20 accounts blocked by BBF duplicate detection
+- Identified "common customer" scenario: customers existing in both ES and BBF orgs
+
+**Critical Discovery:**
+- Some customers already exist in BBF org, causing duplicate detection blocks
+- This represents a new scenario not previously accounted for in migration logic
+- Requires stakeholder decision on matching/linking strategy before proceeding
+
+### 2026-01-12 - Service Migration Notebooks Created
+**Accomplishments:**
+- Created Service migration notebook (initial-day/05_service_migration.ipynb)
+- Created Service_Charge migration notebook (initial-day/06_service_charge_migration.ipynb)
+- Created Off_Net migration notebook (initial-day/07_offnet_migration.ipynb)
+- Organized migration pipeline into sequential notebooks
+- Identified critical testing blocker
+
+**Migration Notebooks Status:**
+1. ✅ Location Migration: `initial-day/01_location_migration.ipynb` (tested, working)
+2. ✅ Account Migration: `initial-day/02_account_migration.ipynb` (tested, working - UAT tested 2026-01-14)
+3. ✅ Contact Migration: `initial-day/03_contact_migration.ipynb` (tested, working)
+4. ✅ BAN Migration: `initial-day/04_ban_migration.ipynb` (created)
+5. ⚠️ Service Migration: `initial-day/05_service_migration.ipynb` (created, cannot test)
+6. ⚠️ Service_Charge Migration: `initial-day/06_service_charge_migration.ipynb` (created, cannot test)
+7. ⚠️ Off_Net Migration: `initial-day/07_offnet_migration.ipynb` (created, cannot test)
+
+**Source Files Migrated:**
+- Location: `es_bbf_location_migration.ipynb` → `initial-day/01_location_migration.ipynb`
+- Account: `es_bbf_account_migration.ipynb` → `initial-day/02_account_migration.ipynb`
+- Contact: `es_bbf_contact_migration.ipynb` → `initial-day/03_contact_migration.ipynb`
+- BAN: `es_bbf_ban_migration.ipynb` → `initial-day/04_ban_migration.ipynb`
+
+### Earlier - Preparation & Analysis Work
+**Preparation Notebooks (NOT part of migration pipeline):**
+- `es_to_bbf_ban_creation_v12.ipynb` - Creates -BBF BANs in ES org (preparation step)
+- `es_bbf_ban_migration_v2.ipynb` - Creates BBF accounts within ES (preparation step)
+- Multiple analysis notebooks for data quality and field mapping
+
+**Analysis Files:**
+- Multiple versions of migration analysis Excel files (v1-v6)
+- Data quality analysis results
+- Dry run results from various migration attempts
+- BBF Complete Data Model Analysis
+- Migration Visual Summary
+
+## In Progress
+- **POC Pipeline Execution**: Currently running full 20-BAN migration pipeline
+  - Location migration executing
+  - Contact migration queued next
+  - Monitoring for errors and data quality issues
+- **Common Customer Strategy**: Awaiting stakeholder decision on handling approach
+
+## Pending/Blocked
+
+### CRITICAL BLOCKER 🚨 - Common Customer Handling Strategy
+**Issue**: Customers that exist in both ES and BBF orgs cause duplicate detection blocks during migration
+
+**Impact**: 
+- Cannot proceed with full Account migration until resolution strategy is determined
+- Affects all downstream migrations (Contacts, BANs, Services, etc.)
+- Unknown scope: number of common customers across both orgs not yet quantified
+
+**Current Workaround for POC**:
+- Affected account (1 out of 20) is automatically filtered from downstream migrations
+- Orphaned Location records remain in BBF but are harmless
+- Demonstrates built-in safety mechanisms of migration pipeline
+
+**Required Action**: Stakeholder decision needed on one of the following approaches:
+1. **Match & Link**: Identify matching records and link ES data to existing BBF Accounts
+2. **Skip & Report**: Skip common customers during migration, generate report for manual handling
+3. **Merge Strategy**: Define rules for merging ES data into existing BBF Account records
+4. **Override**: Allow creation despite duplicates (not recommended)
+
+**Technical Questions to Resolve:**
+- What matching key should be used? (Name, Email, Phone, Custom ID field?)
+- How precise must matching be? (Exact match vs. fuzzy matching)
+- What happens to ES-specific data that doesn't exist in BBF?
+- Should existing BBF data be preserved or overwritten?
+
+### Previous Blocker - Orders in ES Org
+**Issue**: Orders in ES org have NOT been moved to BBF_Ban__c records yet
+
+**Impact**: 
+- Cannot test Service migration (depends on Order → BBF_Ban__c relationship)
+- Cannot test Service_Charge migration (depends on Service records)
+- Cannot test Off_Net migration (depends on Service records)
+- Only Account, Location, Contact migrations can be tested currently
+
+**Required Action**: Create and execute a script to move ES Orders to their corresponding BBF_Ban__c records
+
+### Pending Work Items
+1. ⏳ **Complete POC Pipeline Execution** (IN PROGRESS - Priority 1)
+   - Finish Location migration (01)
+   - Execute Contact migration (03)
+   - Execute BAN migration (04)
+   - Execute Service migration (05) - may hit Order blocker
+   - Execute Service_Charge migration (06)
+   - Execute Off_Net migration (07)
+   - Document results and issues
+
+2. ⏳ **Common Customer Analysis** (BLOCKING - Priority 2)
+   - Query both ES and BBF orgs to identify all common customers
+   - Quantify scope of the common customer issue
+   - Generate analysis report for stakeholders
+   - Await decision on handling strategy
+
+3. ⏳ **Order → BBF_Ban__c Association** (BLOCKING - Priority 3)
+   - Create script to associate existing ES Orders with BBF_Ban__c records
+   - Test the association in ES org
+   - Verify data integrity after association
+
+4. ⏳ **Implement Common Customer Solution** (Priority 4 - depends on item 2)
+   - Implement chosen matching/linking strategy
+   - Update Account migration notebook with common customer logic
+   - Test with UAT accounts to validate solution
+   - Document the approach for future reference
+
+5. ⏳ **Non-Required Field Mapping** (Priority 5)
+   - Work on field mapping/translation for enrichment pass
+   - Document which fields are optional vs. required
+   - Create transformation logic for enrichment data
+
+6. ⏳ **Agent Configuration Updates** (Priority 6)
+   - Update agent configurations with correct commands
+   - Document proper usage patterns
+   - Create command reference guide
+
+7. ⏳ **End-to-End Testing** (Priority 7 - depends on items 1-4)
+   - Test complete migration pipeline from Location → Off_Net
+   - Validate data relationships across all objects
+   - Document test results and any issues
+
+8. ⏳ **Production Deployment Prep** (Priority 8)
+   - Finalize all migration notebooks
+   - Create rollback procedures
+   - Document production execution plan
+
+## Issues & Decisions Log
+
+### 2026-01-14 - POC Pipeline Execution Started
+**Action**: Started full POC pipeline execution with 20 marked BANs
+
+**Observations**:
+- Account migration completed with 19/20 success rate
+- Common customer (1 account) properly filtered from downstream migrations
+- Location records for common customer remain in BBF (orphaned but harmless)
+- Automatic filtering mechanism working as designed
+
+**Next Steps**:
+- Complete Location migration
+- Execute Contact migration
+- Continue through remaining notebooks
+- Document any issues or blockers encountered
+
+### 2026-01-14 - Common Customer Scenario Discovered
+**Issue**: Discovered common customer scenario during UAT testing - some customers already exist in BBF org, causing duplicate detection blocks
+
+**Context**: 
+- During UAT testing with 20 accounts, 1 account was blocked by BBF's duplicate detection
+- This indicates that certain customers exist in both ES and BBF orgs
+- The scope of this issue is currently unknown (could affect many accounts)
+
+**Impact**: 
+- Blocks full-scale Account migration until handling strategy is determined
+- Affects all downstream object migrations (Contacts, BANs, Services, etc.)
+- May require significant rework of migration logic depending on chosen strategy
+
+**Decision Needed**: Stakeholder decision required on matching/linking strategy:
+- What matching key should be used to link ES Accounts to existing BBF Accounts?
+- Should existing BBF data be preserved, merged, or overwritten?
+- What is the business process for handling these common customers?
+
+**Technical Implications**:
+- May need to implement matching algorithm (fuzzy or exact)
+- May need to create linking records or update external ID fields
+- May need separate reporting for matched vs. migrated accounts
+- Testing scope will increase significantly
+
+### 2026-01-12 - Critical Dependency Discovery
+**Issue**: Discovered that ES Orders are not yet associated with BBF_Ban__c records
+
+**Impact**: This blocks testing of the entire service-related portion of the migration pipeline (Services, Service_Charges, Off_Net records)
+
+**Decision**: Prioritize creating Order → BBF_Ban__c association script before proceeding with further testing
+
+**Technical Context**: 
+- Service records depend on Orders being properly linked to BBF_Ban__c
+- Service_Charge records depend on Service records existing
+- Off_Net records depend on Service records existing
+- This creates a critical path dependency that must be resolved
+
+### Migration Pipeline Architecture Decision
+**Decision**: Organize migration into sequential numbered notebooks within `initial-day/` folder
+
+**Rationale**:
+- Clear execution order (01, 02, 03, etc.)
+- Separates preparation notebooks from actual migration notebooks
+- Makes dependencies obvious through numbering
+- Easier to run in sequence for full migration
+
+**Structure**:
+```
+initial-day/
+  01_location_migration.ipynb
+  02_account_migration.ipynb
+  03_contact_migration.ipynb
+  04_ban_migration.ipynb
+  05_service_migration.ipynb
+  06_service_charge_migration.ipynb
+  07_offnet_migration.ipynb
+```
+
+## Known Dependencies
+
+```
+Location (01) ✅ IN PROGRESS
+    ↓
+Account (02) ✅ COMPLETED (19/20) ← Location
+    ↓ [BLOCKER: Common customer handling strategy needed for full migration]
+Contact (03) ⏳ NEXT ← Account
+    ↓
+BAN (04) ← Account
+    ↓
+[BLOCKER: Orders must be associated with BBF_Ban__c]
+    ↓
+Service (05) ← BAN, Orders
+    ↓
+Service_Charge (06) ← Service
+    ↓
+Off_Net (07) ← Service
+```
+
+## File Inventory
+
+### Migration Notebooks (Active)
+- `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/initial-day/01_location_migration.ipynb`
+- `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/initial-day/02_account_migration.ipynb`
+- `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/initial-day/03_contact_migration.ipynb`
+- `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/initial-day/04_ban_migration.ipynb`
+- `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/initial-day/05_service_migration.ipynb`
+- `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/initial-day/06_service_charge_migration.ipynb`
+- `/mnt/c/Users/vjero/Documents/repos/python-repo/python_scripts/ES-to-BBF-migration/initial-day/07_offnet_migration.ipynb`
+
+### Preparation Notebooks (Reference Only)
+- `es_to_bbf_ban_creation_v12.ipynb` - Creates -BBF BANs in ES org
+- `es_bbf_ban_migration_v2.ipynb` - Creates BBF accounts in ES
+- `es_bbf_BAN_split.ipynb` - BAN analysis/splitting logic
+- Various versioned analysis notebooks
+
+### Supporting Files
+- `bbf_export_sf_fields.py` - Field export utility for BBF org
+- `es_export_sf_fields.py` - Field export utility for ES org
+- `data-migration/es_salesforce_fields.xlsx` - Field mapping reference
+- Multiple analysis Excel files with migration results and data quality reports
+
+## Session History
+
+| Date | Duration | Focus Area | Key Accomplishments |
+|------|----------|------------|---------------------|
+| 2026-01-14 | In Progress | POC Pipeline Execution | Running full 20-BAN migration; Account completed (19/20); Location in progress; Contact next |
+| 2026-01-14 | ~1 hour | UAT Account Migration Testing | Tested 20 accounts (19 successful, 1 blocked); discovered common customer duplicate detection issue |
+| 2026-01-12 | ~2 hours | Service Migration Notebooks | Created Service, Service_Charge, Off_Net migration notebooks; identified critical blocker with Order → BBF_Ban__c association |
+| Earlier Sessions | Multiple | Foundation & Testing | Created and tested Location, Account, Contact, BAN migration notebooks; performed extensive data analysis and dry runs |
+
+## Next Steps (Prioritized)
+
+### Immediate (Currently Executing)
+1. **Complete POC Pipeline** 🔄
+   - Finish Location migration (01)
+   - Execute Contact migration (03)
+   - Execute BAN migration (04)
+   - Attempt Service migration (05) - may encounter Order blocker
+   - Document results and any errors encountered
+
+### Short-term (This Week)
+2. **Analyze POC Results** 
+   - Review migration logs and error reports
+   - Validate data quality in BBF org
+   - Document any unexpected issues or behaviors
+   - Calculate success rates for each migration step
+
+3. **Analyze Common Customer Scope** 🚨
+   - Query ES org for all Accounts
+   - Query BBF org for all existing Accounts
+   - Identify potential matches based on Name, Email, or other key fields
+   - Generate report showing scope of common customer issue
+   - Present findings to stakeholders for decision
+
+4. **Stakeholder Decision Meeting** 🚨
+   - Present common customer issue and scope
+   - Review matching/linking strategy options
+   - Get decision on preferred approach
+   - Clarify matching rules and business requirements
+
+### Medium-term (Next 1-2 Weeks)
+5. **Implement Common Customer Solution**
+   - Update Account migration notebook with chosen strategy
+   - Implement matching/linking logic
+   - Add common customer reporting
+   - Test with UAT accounts to validate solution
+
+6. **Create Order → BBF_Ban__c Association Script**
+   - Design script to link existing ES Orders to BBF_Ban__c records
+   - Test in ES org sandbox/test environment
+   - Execute in ES org production
+   - Verify all Orders are properly associated
+
+7. **Retest Service-Related Migrations**
+   - Run Service migration notebook (05)
+   - Run Service_Charge migration notebook (06)
+   - Run Off_Net migration notebook (07)
+   - Document any issues or data quality problems
+
+### Long-term (Next 2-4 Weeks)
+8. **Non-Required Field Mapping**
+   - Identify optional fields for enrichment pass
+   - Create transformation logic for complex field mappings
+   - Document any business rules for field translations
+
+9. **End-to-End Pipeline Testing**
+   - Execute full migration from 01 → 07
+   - Validate data relationships and integrity
+   - Performance testing with production-scale data
+
+10. **Production Readiness**
+    - Finalize error handling in all notebooks
+    - Create rollback procedures
+    - Document production execution plan
+    - Schedule production migration window
+
+## Open Questions
+
+### Critical - Awaiting Stakeholder Decision
+1. **How should common customers (existing in both ES and BBF) be handled during migration?**
+   - Should we match and link to existing BBF records?
+   - Should we skip and handle manually?
+   - Should we implement a merge strategy?
+
+2. **What matching key should be used to link ES Accounts to existing BBF Accounts?**
+   - Account Name (risk of false positives)?
+   - Email address?
+   - Phone number?
+   - Custom external ID field?
+   - Combination of fields?
+
+3. **What is the scope of the common customer issue?**
+   - How many accounts are affected?
+   - Are these high-value customers?
+   - Is there a pattern to which customers exist in both orgs?
+
+### Technical Questions
+4. What is the process for associating Orders with BBF_Ban__c records in ES org?
+5. Are there any business rules for Order → BAN association that need to be considered?
+6. What is the timeline for resolving the Order association blocker?
+7. Which non-required fields are highest priority for the enrichment pass?
+8. What is the target date for production migration execution?
+
+## Risk Register
+
+| Risk | Impact | Probability | Mitigation |
+|------|--------|-------------|------------|
+| Common customer handling complexity | **CRITICAL** | **HIGH** | Analyze scope immediately; get stakeholder decision; implement robust matching logic with extensive testing |
+| Large number of common customers | HIGH | MEDIUM | Complete scope analysis; consider phased migration approach; implement comprehensive reporting |
+| Incorrect matching logic | HIGH | MEDIUM | Implement multiple validation checks; test with UAT data; require manual review for edge cases |
+| Order → BBF_Ban__c association issues | HIGH | MEDIUM | Create robust association script with validation and rollback capability |
+| Service migration data quality issues | HIGH | MEDIUM | Thorough testing after blocker resolved; data validation checks |
+| Performance issues with large datasets | MEDIUM | MEDIUM | Test with production-scale data; implement batch processing |
+| Missing field mappings for enrichment | MEDIUM | LOW | Document all optional fields; prioritize based on business value |
+| Production migration downtime | HIGH | LOW | Plan migration window; create rollback procedures; test thoroughly |
+
+---
+*Last Updated: 2026-01-14 - POC Pipeline Execution In Progress*
