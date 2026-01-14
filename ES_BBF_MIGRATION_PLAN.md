@@ -236,7 +236,10 @@ WHERE Id IN (
   - Query Orders with Active + NOT PA MARKET DECOM criteria
   - Get unique BAN IDs from those Orders
   - Set `BBF_Ban__c = TRUE` on those BANs
-  - Limit to N BANs for testing (e.g., 20)
+  - Configuration options:
+    - `BAN_LIMIT` - Max BANs to mark (default: 20)
+    - `MAX_ORDERS_PER_BAN` - Max orders per BAN (default: 5) - keeps POC small
+    - `DRY_RUN` - Preview changes without updating (default: True)
   - Exports Account IDs and Address IDs for reference
 
 - [x] **Modify Account Migration** (`02_account_migration.ipynb`) ✅
@@ -345,3 +348,6 @@ Order (the source of truth)
 | | Updated `02_account_migration.ipynb` - Added `FILTER_BY_BBF_BAN` option |
 | | Updated `01_location_migration.ipynb` - Added `FILTER_BY_BBF_BAN` option |
 | | All notebooks now enforce the Order-based migration policy |
+| | Added `MAX_ORDERS_PER_BAN` option to UAT prep (default: 5) for smaller POC scope |
+| | UAT Testing: Marked 20 BANs (≤5 orders each) with BBF_Ban__c = true |
+| | Set TEST_MODE = False on migration notebooks to migrate all records in scope |
