@@ -1,7 +1,8 @@
 # ES to BBF Migration - Master Planning Document
 
-**Last Updated:** 2026-01-14
+**Last Updated:** 2026-01-15
 **Branch:** uat-sandbox-testing
+**Current Phase:** Day Two - Field Mapping & Enrichment (Mapping Complete, Enrichment Pending)
 
 ---
 
@@ -330,6 +331,54 @@ Even when a customer already exists in BBF, we still need to:
   - Queries Orders linked to `BBF_Ban__c = true` BANs
   - Applies full migration criteria (Active + NOT PA MARKET DECOM)
   - Only migrates Addresses from qualifying Orders
+
+### Day Two - Field Mapping & Enrichment - IN PROGRESS
+
+- [x] **Complete Field Mappings for All 7 Objects** ✅ COMPLETED 2026-01-15
+  - Account → Account (58 high confidence, 4 transformers)
+  - Address__c → Location__c (10 high confidence, 16 transformers)
+  - Contact → Contact (43 high confidence, 1 transformer)
+  - Billing_Invoice__c → BAN__c (6 high confidence, 3 transformers)
+  - Order → Service__c (41 high confidence, 26 transformers)
+  - OrderItem → Service_Charge__c (10 high confidence, 19 transformers)
+  - Off_Net__c → Off_Net__c (15 high confidence, 12 transformers)
+  - Methodology: AI-powered semantic matching (not fuzzy string matching)
+  - Output: 7 formatted Excel files in `day-two/mappings/`
+
+- [x] **Generate Transformer Functions** ✅ COMPLETED 2026-01-15
+  - Created `generate_transformers.py` tool
+  - Generated 81 transformer functions across 7 Python modules
+  - Total: 3,391 lines of production-ready Python code
+  - Each function includes type hints, docstrings, and AI reasoning
+  - Full edge case handling (null values, type mismatches, etc.)
+  - Output: 7 Python modules in `day-two/transformers/`
+
+- [x] **Generate Picklist Value Recommendations** ✅ COMPLETED 2026-01-15
+  - Created `recommend_picklist_values.py` tool
+  - Analyzed 281 picklist values across all objects
+  - Provided 87 AI semantic recommendations (31%)
+  - Flagged 194 values requiring business decisions (69%)
+  - Each recommendation includes reasoning
+  - Output: Updated Excel files with BBF_Final_Value suggestions
+
+- [ ] **Business Review of Picklist Values** 🔴 BLOCKING Enrichment
+  - 194 picklist values need business decisions
+  - 87 AI recommendations need validation
+  - Priority objects: Service__c (23 values), Off_Net__c (54 values), Account (66 values)
+  - Mapping Excel files ready for review in `day-two/mappings/`
+
+- [ ] **Test Transformer Functions**
+  - Test 81 functions with POC data
+  - Validate transformations produce correct BBF values
+  - Document edge cases requiring code updates
+  - Estimated time: 7-14 hours
+
+- [ ] **Develop Enrichment Notebooks**
+  - Create enrichment notebooks for all 7 objects
+  - Integrate transformer functions from `day-two/transformers/`
+  - Query BBF records WHERE ES_Legacy_ID__c != null
+  - Apply transformers to populate non-required fields
+  - Test with POC data before full enrichment
 
 ### Future (for Production Consistency)
 

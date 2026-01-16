@@ -1,0 +1,994 @@
+{
+  "field_mappings": [
+    {
+      "bbf_field_api": "Aloc_COGS_Provider__c",
+      "bbf_label": "Aloc COGS Provider",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Off_Net_Vendor__c",
+      "es_label": "Last Mile Carrier",
+      "es_type": "reference",
+      "confidence": "Low",
+      "transformer_needed": "Y",
+      "notes": "A-Location COGS provider (reference vs text mismatch) | Data type conversion required"
+    },
+    {
+      "bbf_field_api": "COGS_MRC__c",
+      "bbf_label": "COGS MRC",
+      "bbf_type": "currency",
+      "bbf_required": "No",
+      "es_field_api": "Cost_MRC__c",
+      "es_label": "Cost MRC",
+      "es_type": "currency",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Cost of Goods Sold monthly recurring cost (exact semantic match)"
+    },
+    {
+      "bbf_field_api": "COGS_NRC__c",
+      "bbf_label": "COGS NRC",
+      "bbf_type": "currency",
+      "bbf_required": "No",
+      "es_field_api": "Cost_NRC__c",
+      "es_label": "Cost NRC",
+      "es_type": "currency",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Cost of Goods Sold non-recurring cost (exact semantic match)"
+    },
+    {
+      "bbf_field_api": "Charge_Class__c",
+      "bbf_label": "Charge Class",
+      "bbf_type": "picklist",
+      "bbf_required": "No",
+      "es_field_api": "",
+      "es_label": "",
+      "es_type": "",
+      "confidence": "None",
+      "transformer_needed": "N",
+      "notes": "No semantic match found in BBF-specific field (likely BBF-only feature)"
+    },
+    {
+      "bbf_field_api": "Disconnect_Date__c",
+      "bbf_label": "Off-Net Disconnect Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "Disconnect_Date__c",
+      "es_label": "Disconnect Date",
+      "es_type": "date",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Service disconnect date (exact API name match)"
+    },
+    {
+      "bbf_field_api": "Off_Net_Circuit_ID__c",
+      "bbf_label": "Off-Net Circuit ID",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_circuit_Id__c",
+      "es_label": "Vendor circuit Id",
+      "es_type": "string",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Vendor circuit identifier (exact semantic match)"
+    },
+    {
+      "bbf_field_api": "Off_Net_Original_Due_Date__c",
+      "bbf_label": "Off-Net Original Due Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_FOC_Received__c",
+      "es_label": "Vendor FOC Received",
+      "es_type": "date",
+      "confidence": "Medium",
+      "transformer_needed": "N",
+      "notes": "FOC date mapping (date type mismatch semantically)"
+    },
+    {
+      "bbf_field_api": "Off_Net_Service_Due_Date__c",
+      "bbf_label": "Off-Net Service Due Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_Due_date__c",
+      "es_label": "Vendor Due date",
+      "es_type": "date",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Vendor service due date (semantic match)"
+    },
+    {
+      "bbf_field_api": "Off_Net_Start_Date__c",
+      "bbf_label": "Off-Net Start Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_Bill_Start_Date__c",
+      "es_label": "Vendor Bill Start Date",
+      "es_type": "date",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Vendor billing start date (semantic match)"
+    },
+    {
+      "bbf_field_api": "Service_Order_Line__c",
+      "bbf_label": "Service Order Line",
+      "bbf_type": "reference",
+      "bbf_required": "No",
+      "es_field_api": "",
+      "es_label": "",
+      "es_type": "",
+      "confidence": "None",
+      "transformer_needed": "N",
+      "notes": "No semantic match found in BBF-specific field (likely BBF-only feature)"
+    },
+    {
+      "bbf_field_api": "Term__c",
+      "bbf_label": "Term",
+      "bbf_type": "picklist",
+      "bbf_required": "No",
+      "es_field_api": "Term__c",
+      "es_label": "Term",
+      "es_type": "picklist",
+      "confidence": "High",
+      "transformer_needed": "Y",
+      "notes": "Contract term in months (requires picklist value mapping) | Picklist value mapping required"
+    },
+    {
+      "bbf_field_api": "Zloc_COGS_Provider__c",
+      "bbf_label": "Zloc COGS Provider",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_Name__c",
+      "es_label": "Accounts Payable Vendor",
+      "es_type": "reference",
+      "confidence": "Low",
+      "transformer_needed": "Y",
+      "notes": "Z-Location COGS provider (reference vs text, accounts payable vendor) | Data type conversion required"
+    },
+    {
+      "bbf_field_api": "Off_Net_Expiration_Date__c",
+      "bbf_label": "Off-Net Expiration Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "",
+      "es_label": "",
+      "es_type": "",
+      "confidence": "None",
+      "transformer_needed": "N",
+      "notes": "No semantic match found in BBF-specific field (likely BBF-only feature)"
+    },
+    {
+      "bbf_field_api": "Product__c",
+      "bbf_label": "Product",
+      "bbf_type": "picklist",
+      "bbf_required": "No",
+      "es_field_api": "Bandwidth__c",
+      "es_label": "Bandwidth",
+      "es_type": "picklist",
+      "confidence": "Low",
+      "transformer_needed": "Y",
+      "notes": "Large BBF product picklist (471 values) vs ES bandwidth picklist (43 values) | Picklist value mapping required"
+    },
+    {
+      "bbf_field_api": "Service_Type__c",
+      "bbf_label": "Service Type",
+      "bbf_type": "picklist",
+      "bbf_required": "No",
+      "es_field_api": "Off_Net_Type__c",
+      "es_label": "Off Net Type",
+      "es_type": "multipicklist",
+      "confidence": "Low",
+      "transformer_needed": "Y",
+      "notes": "Service type picklist (72 values) vs off-net type multipicklist (3 values) | Data type conversion required"
+    },
+    {
+      "bbf_field_api": "Additional_Information__c",
+      "bbf_label": "Additional Information",
+      "bbf_type": "textarea",
+      "bbf_required": "No",
+      "es_field_api": "Notes__c",
+      "es_label": "Notes",
+      "es_type": "textarea",
+      "confidence": "Low",
+      "transformer_needed": "N",
+      "notes": "Additional information text area (semantic match)"
+    },
+    {
+      "bbf_field_api": "Approved_ETL_Disconnect_Date__c",
+      "bbf_label": "Approved ETL Disconnect Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "Approved_ETL_Disconnect_Date__c",
+      "es_label": "Approved ETL Disconnect Date",
+      "es_type": "date",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "ETL approved disconnect date (exact match)"
+    },
+    {
+      "bbf_field_api": "BBF_Circuit_ID__c",
+      "bbf_label": "BBF Circuit ID",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Internal_Circuit_Id__c",
+      "es_label": "Internal Circuit Id",
+      "es_type": "textarea",
+      "confidence": "Low",
+      "transformer_needed": "Y",
+      "notes": "BBF circuit ID (textarea truncation needed) | Data type conversion required"
+    },
+    {
+      "bbf_field_api": "Demarc_Location__c",
+      "bbf_label": "Demarc Location",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Demarc_Loaction__c",
+      "es_label": "Demarc Loaction",
+      "es_type": "textarea",
+      "confidence": "Low",
+      "transformer_needed": "Y",
+      "notes": "Demarc location (typo in ES field, requires truncation) | Data type conversion required"
+    },
+    {
+      "bbf_field_api": "Disconnect_PON__c",
+      "bbf_label": "Disconnect PON",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Disconnect_PON__c",
+      "es_label": "Disconnect PON #",
+      "es_type": "string",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Disconnect purchase order (exact match to ES field added later)"
+    },
+    {
+      "bbf_field_api": "Disconnect_Submitted_Date__c",
+      "bbf_label": "Disconnect Submitted Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "PM_Order_Completed__c",
+      "es_label": "Disconnect Submitted Date",
+      "es_type": "date",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Disconnect submitted date (semantic match)"
+    },
+    {
+      "bbf_field_api": "ETL_Amount_Approved__c",
+      "bbf_label": "ETL Amount Approved",
+      "bbf_type": "currency",
+      "bbf_required": "No",
+      "es_field_api": "ETL_Amount_Approved__c",
+      "es_label": "ETL Amount Approved",
+      "es_type": "currency",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "ETL amount approved (exact match)"
+    },
+    {
+      "bbf_field_api": "Future_Disconnect_Date__c",
+      "bbf_label": "Future Disconnect Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "Future_Disconnect_Date__c",
+      "es_label": "Future Disconnect Date",
+      "es_type": "date",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Future disconnect date (exact match)"
+    },
+    {
+      "bbf_field_api": "Off_Net_Problem_Reason__c",
+      "bbf_label": "Off-Net Problem Reason",
+      "bbf_type": "textarea",
+      "bbf_required": "No",
+      "es_field_api": "Off_Net_Problem_Reason__c",
+      "es_label": "Off-Net Problem Reason",
+      "es_type": "textarea",
+      "confidence": "Low",
+      "transformer_needed": "N",
+      "notes": "Problem reason text (semantic match)"
+    },
+    {
+      "bbf_field_api": "Off_Net_Problem_Reason_Code__c",
+      "bbf_label": "Off-Net Problem Reason Code",
+      "bbf_type": "picklist",
+      "bbf_required": "No",
+      "es_field_api": "Off_Net_Problem_Reason_Code__c",
+      "es_label": "Off-Net Problem Reason Code",
+      "es_type": "picklist",
+      "confidence": "Medium",
+      "transformer_needed": "N",
+      "notes": "Problem reason code (exact values, different contexts)"
+    },
+    {
+      "bbf_field_api": "Off_Net_Service_Status__c",
+      "bbf_label": "Off-Net Service Status",
+      "bbf_type": "picklist",
+      "bbf_required": "No",
+      "es_field_api": "LEC_Order_Status__c",
+      "es_label": "LEC Order Status",
+      "es_type": "picklist",
+      "confidence": "Medium",
+      "transformer_needed": "Y",
+      "notes": "Service status picklist (requires value mapping, different labels) | Picklist value mapping required"
+    },
+    {
+      "bbf_field_api": "Order_Number__c",
+      "bbf_label": "Order Number",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_Order__c",
+      "es_label": "Vendor Order #",
+      "es_type": "string",
+      "confidence": "Low",
+      "transformer_needed": "N",
+      "notes": "Order number text field (similar purpose)"
+    },
+    {
+      "bbf_field_api": "Review_Requested_Date__c",
+      "bbf_label": "Review Requested Date",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "Requested_ETL_Review_Date__c",
+      "es_label": "Requested ETL Review Date",
+      "es_type": "date",
+      "confidence": "Low",
+      "transformer_needed": "N",
+      "notes": "Review requested date (semantic match)"
+    },
+    {
+      "bbf_field_api": "Stripped_Circuit_ID__c",
+      "bbf_label": "Stripped Circuit ID",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Stripped_Circuit_ID2__c",
+      "es_label": "Stripped Circuit ID",
+      "es_type": "textarea",
+      "confidence": "Medium",
+      "transformer_needed": "Y",
+      "notes": "Stripped circuit ID (different field purposes) | Data type conversion required"
+    },
+    {
+      "bbf_field_api": "Vendor_BAN__c",
+      "bbf_label": "Vendor BAN",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_Ban__c",
+      "es_label": "Vendor Ban",
+      "es_type": "reference",
+      "confidence": "High",
+      "transformer_needed": "Y",
+      "notes": "Vendor billing account number reference (exact match) | Data type conversion required"
+    },
+    {
+      "bbf_field_api": "Vendor_NNI__c",
+      "bbf_label": "Vendor NNI",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_NNI__c",
+      "es_label": "Vendor NNI",
+      "es_type": "reference",
+      "confidence": "Low",
+      "transformer_needed": "Y",
+      "notes": "Vendor NNI reference vs text (type mismatch) | Data type conversion required"
+    },
+    {
+      "bbf_field_api": "Vendor_Order_Issued__c",
+      "bbf_label": "Vendor Order Issued",
+      "bbf_type": "date",
+      "bbf_required": "No",
+      "es_field_api": "Vendor_Order_Issued__c",
+      "es_label": "Vendor Order Issued",
+      "es_type": "date",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "Vendor order issued date (exact API name match)"
+    },
+    {
+      "bbf_field_api": "Vendor_PON__c",
+      "bbf_label": "Vendor PON",
+      "bbf_type": "string",
+      "bbf_required": "No",
+      "es_field_api": "VendorPON__c",
+      "es_label": "Vendor PON #",
+      "es_type": "textarea",
+      "confidence": "High",
+      "transformer_needed": "Y",
+      "notes": "Vendor purchase order number (exact match) | Data type conversion required"
+    }
+  ],
+  "picklist_mappings": [
+    {
+      "es_field": "Term__c",
+      "es_value": "6",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "36",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "12",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "12",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "18",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "1",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "24",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "24",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "36",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "36",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "48",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "48",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "60",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "60",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "62",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "0 | 1 | 12 | 24 | 36 | 48 | 60 | 72 | 84 | 96 | 108 | 120 | 132 | 144 | 156 | 168 | 180 | 192 | 204 | 216 | 228 | 240 | 516 | Not Renewing",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "84",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "84",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "96",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "96",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "120",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "120",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "240",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "240",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "NO",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "Not Renewing",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Term__c",
+      "es_value": "MO",
+      "bbf_field": "Term__c",
+      "suggested_mapping": "0 | 1 | 12 | 24 | 36 | 48 | 60 | 72 | 84 | 96 | 108 | 120 | 132 | 144 | 156 | 168 | 180 | 192 | 204 | 216 | 228 | 240 | 516 | Not Renewing",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "5 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "5 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "10 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "10 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "20 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "20 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "30 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "40 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "50 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "250 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "60 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "70 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "80 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "90 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "100 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "100 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "150 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "200 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "200 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "250 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "250 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "300 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "300 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "400 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "400 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "500 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "500 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "600 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "600 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "700 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "700 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "800 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "800 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "900 Mb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "900 Mbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "1 Gb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "1 GB DIA",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "2 Gb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "2 Gbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "2.5 Gb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "5 Gb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "25 Gbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "10 Gb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "10 Gbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "40 Gb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "40 Gbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "100 Gb",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "100 Gbps",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "DSL",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "CRDSLA1",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "DS0",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "Cross Connect - DS0",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "DS1",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "Cross Connect - DS1",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "DS3",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "Cross Connect - DS3",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "OC3",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "OC12",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "OC48",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "OC192",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "Cable",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "Collocation",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "COLLO",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "Cross Connect",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "Cross Connect",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "Dark Fiber",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "Dark Fiber",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "Voice",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "Voice Trunk",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "Wireless",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Bandwidth__c",
+      "es_value": "Tower Rent",
+      "bbf_field": "Product__c",
+      "suggested_mapping": "/24 Static IP | /25 Static IP | /26 Static IP | /27 Static IP | /28 Static IP | /29 Static IP | /30 Static IP | /31 Static IP | /48 Static IP | /56 Static IP | /64 Static IP | 100 Gbps | 100 Mbps | 10 Gbps | 10 Mbps | 120v - 20 amp - A/B Tail | 120v - 20 amp - A Tail | 120V - 30 amp - A/B Tail | 120v - 30 amp - A Tail | 12 port 10Gbps IMM | 1 GB DIA | 1 Gbps | 1 kw | 200 Gbps | 200 Mbps | 208v 1 ph - 20 amp - A/B Tail | 208v 1ph - 20 amp - A Tail | 208v 1 ph - 30 amp - A/B Tail | 208v 1 ph - 30 amp - A Tail | 208v 1 ph - 60 amp - A/B Tail | 208v 1 ph - 60 amp - A Tail | 208v 3 ph - 30 amp - A/B Tail | 208v 3 ph - 30 amp - A Tail | 208v 3 ph - 60 amp - A/B Tail | 208v 3 ph - 60 amp - A Tail | 20 Gbps | 20 Mbps | 250 Mbps | 25 Gbps | 25 Hours | 2 Gbps | 300 Gbps | 300 Mbps | 30 Gbps | 3 Gbps | 3 kw | 400 Gbps | 400 Mbps | 40 Gbps | 4 Gbps | 500 Mbps | 50 Gbps | 50 Hours | 50 Mbps | 5 Gbps | 5 Hours Monthly | 5 kw | 5 Mbps | 600 Mbps | 60 Gbps | 6 Gbps | 700 Mbps | 70 Gbps | 750 Mbps | 7 Gbps | 800 Gbps | 800 Mbps | 80 Gbps | 8 Gbps | 900 Mbps | 90 Gbps | 9 Gbps | ACCES10 | ACCES100 | ACCES200 | ACCES50 | ACCESS1G | AC Power | ADD-BAND | Add-Drop | ADD-ENG | ADD-EQUI | ADD-EVC | ADD-FPR | ADD-PWR | ANNUAL | ANNUAL2 | ANNUAL3 | ANNUAL4 | ANNUAL5 | AnnualUP | ARUSF | BADGE | BBQC IX | BBU IX. | BICP L1 | BICP L11 | BICP L20 | BICP L7 | BICP-PRT | Breaker size (amperage) | BURST-RT | BURST-VI | BURST-VL | CAB-HLF1 | Cabling | CABNET1 | CABNET2 | CALEA | CALEA Custom | CANCEL | Cancellation Fee | CHANGE | CLOUD | Cloud Connect | COLLO | COLO | COVID | CRD2PLE1 | CRD2PLE2 | CRDCON1 | CRDOUT1 | CRDOUT10 | CRDOUT13 | CRDOUT2 | CRDOUT3 | CRDOUT4 | CRDSLA1 | CRDSLA10 | CRDSLA11 | CRDSLA12 | CRDSLA13 | CRDSLA2 | CRDSLA3 | CRDSLA4 | CRDSLA5 | CRDSLA6 | CRDSLA7 | CRDSLA8 | CRDSLA9 | Credit | CREDIT1 | CREDIT2 | CREDIT3 | CREDIT4 | CREDIT7 | Cross Connect | Cross Connect - 100M | Cross Connect - 10G | Cross Connect - 1G | Cross Connect - DF | Cross Connect - DS0 | Cross Connect - DS1 | Cross Connect - DS3 | Cross Connect - OC-3 | CR-REGUL | CT1 | CT2 | CT3 | CTE | CTVLAN | Custom COLO | Custom COLO Infrastructure | Custom DIA | Custom ELAN | Custom EPL | Custom EVPL | Custom L3VPN | Custom Power | Custom Space (Sq. Ft) | Custom VLAN | Custom Wavelength | Dark Fiber | DC Power | DDOS | Dedicated Internet | DF | DIA | DID | DISCOUNT | Dispatch Fee | DK-FBR | DS1 Transport | DS3 Transport | ENT-FAC | EqpLease | Equipment Cabinet | Equipment PDU | ERLYTERM | Ethernet client optics (10Gbps) | Ethernet client optics (1Gbps) | Ethernet network optics (10Gbps) | Ethernet network optics (1Gbps) | Ethernet Transport | ETHLOOP | ETH-TRNS | EVC | Expedite | FCM1 | FCM2 | FCM3 | FCME | Fiber Repair Reimbursement | FIBER-RP | Floor Space | FM1 | FM2 | FM3 | Full Cabinet | FUSC | Half Cabinet | IAUSF | ICB | ILALED | ILBALD | ILBLOM | ILCARB | ILCARLVL | ILCHCGCK | ILCHMP | ILCLAYCY | ILCLNT | ILCOLF | ILCOLMB | ILDAHK | ILELKG | ILELMWD | ILELVS | ILEMOLNE | ILEPEORA | ILFLORA | ILFRNK | ILGALS | ILGENS | ILHIGHLD | ILINFRA | ILIPAVA | ILJACK | ILKEWN | ILLOCAL | ILLOUIS | ILMATN | ILMILN | ILMOLN | ILMORTN | ILNASHVL | ILOBLNG | ILORIN | ILPALEST | ILPAVA | ILPEKP | ILPEKTAZ | ILPEORIA | ILQNCY | ILROBIN | ILROCK | ILROCKWN | ILSALEM | ILTBLG | ILTELEX | ILURBN | ILUSF | ILVALMYR | ILVARN | ILWASHTN | ILWTRLOO | INA Trpt | INET-1 | INET-2 | INET-MGT | INFM201 | INFM201X | INFM202 | INFM202X | INFM203 | INFM203X | INFM301 | INFM301X | INFM302 | INFM302X | INFM303 | INFM303X | INFM503 | INFM503X | INFM602 | INFM602X | INFM603 | INFM603X | INFRBBQ | INFR-KWX | INFRSTR | INFRST-X | INFR-T1 | INFR-T2 | INFR-T3 | INFR-T4 | INFR-WH | Inst2MNA | INSTAL1 | INSTAL2 | INSTAL3 | INSTAL4 | INSTAL5 | INSTAL6 | INSTAL7 | INSTAL8 | INSTAL9 | Install | INSTCOL1 | InstCOLO | InstFibr | InstISUP | INSTLDDS | InstMNA | InstOFF | InstPwr | INSTXCN1 | INT-4 | INTER-CR | International | INT-MGT | INTRA-CR | INV-ERR1 | InvERR2 | INV-ERR2 | INV-ERR3 | INvErr1 | IP44ADDR | IP6 ADDR | IP ADDR | IPAddres | IProtect | IProtect-HA | IP Space | IP TRANS | ISUP-Add | ISUPadd1 | ISUPadd2 | ISUPadd3 | ISUPadd4 | ISUPadd5 | ISUPadd6 | ISUPadd7 | ISUPadd8 | ISUP DIS | ISUPdis1 | ISUPdis2 | ISUPdis3 | Kilowatt(s) | KSUSF | KYUSF | LOW-SPD | LWEP-1 | M13MUX | Materials (POP site & customer prem) | MDA-e 8-port 10/25GE SFP+/28 | Mileage | MISC-R | MNA Trpt | MOCAMN | MOCOLB | MOJPLN | MOSTLS | MoUSF | MTU | Mux1 | Mux2 | MUXING | NEUSF | O&M Fee | OAM | OC-12 | OC-12 Transport | OC-192 | OC-3 Transport | OC-48 | OC-48 Transport | OFNT-LPA | OFNT-LPZ | OPTCODE | Optical Link | ORDER | OUTCRD | OUTCRD1 | PAL-INRC | PALL-MRC | PAL-ONRC | PARTIAL | PARTIAL2 | PARTIAL3 | POP site materials (POP to POP deals only) | PORT | PORT100 | PORT200 | PPTSU2 | PPTSU3 | PPTSUR | Project Planning | Pro-Location | PROMISS | Prorat1 | PRORATE2 | PRORATE3 | PRORATED | PROTECT | Prt-Alnk | PTCODIS | Rack Unit | RECUR CR | Reserve | RH-AHR10 | RH-MRBL | RH-NPL1 | RH-NPL2 | RH-NRC | RH-OVR1 | RH-OVR2 | RH-OVR7 | RTR-BYDN | SDIA | SIA | SLL-QUAL | Smart Hands Hourly | Smart Hands - Hourly | SPEC-CON | Square Footage | SS7 | SS7 ISUP-Add | Static IPv4 | Static IPv6 | STP-PORT | STPptADD | SURVEL | SURVEL2 | T1 | TCAP/CLS | TCAP-DIS | TCAP-INS | TEMP-BAN | Third Cabinet | TNUSF | Toll Free | TRANSPT | TSP Billing Code | TSP Custom | TSP-MRC | TSP-NRC | UP-PRORT | UP-PRRT2 | UP-PRRT3 | USF-CR | vConnect | VID-FEED | VID-PORT | Voice Trunk | vPOP | WIUSF | X100MBP | X10G | X1GIG | X200MBP | X300MBP | X-CON | XCON-2 | X-CON2 | XCONN | XDF | XDS0 | XDS1 | XDS3 | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Type__c",
+      "es_value": "Circuit",
+      "bbf_field": "Service_Type__c",
+      "suggested_mapping": "Electrical Circuit",
+      "notes": "Close Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Type__c",
+      "es_value": "Cross Connect",
+      "bbf_field": "Service_Type__c",
+      "suggested_mapping": "100G | 10G | 2.5G | BADGE | CALEA | Cancellation | CDN | Cloud Connect | COLO | Credit | DF | DIA | DID | DS-1 | DS-3 | Early Termination | ELAN | Electrical Circuit | ENNI | EPL | EPLAN | Equipment | EVC | EVPL | EVPLAN | Floor Space | Installation | IProtect | IP Subnet | L3VPN | NTWK | NTWK Non-LAG | OC-12 | OC-12c | OC-3 | OC-3c | OC-48 | OC-48c | PALLET | Planning Project | Power | Reserve | RING | ROADM | SDIA | SIA | Smart Hands | Softphone | SRVL | SS7 | STS-1 | STS-3c | T1 | Taxes/Fees | Toll Free | TSP | VLAN | VOICE | VPOP | Wavelength | X100M | X10G | X1GIG | XCN | XCONN | Xconnect | XDF | XDS0 | XDS1 | XDS3 | XEDF | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Type__c",
+      "es_value": "Collocation",
+      "bbf_field": "Service_Type__c",
+      "suggested_mapping": "100G | 10G | 2.5G | BADGE | CALEA | Cancellation | CDN | Cloud Connect | COLO | Credit | DF | DIA | DID | DS-1 | DS-3 | Early Termination | ELAN | Electrical Circuit | ENNI | EPL | EPLAN | Equipment | EVC | EVPL | EVPLAN | Floor Space | Installation | IProtect | IP Subnet | L3VPN | NTWK | NTWK Non-LAG | OC-12 | OC-12c | OC-3 | OC-3c | OC-48 | OC-48c | PALLET | Planning Project | Power | Reserve | RING | ROADM | SDIA | SIA | Smart Hands | Softphone | SRVL | SS7 | STS-1 | STS-3c | T1 | Taxes/Fees | Toll Free | TSP | VLAN | VOICE | VPOP | Wavelength | X100M | X10G | X1GIG | XCN | XCONN | Xconnect | XDF | XDS0 | XDS1 | XDS3 | XEDF | XOCN",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Problem_Reason_Code__c",
+      "es_value": "Customer Readiness",
+      "bbf_field": "Off_Net_Problem_Reason_Code__c",
+      "suggested_mapping": "Customer Readiness",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Problem_Reason_Code__c",
+      "es_value": "Pending MSA/Contract",
+      "bbf_field": "Off_Net_Problem_Reason_Code__c",
+      "suggested_mapping": "Pending MSA/Contract",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Problem_Reason_Code__c",
+      "es_value": "Related Order Dependency",
+      "bbf_field": "Off_Net_Problem_Reason_Code__c",
+      "suggested_mapping": "Related Order Dependency",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Problem_Reason_Code__c",
+      "es_value": "Pending ETL Approval",
+      "bbf_field": "Off_Net_Problem_Reason_Code__c",
+      "suggested_mapping": "Pending ETL Approval",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Problem_Reason_Code__c",
+      "es_value": "Pending Migration",
+      "bbf_field": "Off_Net_Problem_Reason_Code__c",
+      "suggested_mapping": "Pending Migration",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Problem_Reason_Code__c",
+      "es_value": "Approved for Future Date",
+      "bbf_field": "Off_Net_Problem_Reason_Code__c",
+      "suggested_mapping": "Approved for Future Date",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "Off_Net_Problem_Reason_Code__c",
+      "es_value": "Requires Research",
+      "bbf_field": "Off_Net_Problem_Reason_Code__c",
+      "suggested_mapping": "Requires Research",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "LEC_Order_Status__c",
+      "es_value": "Pending",
+      "bbf_field": "Off_Net_Service_Status__c",
+      "suggested_mapping": "Pending",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "LEC_Order_Status__c",
+      "es_value": "Active",
+      "bbf_field": "Off_Net_Service_Status__c",
+      "suggested_mapping": "Active",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "LEC_Order_Status__c",
+      "es_value": "NOC Review",
+      "bbf_field": "Off_Net_Service_Status__c",
+      "suggested_mapping": "Pending | Active | NOC Reiew | Soft Disco | Pending Disco | Invoice Evaluation | Disco",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "LEC_Order_Status__c",
+      "es_value": "Soft Disco",
+      "bbf_field": "Off_Net_Service_Status__c",
+      "suggested_mapping": "Soft Disco",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "LEC_Order_Status__c",
+      "es_value": "Pending Disco",
+      "bbf_field": "Off_Net_Service_Status__c",
+      "suggested_mapping": "Pending Disco",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "LEC_Order_Status__c",
+      "es_value": "Invoice Evaluation",
+      "bbf_field": "Off_Net_Service_Status__c",
+      "suggested_mapping": "Invoice Evaluation",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "LEC_Order_Status__c",
+      "es_value": "Disco",
+      "bbf_field": "Off_Net_Service_Status__c",
+      "suggested_mapping": "Disco",
+      "notes": "Exact Match",
+      "bbf_final_value": ""
+    }
+  ]
+}

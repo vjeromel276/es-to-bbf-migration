@@ -2,7 +2,7 @@
 
 ## Primary Directive
 
-**NO ASSUMPTIONS. CHECK CODE, METADATA, WHATEVER YOU NEED SO THAT WE DON'T HAVE TO TAKE TIME TO FIX IT LATER ON.**
+**AT THE START OF EVERY NEW CHAT READ THE PRIOR DAYS COMMIT NOTES. CHECK CODE, METADATA, WHATEVER YOU NEED SO THAT WE DON'T HAVE TO TAKE TIME TO FIX IT LATER ON.**
 
 Before writing any migration code:
 1. Export and read the actual BBF object metadata (field names, types, required fields)
