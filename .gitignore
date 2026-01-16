@@ -1,6 +1,8 @@
-*/*.xlsx
 *.xlsx
 *.log
 *.docx
 *.tmp
 *.csv
+
+# But track Day Two mapping files
+!day-two/mappings/*.xlsx
