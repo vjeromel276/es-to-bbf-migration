@@ -21,25 +21,14 @@ from rapidfuzz import fuzz
 from collections import defaultdict
 import re
 
-# ---------------------------------------------------------------------
-# Salesforce credentials - BBF (Sandbox)
-# ---------------------------------------------------------------------
-BBF_CREDENTIALS = {
-    "username": "vlettau@everstream.net",
-    "password": "212MDcsc!!",
-    "security_token": "I88iovRhihZLbn0pGmYTFl5V",
-    "domain": "test",  # sandbox
-}
+# Import credentials from .env file
+from credentials import get_es_credentials, get_bbf_credentials
 
 # ---------------------------------------------------------------------
-# Salesforce credentials - ES (Production)
+# Salesforce credentials - loaded from .env file
 # ---------------------------------------------------------------------
-ES_CREDENTIALS = {
-    "username": "sfdcapi@everstream.net",
-    "password": "pV4CAxns8DQtJsBq!",
-    "security_token": "r1uoYiusK19RbrflARydi86TA",
-    "domain": "login",  # production
-}
+BBF_CREDENTIALS = get_bbf_credentials()
+ES_CREDENTIALS = get_es_credentials('prod')
 
 # ---------------------------------------------------------------------
 # Standard Account fields to retrieve

@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
 import argparse
 import sys
+import os
 import pandas as pd
 from simple_salesforce import Salesforce
 
+# Add parent directories to path for credentials module
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+from credentials import get_bbf_credentials
+
 # ---------------------------------------------------------------------
-# Salesforce credentials
+# Salesforce credentials (loaded from .env file)
 # ---------------------------------------------------------------------
-sf_username = "vlettau@everstream.net"
-sf_password = "MNlkpo0987)(*&"
-sf_token = "I4xmQLmm03cXl1O9qI2Z3XAAX"
-sf_domain = "test"  # or 'test' for sandbox
+bbf_creds = get_bbf_credentials()
+sf_username = bbf_creds['username']
+sf_password = bbf_creds['password']
+sf_token = bbf_creds['security_token']
+sf_domain = bbf_creds['domain']
 
 # ---------------------------------------------------------------------
 # CLI setup
