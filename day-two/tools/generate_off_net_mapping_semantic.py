@@ -233,7 +233,10 @@ def generate_mapping():
             'es_type': es_field['type'] if es_field else '',
             'confidence': confidence,
             'transformer_needed': transformer_needed,
-            'notes': notes
+            'notes': notes,
+            'es_final_field': '',  # Business decision: override AI suggestion if needed
+            'include_in_migration': 'Yes' if confidence == 'High' else 'TBD',  # Business decision
+            'business_notes': ''  # Business decision: reasoning for overrides
         }
         field_mappings.append(mapping)
 

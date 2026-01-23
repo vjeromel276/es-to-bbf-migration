@@ -24,11 +24,12 @@ COLOR_NONE = 'FFFFC7CE'
 
 def create_field_mapping_sheet(ws, field_mappings):
     """Create the Field_Mapping sheet"""
-    # Headers
+    # Headers - includes business decision columns
     headers = [
         'BBF_Field_API_Name', 'BBF_Field_Label', 'BBF_Data_Type', 'BBF_Is_Required',
         'ES_Field_API_Name', 'ES_Field_Label', 'ES_Data_Type',
-        'Match_Confidence', 'Transformer_Needed', 'Notes'
+        'Match_Confidence', 'Transformer_Needed', 'Notes',
+        'ES_Final_Field', 'Include_in_Migration', 'Business_Notes'
     ]
 
     # Write headers
@@ -51,8 +52,16 @@ def create_field_mapping_sheet(ws, field_mappings):
         ws.cell(row=row_idx, column=9, value=mapping.get('transformer_needed', 'N'))
         ws.cell(row=row_idx, column=10, value=mapping.get('notes', ''))
 
-        # Apply color based on confidence
+        # Business decision columns - read from mapping if present, otherwise default
         confidence = mapping.get('confidence', 'None')
+        es_final = mapping.get('es_final_field', '')
+        include_mig = mapping.get('include_in_migration', 'Yes' if confidence == 'High' else 'TBD')
+        biz_notes = mapping.get('business_notes', '')
+        ws.cell(row=row_idx, column=11, value=es_final)  # ES_Final_Field - empty means accept AI suggestion
+        ws.cell(row=row_idx, column=12, value=include_mig)  # Include_in_Migration
+        ws.cell(row=row_idx, column=13, value=biz_notes)  # Business_Notes
+
+        # Apply color based on confidence
         if confidence == 'High':
             fill_color = COLOR_HIGH
         elif confidence == 'Medium':
@@ -61,7 +70,7 @@ def create_field_mapping_sheet(ws, field_mappings):
             fill_color = COLOR_LOW
 
         fill = PatternFill(start_color=fill_color, end_color=fill_color, fill_type='solid')
-        for col in range(1, 11):
+        for col in range(1, 14):  # Updated to include new columns
             cell = ws.cell(row=row_idx, column=col)
             cell.fill = fill
             cell.alignment = Alignment(horizontal='left', vertical='top', wrap_text=True)
@@ -69,8 +78,8 @@ def create_field_mapping_sheet(ws, field_mappings):
     # Freeze header row
     ws.freeze_panes = 'A2'
 
-    # Set column widths
-    column_widths = [35, 35, 20, 15, 35, 35, 20, 18, 18, 60]
+    # Set column widths - includes new columns
+    column_widths = [35, 35, 20, 15, 35, 35, 20, 18, 18, 60, 35, 20, 40]
     for col_idx, width in enumerate(column_widths, 1):
         ws.column_dimensions[get_column_letter(col_idx)].width = width
 

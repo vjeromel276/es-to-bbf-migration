@@ -318,7 +318,10 @@ def create_mapping_excel(es_fields_csv, bbf_fields_csv, es_picklist_csv, bbf_pic
             'ES_Data_Type': es_type if es_type else '',
             'Match_Confidence': confidence,
             'Transformer_Needed': transformer,
-            'Notes': notes
+            'Notes': notes,
+            'ES_Final_Field': '',  # Business decision: override AI suggestion if needed
+            'Include_in_Migration': 'Yes' if confidence == 'High' else 'TBD',  # Business decision
+            'Business_Notes': ''  # Business decision: reasoning for overrides
         })
 
         # Create picklist mappings if both are picklist fields
