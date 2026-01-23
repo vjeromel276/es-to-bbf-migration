@@ -62,6 +62,119 @@ FAMILY_TO_SERVICE_TYPE = {
     'Equipment & Managed Equipment': ('Equipment', 'High', 'Equipment direct match'),
 }
 
+# Product_Name__c → Product_Simple__c direct mapping (same as transformer)
+PRODUCT_NAME_TO_PRODUCT_SIMPLE = {
+    # Internet/DIA products
+    'Dedicated Internet Access': ('DIA', 'High', 'DIA direct match'),
+    'Internet': ('DIA', 'High', 'Internet maps to DIA'),
+    'Virtual Dedicated Internet Access': ('DIA', 'Medium', 'Virtual DIA'),
+
+    # Dark Fiber products
+    'Dark Fiber': ('Dark Fiber', 'High', 'Direct match'),
+    'Dark Fiber IRU': ('Dark Fiber', 'High', 'IRU is Dark Fiber'),
+    'Dark Fiber Lease': ('Dark Fiber', 'High', 'Lease is Dark Fiber'),
+    '2 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '4 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '6 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '8 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '12 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '24 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '48 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '60 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '72 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '96 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+    '144 Strands': ('Dark Fiber', 'High', 'Strand count = Dark Fiber'),
+
+    # Ethernet products
+    'Ethernet': ('Ethernet Transport', 'High', 'Direct match'),
+    'Ethernet (EPL/EVPL)': ('Ethernet Transport', 'High', 'EPL/EVPL = Ethernet'),
+    'Point-to-Point': ('Ethernet Transport', 'High', 'P2P = Ethernet Transport'),
+    'Point-to-MultiPoint': ('Ethernet Transport', 'Medium', 'P2MP = Ethernet'),
+    'Private Line': ('Ethernet Transport', 'Medium', 'Private Line = Ethernet'),
+
+    # IP products
+    'IPv4 Blocks /30  (1 Gateway, 1 Usable)': ('/30 Static IP', 'High', 'Exact IP block match'),
+    'IPv4 Blocks /29  (1 Gateway, 5 Usable)': ('/29 Static IP', 'High', 'Exact IP block match'),
+    'IPv4 Blocks /28  (1 Gateway, 13 Usable)': ('/28 Static IP', 'High', 'Exact IP block match'),
+    'IPv4 Blocks /27  (1 Gateway, 29 Usable)': ('/27 Static IP', 'High', 'Exact IP block match'),
+    'IPv4 Blocks /26  (1 Gateway, 61 Usable)': ('/26 Static IP', 'High', 'Exact IP block match'),
+    'IPv4 Blocks /25  (1 Gateway, 125 Usable)': ('/25 Static IP', 'High', 'Exact IP block match'),
+    'IPv4 Blocks /24  (1 Gateway, 253 Usable)': ('/24 Static IP', 'High', 'Exact IP block match'),
+    'eBGP': ('IP ADDR', 'Medium', 'BGP routing = IP'),
+
+    # Voice products
+    'Voice Recurring Charges': ('Voice Trunk', 'High', 'Voice = Voice Trunk'),
+    'Hosted Voice': ('Voice Trunk', 'High', 'Hosted Voice = Voice Trunk'),
+    'PRI': ('Voice Trunk', 'High', 'PRI = Voice Trunk'),
+    'SIP': ('Voice Trunk', 'High', 'SIP = Voice Trunk'),
+    'Toll Free': ('Toll Free', 'High', 'Direct match'),
+    'DID': ('DID', 'High', 'Direct match'),
+
+    # Colocation products
+    'Collocation': ('COLO', 'High', 'Direct match'),
+    'Colocation': ('COLO', 'High', 'Direct match (alt spelling)'),
+    'Full Cabinet': ('Full Cabinet', 'High', 'Direct match'),
+    'Half Cabinet': ('Half Cabinet', 'High', 'Direct match'),
+    'Cabinet Relocate': ('COLO', 'Medium', 'Cabinet work = COLO'),
+    'Rack Space': ('Rack Unit', 'High', 'Rack = Rack Unit'),
+    'Floor Space': ('Floor Space', 'High', 'Direct match'),
+    'Power': ('AC Power', 'High', 'Power = AC Power'),
+
+    # Cross-connect products
+    'Cross Connect': ('Cross Connect', 'High', 'Direct match'),
+    'Handoff Type : Copper': ('Cross Connect', 'Medium', 'Handoff = Cross Connect'),
+    'Handoff Type : Fiber': ('Cross Connect', 'Medium', 'Handoff = Cross Connect'),
+
+    # DWDM/Wavelength products
+    'DWDM': ('Wavelength', 'High', 'DWDM = Wavelength'),
+    'Managed Wave': ('Wavelength', 'High', 'Managed Wave = Wavelength'),
+    'Wavelength': ('Wavelength', 'High', 'Direct match'),
+
+    # Network products
+    'Network-to-Network Interface': ('ENNI', 'High', 'NNI = ENNI'),
+    'NNI': ('ENNI', 'High', 'Direct match'),
+
+    # Logical/VLAN products
+    'Logical Attribute : Layer 2': ('VLAN', 'Medium', 'L2 = VLAN'),
+    'Logical Attribute : Layer 3': ('L3VPN', 'Medium', 'L3 = L3VPN'),
+    'Tagged': ('VLAN', 'Medium', 'Tagged = VLAN'),
+    'Untagged': ('VLAN', 'Medium', 'Untagged = VLAN'),
+
+    # Labor/Installation products
+    'Labor': ('Install', 'High', 'Labor = Install'),
+    'Installation': ('Install', 'High', 'Direct match'),
+    'Expedite': ('Expedite', 'High', 'Direct match'),
+    'Smart Hands': ('Smart Hands Hourly', 'High', 'Smart Hands match'),
+
+    # Promotions/Credits/Discounts
+    'Discount': ('DISCOUNT', 'High', 'Direct match'),
+    'Credit': ('Credit', 'High', 'Direct match'),
+    'New Service Promotion: First 3 Months Free': ('Credit', 'High', 'Promo = Credit'),
+    'New Service Promotion: First 5 Months Free': ('Credit', 'High', 'Promo = Credit'),
+    'New Service Promotion:  First 5 Months Free': ('Credit', 'High', 'Promo = Credit'),
+
+    # Equipment
+    'Rocket Fiber Service Delivery Device': ('EqpLease', 'Medium', 'Device = Equipment'),
+    'Equipment': ('EqpLease', 'High', 'Equipment = EqpLease'),
+    'Router': ('EqpLease', 'Medium', 'Router = Equipment'),
+
+    # Diversity products
+    'Diversity': ('Ethernet Transport', 'Low', 'Diversity attribute'),
+    'Diverse Path': ('Ethernet Transport', 'Low', 'Diversity attribute'),
+
+    # TSP products
+    'TSP': ('TSP-MRC', 'High', 'TSP match'),
+    'TSP Fee': ('TSP-MRC', 'High', 'TSP match'),
+
+    # SS7 products
+    'SS7': ('SS7', 'High', 'Direct match'),
+    'ISUP': ('SS7', 'Medium', 'ISUP = SS7'),
+
+    # Unknown/Undetermined - needs default
+    'Unknown': ('ANNUAL', 'Low', 'NEEDS REVIEW - 28.7% of records'),
+    '00000_UNDETERMINED': ('ANNUAL', 'Low', 'NEEDS REVIEW - undetermined product'),
+}
+
 # Bandwidth patterns to extract from Description
 BANDWIDTH_PATTERNS = [
     (r'(\d+)\s*Gbps', 'Gbps'),
@@ -315,41 +428,115 @@ def main():
     ws2.freeze_panes = 'A2'
 
     # =========================================================================
-    # SHEET 3: BBF Service_Type_Charge__c Reference
+    # SHEET 3: Product_Name → Product_Simple Mapping (NEW - main mapping)
     # =========================================================================
-    ws3 = wb.create_sheet("BBF_ServiceType_Values")
+    ws3 = wb.create_sheet("ProductName_to_ProductSimple")
 
-    ws3.cell(row=1, column=1, value='BBF Service_Type_Charge__c Picklist Values').font = Font(bold=True, size=14)
-    ws3.cell(row=2, column=1, value=f'Total: {len(bbf_service_types)} values')
+    headers3 = [
+        'ES Product_Name__c', 'Count', '%',
+        'AI Suggested BBF Product_Simple__c', 'Confidence', 'AI Notes',
+        'BUSINESS DECISION: Final BBF Value', 'Business Notes'
+    ]
+
+    for col, header in enumerate(headers3, 1):
+        cell = ws3.cell(row=1, column=col, value=header)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = header_align
+        cell.border = thin_border
+
+    row = 2
+    mapped_count = 0
+    unmapped_count = 0
+
+    for product_name, count in product_counter.most_common():
+        pct = count / len(records) * 100
+
+        # Get AI suggestion from mapping
+        if product_name in PRODUCT_NAME_TO_PRODUCT_SIMPLE:
+            suggested_value, confidence, notes = PRODUCT_NAME_TO_PRODUCT_SIMPLE[product_name]
+            mapped_count += count
+        else:
+            suggested_value = ''
+            confidence = 'None'
+            notes = 'No mapping defined - needs business input'
+            unmapped_count += count
+
+        # Determine fill color
+        if confidence == 'High':
+            fill = PatternFill(start_color=COLOR_HIGH, end_color=COLOR_HIGH, fill_type='solid')
+        elif confidence == 'Medium':
+            fill = PatternFill(start_color=COLOR_MEDIUM, end_color=COLOR_MEDIUM, fill_type='solid')
+        elif confidence == 'Low':
+            fill = PatternFill(start_color=COLOR_LOW, end_color=COLOR_LOW, fill_type='solid')
+        else:
+            fill = PatternFill(start_color=COLOR_LOW, end_color=COLOR_LOW, fill_type='solid')
+
+        ws3.cell(row=row, column=1, value=product_name).border = thin_border
+        ws3.cell(row=row, column=2, value=count).border = thin_border
+        ws3.cell(row=row, column=3, value=f"{pct:.1f}%").border = thin_border
+        ws3.cell(row=row, column=4, value=suggested_value).border = thin_border
+        ws3.cell(row=row, column=5, value=confidence).border = thin_border
+        ws3.cell(row=row, column=6, value=notes).border = thin_border
+        ws3.cell(row=row, column=7, value='').border = thin_border  # Business decision
+        ws3.cell(row=row, column=8, value='').border = thin_border  # Business notes
+
+        # Apply fill to row
+        for col in range(1, 9):
+            ws3.cell(row=row, column=col).fill = fill
+
+        row += 1
+
+    # Column widths
+    ws3.column_dimensions['A'].width = 50
+    ws3.column_dimensions['B'].width = 10
+    ws3.column_dimensions['C'].width = 8
+    ws3.column_dimensions['D'].width = 35
+    ws3.column_dimensions['E'].width = 12
+    ws3.column_dimensions['F'].width = 40
+    ws3.column_dimensions['G'].width = 35
+    ws3.column_dimensions['H'].width = 40
+    ws3.freeze_panes = 'A2'
+
+    # =========================================================================
+    # SHEET 4: BBF Service_Type_Charge__c Reference
+    # =========================================================================
+    ws4 = wb.create_sheet("BBF_ServiceType_Values")
+
+    ws4.cell(row=1, column=1, value='BBF Service_Type_Charge__c Picklist Values').font = Font(bold=True, size=14)
+    ws4.cell(row=2, column=1, value=f'Total: {len(bbf_service_types)} values')
 
     row = 4
     for val in sorted(bbf_service_types):
-        ws3.cell(row=row, column=1, value=val)
-        row += 1
-
-    ws3.column_dimensions['A'].width = 30
-
-    # =========================================================================
-    # SHEET 4: BBF Product_Simple__c Reference
-    # =========================================================================
-    ws4 = wb.create_sheet("BBF_Product_Values")
-
-    ws4.cell(row=1, column=1, value='BBF Product_Simple__c Picklist Values').font = Font(bold=True, size=14)
-    ws4.cell(row=2, column=1, value=f'Total: {len(bbf_products)} values')
-
-    row = 4
-    for val in sorted(bbf_products):
         ws4.cell(row=row, column=1, value=val)
         row += 1
 
-    ws4.column_dimensions['A'].width = 40
+    ws4.column_dimensions['A'].width = 30
 
     # =========================================================================
-    # SHEET 5: Summary & Instructions
+    # SHEET 5: BBF Product_Simple__c Reference
     # =========================================================================
-    ws5 = wb.create_sheet("Instructions")
-    ws5.insert_rows(1)  # Move to first position
-    wb.move_sheet(ws5, offset=-4)
+    ws5 = wb.create_sheet("BBF_Product_Values")
+
+    ws5.cell(row=1, column=1, value='BBF Product_Simple__c Picklist Values').font = Font(bold=True, size=14)
+    ws5.cell(row=2, column=1, value=f'Total: {len(bbf_products)} values')
+
+    row = 4
+    for val in sorted(bbf_products):
+        ws5.cell(row=row, column=1, value=val)
+        row += 1
+
+    ws5.column_dimensions['A'].width = 40
+
+    # =========================================================================
+    # SHEET 6: Summary & Instructions
+    # =========================================================================
+    ws6 = wb.create_sheet("Instructions")
+    ws6.insert_rows(1)  # Move to first position
+    wb.move_sheet(ws6, offset=-5)
+
+    mapped_pct = mapped_count / len(records) * 100 if len(records) > 0 else 0
+    unmapped_pct = unmapped_count / len(records) * 100 if len(records) > 0 else 0
 
     instructions = [
         ('ES → BBF Service_Charge__c Product Mapping Template', Font(bold=True, size=16)),
@@ -358,26 +545,44 @@ def main():
         ('', None),
         ('PURPOSE:', Font(bold=True, size=12)),
         ('This template maps ES OrderItem Product data to BBF Service_Charge__c fields:', None),
+        ('  • Product_Name__c → Product_Simple__c (PRIMARY - direct product mapping)', None),
         ('  • Product_Family__c → Service_Type_Charge__c (service category)', None),
-        ('  • Description (bandwidth) → Product_Simple__c (product/bandwidth)', None),
+        ('  • Description (bandwidth) → Product_Simple__c (SECONDARY - bandwidth extraction)', None),
+        ('', None),
+        ('MAPPING PRIORITY (for Product_Simple__c):', Font(bold=True, size=12)),
+        ('  1. Direct Product_Name__c mapping (most accurate)', None),
+        ('  2. Bandwidth extracted from Description field', None),
+        ('  3. Bandwidth extracted from Product_Name__c field', None),
+        ('  4. Service type default (based on Service_Type_Charge__c)', None),
+        ('  5. Ultimate default: "ANNUAL"', None),
         ('', None),
         ('HOW TO USE:', Font(bold=True, size=12)),
-        ('1. Review Sheet "Family_to_ServiceType" - AI suggestions for Service_Type_Charge__c', None),
-        ('2. Review Sheet "Bandwidth_to_Product" - Bandwidth extraction for Product_Simple__c', None),
-        ('3. Fill in "BUSINESS DECISION" columns where AI confidence is Low/Medium', None),
-        ('4. Return completed file for transformer script generation', None),
+        ('1. Review Sheet "ProductName_to_ProductSimple" - PRIMARY Product_Simple__c mapping', None),
+        ('2. Review Sheet "Family_to_ServiceType" - AI suggestions for Service_Type_Charge__c', None),
+        ('3. Review Sheet "Bandwidth_to_Product" - Bandwidth extraction for Product_Simple__c', None),
+        ('4. Fill in "BUSINESS DECISION" columns where AI confidence is Low/None', None),
+        ('5. Return completed file for transformer script generation', None),
         ('', None),
         ('COLOR LEGEND:', Font(bold=True, size=12)),
-        ('  🟢 Green = High confidence match (likely correct)', None),
-        ('  🟡 Yellow = Medium confidence (review recommended)', None),
-        ('  🔴 Red = Low confidence (business decision required)', None),
+        ('  Green = High confidence match (likely correct)', None),
+        ('  Yellow = Medium confidence (review recommended)', None),
+        ('  Red = Low confidence or No mapping (business decision required)', None),
         ('', None),
         ('STATISTICS:', Font(bold=True, size=12)),
         (f'  Total ES OrderItems analyzed: {len(records):,}', None),
-        (f'  Unique Product_Family__c values: {len(family_counter)}', None),
-        (f'  Unique bandwidths extracted: {len(bandwidth_counter)}', None),
-        (f'  Records with bandwidth: {sum(bandwidth_counter.values()):,} ({sum(bandwidth_counter.values())/len(records)*100:.1f}%)', None),
-        (f'  Records without bandwidth: {no_bw_count:,} ({no_bw_count/len(records)*100:.1f}%)', None),
+        ('', None),
+        ('  Product_Name__c Mapping Coverage:', Font(bold=True)),
+        (f'    Unique Product_Name__c values: {len(product_counter)}', None),
+        (f'    Records with AI mapping: {mapped_count:,} ({mapped_pct:.1f}%)', None),
+        (f'    Records needing business input: {unmapped_count:,} ({unmapped_pct:.1f}%)', None),
+        ('', None),
+        ('  Product_Family__c → Service_Type_Charge__c:', Font(bold=True)),
+        (f'    Unique Product_Family__c values: {len(family_counter)}', None),
+        ('', None),
+        ('  Bandwidth Extraction (SECONDARY):', Font(bold=True)),
+        (f'    Unique bandwidths extracted: {len(bandwidth_counter)}', None),
+        (f'    Records with bandwidth: {sum(bandwidth_counter.values()):,} ({sum(bandwidth_counter.values())/len(records)*100:.1f}%)', None),
+        (f'    Records without bandwidth: {no_bw_count:,} ({no_bw_count/len(records)*100:.1f}%)', None),
         ('', None),
         ('REFERENCE SHEETS:', Font(bold=True, size=12)),
         ('  • "BBF_ServiceType_Values" - All valid BBF Service_Type_Charge__c picklist values', None),
@@ -385,11 +590,11 @@ def main():
     ]
 
     for row_idx, (text, font) in enumerate(instructions, 1):
-        cell = ws5.cell(row=row_idx, column=1, value=text)
+        cell = ws6.cell(row=row_idx, column=1, value=text)
         if font:
             cell.font = font
 
-    ws5.column_dimensions['A'].width = 80
+    ws6.column_dimensions['A'].width = 80
 
     # Save workbook
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -399,9 +604,15 @@ def main():
     print(f"\n✅ Mapping template created: {output_file}")
     print(f"\n📊 Summary:")
     print(f"   Total records analyzed: {len(records):,}")
-    print(f"   Product_Family values: {len(family_counter)}")
-    print(f"   Bandwidth patterns found: {len(bandwidth_counter)}")
-    print(f"   Records with bandwidth: {sum(bandwidth_counter.values()):,} ({sum(bandwidth_counter.values())/len(records)*100:.1f}%)")
+    print(f"\n   Product_Name__c → Product_Simple__c:")
+    print(f"      Unique Product_Name values: {len(product_counter)}")
+    print(f"      Records with AI mapping: {mapped_count:,} ({mapped_pct:.1f}%)")
+    print(f"      Records needing business input: {unmapped_count:,} ({unmapped_pct:.1f}%)")
+    print(f"\n   Product_Family → Service_Type:")
+    print(f"      Product_Family values: {len(family_counter)}")
+    print(f"\n   Bandwidth extraction (secondary):")
+    print(f"      Bandwidth patterns found: {len(bandwidth_counter)}")
+    print(f"      Records with bandwidth: {sum(bandwidth_counter.values()):,} ({sum(bandwidth_counter.values())/len(records)*100:.1f}%)")
 
     return output_file
 

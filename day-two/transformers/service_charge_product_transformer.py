@@ -145,7 +145,125 @@ BANDWIDTH_TO_PRODUCT = {
     '900 Mbps': '900 Mbps',
 }
 
-# Service Type → Default Product mapping (when no bandwidth detected)
+# =============================================================================
+# PRODUCT_NAME → PRODUCT_SIMPLE DIRECT MAPPING
+# =============================================================================
+# Maps ES Product_Name__c directly to BBF Product_Simple__c
+# This provides better coverage than bandwidth extraction alone
+
+PRODUCT_NAME_TO_PRODUCT_SIMPLE = {
+    # Internet/DIA products
+    'Dedicated Internet Access': 'DIA',
+    'Internet': 'DIA',
+    'Virtual Dedicated Internet Access': 'DIA',
+
+    # Dark Fiber products
+    'Dark Fiber': 'Dark Fiber',
+    'Dark Fiber IRU': 'Dark Fiber',
+    'Dark Fiber Lease': 'Dark Fiber',
+    '2 Strands': 'Dark Fiber',
+    '4 Strands': 'Dark Fiber',
+    '6 Strands': 'Dark Fiber',
+    '8 Strands': 'Dark Fiber',
+    '12 Strands': 'Dark Fiber',
+    '24 Strands': 'Dark Fiber',
+    '48 Strands': 'Dark Fiber',
+    '60 Strands': 'Dark Fiber',
+    '72 Strands': 'Dark Fiber',
+    '96 Strands': 'Dark Fiber',
+    '144 Strands': 'Dark Fiber',
+
+    # Ethernet products
+    'Ethernet': 'Ethernet Transport',
+    'Ethernet (EPL/EVPL)': 'Ethernet Transport',
+    'Point-to-Point': 'Ethernet Transport',
+    'Point-to-MultiPoint': 'Ethernet Transport',
+    'Private Line': 'Ethernet Transport',
+
+    # IP products
+    'IPv4 Blocks /30  (1 Gateway, 1 Usable)': '/30 Static IP',
+    'IPv4 Blocks /29  (1 Gateway, 5 Usable)': '/29 Static IP',
+    'IPv4 Blocks /28  (1 Gateway, 13 Usable)': '/28 Static IP',
+    'IPv4 Blocks /27  (1 Gateway, 29 Usable)': '/27 Static IP',
+    'IPv4 Blocks /26  (1 Gateway, 61 Usable)': '/26 Static IP',
+    'IPv4 Blocks /25  (1 Gateway, 125 Usable)': '/25 Static IP',
+    'IPv4 Blocks /24  (1 Gateway, 253 Usable)': '/24 Static IP',
+    'eBGP': 'IP ADDR',
+
+    # Voice products
+    'Voice Recurring Charges': 'Voice Trunk',
+    'Hosted Voice': 'Voice Trunk',
+    'PRI': 'Voice Trunk',
+    'SIP': 'Voice Trunk',
+    'Toll Free': 'Toll Free',
+    'DID': 'DID',
+
+    # Colocation products
+    'Collocation': 'COLO',
+    'Colocation': 'COLO',
+    'Full Cabinet': 'Full Cabinet',
+    'Half Cabinet': 'Half Cabinet',
+    'Cabinet Relocate': 'COLO',
+    'Rack Space': 'Rack Unit',
+    'Floor Space': 'Floor Space',
+    'Power': 'AC Power',
+
+    # Cross-connect products
+    'Cross Connect': 'Cross Connect',
+    'Handoff Type : Copper': 'Cross Connect',
+    'Handoff Type : Fiber': 'Cross Connect',
+
+    # DWDM/Wavelength products
+    'DWDM': 'Wavelength',
+    'Managed Wave': 'Wavelength',
+    'Wavelength': 'Wavelength',
+
+    # Network products
+    'Network-to-Network Interface': 'ENNI',
+    'NNI': 'ENNI',
+
+    # Logical/VLAN products
+    'Logical Attribute : Layer 2': 'VLAN',
+    'Logical Attribute : Layer 3': 'L3VPN',
+    'Tagged': 'VLAN',
+    'Untagged': 'VLAN',
+
+    # Labor/Installation products
+    'Labor': 'Install',
+    'Installation': 'Install',
+    'Expedite': 'Expedite',
+    'Smart Hands': 'Smart Hands Hourly',
+
+    # Promotions/Credits/Discounts
+    'Discount': 'DISCOUNT',
+    'Credit': 'Credit',
+    'New Service Promotion: First 3 Months Free': 'Credit',
+    'New Service Promotion: First 5 Months Free': 'Credit',
+    'New Service Promotion:  First 5 Months Free': 'Credit',
+
+    # Equipment
+    'Rocket Fiber Service Delivery Device': 'EqpLease',
+    'Equipment': 'EqpLease',
+    'Router': 'EqpLease',
+
+    # Diversity products
+    'Diversity': 'Ethernet Transport',
+    'Diverse Path': 'Ethernet Transport',
+
+    # TSP products
+    'TSP': 'TSP-MRC',
+    'TSP Fee': 'TSP-MRC',
+
+    # SS7 products
+    'SS7': 'SS7',
+    'ISUP': 'SS7',
+
+    # Catch-all for unknown/undetermined
+    'Unknown': 'ANNUAL',  # Default - business may want to review
+    '00000_UNDETERMINED': 'ANNUAL',  # Default
+}
+
+# Service Type → Default Product mapping (when no bandwidth or product name match)
 SERVICE_TYPE_DEFAULT_PRODUCTS = {
     'DIA': 'DIA',
     'DF': 'Dark Fiber',
@@ -256,24 +374,29 @@ def transform_product_simple(
     Transform ES OrderItem data to BBF Product_Simple__c.
 
     Priority:
-    1. Extract bandwidth from Description field
-    2. Extract bandwidth from Product_Name__c field
-    3. Use service-type-based default
-    4. Use ultimate default
+    1. Direct Product_Name__c mapping (most specific)
+    2. Extract bandwidth from Description field
+    3. Extract bandwidth from Product_Name__c field
+    4. Use service-type-based default
+    5. Use ultimate default
 
     Args:
         description: ES OrderItem.Description field
         product_family: ES OrderItem.Product_Family__c (for context)
         service_type: Already-transformed Service_Type_Charge__c (for default lookup)
-        product_name: ES OrderItem.Product_Name__c (may contain bandwidth)
+        product_name: ES OrderItem.Product_Name__c (may contain bandwidth or direct mapping)
 
     Returns:
         BBF Product_Simple__c picklist value
     """
-    # Try to extract bandwidth from description first
+    # Priority 1: Direct Product_Name__c mapping
+    if product_name and product_name in PRODUCT_NAME_TO_PRODUCT_SIMPLE:
+        return PRODUCT_NAME_TO_PRODUCT_SIMPLE[product_name]
+
+    # Priority 2: Try to extract bandwidth from description
     bw_value, bw_unit = extract_bandwidth_from_description(description)
 
-    # If not found, try Product_Name__c
+    # Priority 3: If not found in description, try Product_Name__c for bandwidth
     if bw_value is None and product_name:
         bw_value, bw_unit = extract_bandwidth_from_description(product_name)
 
