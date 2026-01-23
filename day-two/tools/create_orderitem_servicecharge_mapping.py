@@ -18,10 +18,16 @@ SYSTEM_FIELDS = {
     'PhotoUrl', 'CleanStatus'
 }
 
-# Day 1 migration fields for Service_Charge__c (already populated)
+# Day 1 migration fields for Service_Charge__c (already populated - COMPLETE)
 DAY1_FIELDS_SERVICE_CHARGE = {
-    'Name', 'Service__c', 'Product_Simple__c', 'Service_Type_Charge__c',
-    'ES_Legacy_ID__c', 'BBF_New_Id__c'
+    'Name', 'Service__c', 'ES_Legacy_ID__c', 'BBF_New_Id__c'
+}
+
+# Day 1 PLACEHOLDER fields - set to temporary values, need proper mapping in Day 2
+# These fields were populated with placeholders because business mapping wasn't ready
+PLACEHOLDER_FIELDS_SERVICE_CHARGE = {
+    'Product_Simple__c',      # Set to 'ANNUAL' placeholder
+    'Service_Type_Charge__c'  # Set to 'Power' placeholder
 }
 
 
@@ -53,6 +59,17 @@ def semantic_match_fields(bbf_field, es_fields_data):
 
     # Billing/charge domain semantic mappings
     semantic_rules = {
+        # === PLACEHOLDER FIELDS - Need Day 2 mapping ===
+        'Product_Simple__c': {
+            'matches': ['Product2Id', 'Product_Name__c', 'Product_Family__c', 'SBQQ__Product__c'],
+            'confidence': 'High',
+            'notes': '⚠️ PLACEHOLDER: Currently set to "ANNUAL" - needs ES Product → BBF Product mapping'
+        },
+        'Service_Type_Charge__c': {
+            'matches': ['SBQQ__ChargeType__c', 'SBQQ__BillingType__c', 'Charge_Type__c'],
+            'confidence': 'High',
+            'notes': '⚠️ PLACEHOLDER: Currently set to "Power" - needs ES charge type → BBF service type mapping'
+        },
         # Core charge fields
         'Unit_Rate__c': {
             'matches': ['UnitPrice', 'UnitPriceForceOverride__c'],
@@ -452,9 +469,12 @@ def main():
     with open(bbf_fields_file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            # Exclude system fields and Day 1 fields
+            # Exclude system fields and completed Day 1 fields
+            # Note: PLACEHOLDER_FIELDS are NOT excluded - they need Day 2 mapping
             field_api = row['Field API Name']
             if field_api not in SYSTEM_FIELDS and field_api not in DAY1_FIELDS_SERVICE_CHARGE:
+                # Mark if this is a placeholder field that needs priority mapping
+                row['is_placeholder'] = field_api in PLACEHOLDER_FIELDS_SERVICE_CHARGE
                 bbf_fields.append(row)
     print(f"Loaded {len(bbf_fields)} BBF fields (after filtering)")
 
@@ -481,6 +501,9 @@ def main():
         if 'derive' in notes.lower() or 'calculate' in notes.lower() or 'transform' in notes.lower():
             transformer_needed = 'Y'
 
+        # Check if this is a placeholder field that needs priority mapping
+        is_placeholder = bbf_field.get('is_placeholder', False)
+
         field_mappings.append({
             'bbf_field_api': bbf_api,
             'bbf_label': bbf_label,
@@ -492,6 +515,7 @@ def main():
             'confidence': confidence,
             'transformer_needed': transformer_needed,
             'notes': notes,
+            'is_placeholder': 'Yes' if is_placeholder else 'No',  # PLACEHOLDER fields need Day 2 enrichment
             'es_final_field': '',  # Business decision: override AI suggestion if needed
             'include_in_migration': 'Yes' if confidence == 'High' else 'TBD',  # Business decision
             'business_notes': ''  # Business decision: reasoning for overrides
@@ -535,6 +559,7 @@ def main():
     low = sum(1 for m in field_mappings if m['confidence'] == 'Low')
     none = sum(1 for m in field_mappings if m['confidence'] == 'None')
     transformers = sum(1 for m in field_mappings if m['transformer_needed'] == 'Y')
+    placeholders = sum(1 for m in field_mappings if m['is_placeholder'] == 'Yes')
 
     print(f"\nConfidence breakdown:")
     print(f"  High: {high}")
@@ -542,6 +567,12 @@ def main():
     print(f"  Low: {low}")
     print(f"  None: {none}")
     print(f"  Transformers needed: {transformers}")
+
+    if placeholders > 0:
+        print(f"\n⚠️  PLACEHOLDER FIELDS (need priority mapping): {placeholders}")
+        for m in field_mappings:
+            if m['is_placeholder'] == 'Yes':
+                print(f"    - {m['bbf_field_api']}: {m['notes']}")
 
 
 if __name__ == '__main__':

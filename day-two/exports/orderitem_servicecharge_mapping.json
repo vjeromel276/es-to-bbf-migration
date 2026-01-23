@@ -10,7 +10,11 @@
       "es_type": "string",
       "confidence": "High",
       "transformer_needed": "Y",
-      "notes": "Charge description - maps to OrderItem Description or Item_Summary__c"
+      "notes": "Charge description - maps to OrderItem Description or Item_Summary__c",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Charge__c",
@@ -22,7 +26,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Deprecated charge type reference - not used in migration"
+      "notes": "Deprecated charge type reference - not used in migration",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Unit_Rate__c",
@@ -34,7 +42,11 @@
       "es_type": "currency",
       "confidence": "High",
       "transformer_needed": "N",
-      "notes": "Unit rate for the charge - maps to OrderItem UnitPrice"
+      "notes": "Unit rate for the charge - maps to OrderItem UnitPrice",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Units__c",
@@ -46,7 +58,11 @@
       "es_type": "double",
       "confidence": "High",
       "transformer_needed": "N",
-      "notes": "Quantity of units - maps to OrderItem Quantity"
+      "notes": "Quantity of units - maps to OrderItem Quantity",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Start_Date__c",
@@ -58,7 +74,11 @@
       "es_type": "date",
       "confidence": "High",
       "transformer_needed": "N",
-      "notes": "Service start date - maps to OrderItem ServiceDate"
+      "notes": "Service start date - maps to OrderItem ServiceDate",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "End_Date__c",
@@ -70,7 +90,11 @@
       "es_type": "date",
       "confidence": "High",
       "transformer_needed": "N",
-      "notes": "Service end date - maps to OrderItem EndDate"
+      "notes": "Service end date - maps to OrderItem EndDate",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Sequence__c",
@@ -82,7 +106,11 @@
       "es_type": "string",
       "confidence": "Medium",
       "transformer_needed": "Y",
-      "notes": "Sequence or line number - maps to OrderItemNumber"
+      "notes": "Sequence or line number - maps to OrderItemNumber",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Match_Key__c",
@@ -94,7 +122,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "BBF matching key - generate from OrderItem.Id or unique combination"
+      "notes": "BBF matching key - generate from OrderItem.Id or unique combination",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Unified_DB_Last_Synced_Date__c",
@@ -106,7 +138,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "BBF sync timestamp - not applicable for migration"
+      "notes": "BBF sync timestamp - not applicable for migration",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Amount__c",
@@ -118,7 +154,11 @@
       "es_type": "currency",
       "confidence": "High",
       "transformer_needed": "Y",
-      "notes": "MRC amount (calculated as Unit_Rate__c * Units__c) - maps to Total_MRC_Amortized__c"
+      "notes": "MRC amount (calculated as Unit_Rate__c * Units__c) - maps to Total_MRC_Amortized__c",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "PricebookEntryId__c",
@@ -130,7 +170,11 @@
       "es_type": "reference",
       "confidence": "High",
       "transformer_needed": "Y",
-      "notes": "Pricebook entry reference - direct match to OrderItem.PricebookEntryId"
+      "notes": "Pricebook entry reference - direct match to OrderItem.PricebookEntryId",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Charge_Class__c",
@@ -142,7 +186,11 @@
       "es_type": "picklist",
       "confidence": "Medium",
       "transformer_needed": "Y",
-      "notes": "Charge classification (RECUR/NONRECUR) - derive from SBQQ__ChargeType__c (Recurring=RECUR, One-Time=NONRECUR)"
+      "notes": "Charge classification (RECUR/NONRECUR) - derive from SBQQ__ChargeType__c (Recurring=RECUR, One-Time=NONRECUR)",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Charge_Active__c",
@@ -154,7 +202,11 @@
       "es_type": "boolean",
       "confidence": "Medium",
       "transformer_needed": "Y",
-      "notes": "Whether charge is active - derive from SBQQ__Activated__c and !Cancelled__c"
+      "notes": "Whether charge is active - derive from SBQQ__Activated__c and !Cancelled__c",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Product_Category__c",
@@ -166,7 +218,11 @@
       "es_type": "string",
       "confidence": "Low",
       "transformer_needed": "Y",
-      "notes": "Deprecated product category (formula) - may derive from Product_Family__c"
+      "notes": "Deprecated product category (formula) - may derive from Product_Family__c",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Product_Name__c",
@@ -178,7 +234,11 @@
       "es_type": "string",
       "confidence": "Low",
       "transformer_needed": "Y",
-      "notes": "Deprecated product name (formula) - direct match if needed"
+      "notes": "Deprecated product name (formula) - direct match if needed",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Product__c",
@@ -190,7 +250,11 @@
       "es_type": "reference",
       "confidence": "Low",
       "transformer_needed": "Y",
-      "notes": "Deprecated product reference - maps to Product2Id"
+      "notes": "Deprecated product reference - maps to Product2Id",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Test_Formula__c",
@@ -202,7 +266,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Test formula field - not used in migration"
+      "notes": "Test formula field - not used in migration",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Bill_Schedule_Type__c",
@@ -214,7 +282,11 @@
       "es_type": "picklist",
       "confidence": "Medium",
       "transformer_needed": "Y",
-      "notes": "Billing schedule type - derive from SBQQ__BillingFrequency__c"
+      "notes": "Billing schedule type - derive from SBQQ__BillingFrequency__c",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "MRC_COGS__c",
@@ -226,7 +298,11 @@
       "es_type": "currency",
       "confidence": "High",
       "transformer_needed": "N",
-      "notes": "Monthly recurring COGS - maps to OrderItem Vendor_Fees_Monthly__c"
+      "notes": "Monthly recurring COGS - maps to OrderItem Vendor_Fees_Monthly__c",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "NRC_COGS__c",
@@ -238,7 +314,11 @@
       "es_type": "currency",
       "confidence": "High",
       "transformer_needed": "N",
-      "notes": "Non-recurring COGS - maps to OrderItem Vendor_NRC__c"
+      "notes": "Non-recurring COGS - maps to OrderItem Vendor_NRC__c",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "NRC__c",
@@ -250,7 +330,27 @@
       "es_type": "currency",
       "confidence": "High",
       "transformer_needed": "N",
-      "notes": "Non-recurring charge - maps to OrderItem NRC fields"
+      "notes": "Non-recurring charge - maps to OrderItem NRC fields",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
+    },
+    {
+      "bbf_field_api": "Product_Simple__c",
+      "bbf_label": "Product",
+      "bbf_type": "picklist",
+      "bbf_required": "Yes",
+      "es_field_api": "Product2Id",
+      "es_label": "Product ID",
+      "es_type": "reference",
+      "confidence": "High",
+      "transformer_needed": "Y",
+      "notes": "\u26a0\ufe0f PLACEHOLDER: Currently set to \"ANNUAL\" - needs ES Product \u2192 BBF Product mapping",
+      "is_placeholder": "Yes",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Service_Order_Line_Charge__c",
@@ -262,7 +362,27 @@
       "es_type": "reference",
       "confidence": "Low",
       "transformer_needed": "Y",
-      "notes": "Reference to originating quote line - may map to SBQQ__QuoteLine__c if needed"
+      "notes": "Reference to originating quote line - may map to SBQQ__QuoteLine__c if needed",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
+    },
+    {
+      "bbf_field_api": "Service_Type_Charge__c",
+      "bbf_label": "Service Type Charge",
+      "bbf_type": "picklist",
+      "bbf_required": "Yes",
+      "es_field_api": "SBQQ__ChargeType__c",
+      "es_label": "Charge Type",
+      "es_type": "picklist",
+      "confidence": "High",
+      "transformer_needed": "N",
+      "notes": "\u26a0\ufe0f PLACEHOLDER: Currently set to \"Power\" - needs ES charge type \u2192 BBF service type mapping",
+      "is_placeholder": "Yes",
+      "es_final_field": "",
+      "include_in_migration": "Yes",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "MRC_Net__c",
@@ -274,7 +394,11 @@
       "es_type": "currency",
       "confidence": "Medium",
       "transformer_needed": "Y",
-      "notes": "Net MRC (formula field) - calculate from OrderItem pricing"
+      "notes": "Net MRC (formula field) - calculate from OrderItem pricing",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "NRC_Net__c",
@@ -286,7 +410,11 @@
       "es_type": "currency",
       "confidence": "Medium",
       "transformer_needed": "Y",
-      "notes": "Net NRC (formula field) - calculate from OrderItem NRC fields"
+      "notes": "Net NRC (formula field) - calculate from OrderItem NRC fields",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "SC_Record_Type__c",
@@ -298,7 +426,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Service Charge record type (Charge vs COGS) - set based on charge nature"
+      "notes": "Service Charge record type (Charge vs COGS) - set based on charge nature",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Disabled_COPS_Synchronization__c",
@@ -310,7 +442,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "BBF-specific field for COPS sync control - no ES equivalent"
+      "notes": "BBF-specific field for COPS sync control - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Active__c",
@@ -322,7 +458,11 @@
       "es_type": "boolean",
       "confidence": "Medium",
       "transformer_needed": "Y",
-      "notes": "Active status (formula field) - derive from SBQQ__Activated__c and !Cancelled__c"
+      "notes": "Active status (formula field) - derive from SBQQ__Activated__c and !Cancelled__c",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Private_Line_YN__c",
@@ -334,7 +474,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Private line indicator (formula) - BBF-specific logic"
+      "notes": "Private line indicator (formula) - BBF-specific logic",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Start_Date_Achieved_On__c",
@@ -346,7 +490,11 @@
       "es_type": "date",
       "confidence": "Low",
       "transformer_needed": "Y",
-      "notes": "Date when start date was achieved - may track when ServiceDate was set"
+      "notes": "Date when start date was achieved - may track when ServiceDate was set",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "End_Date_Achieved_On__c",
@@ -358,7 +506,11 @@
       "es_type": "date",
       "confidence": "Low",
       "transformer_needed": "Y",
-      "notes": "Date when end date was achieved - may track when EndDate was set"
+      "notes": "Date when end date was achieved - may track when EndDate was set",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Start_Date_Day__c",
@@ -370,7 +522,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Day of month from start date (formula) - BBF-specific"
+      "notes": "Day of month from start date (formula) - BBF-specific",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "End_Date_Day__c",
@@ -382,7 +538,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Day of month from end date (formula) - BBF-specific"
+      "notes": "Day of month from end date (formula) - BBF-specific",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Ignore_in_MBB_Billing_Manually__c",
@@ -394,7 +554,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "BBF-specific billing control - no ES equivalent"
+      "notes": "BBF-specific billing control - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Ignore_in_MBB_Billing_Calculated__c",
@@ -406,7 +570,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "BBF-specific billing control - no ES equivalent"
+      "notes": "BBF-specific billing control - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Ignore_in_MBB_Billing_Backbill_Not_Found__c",
@@ -418,7 +586,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "BBF-specific billing control - no ES equivalent"
+      "notes": "BBF-specific billing control - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Aloc_COGS_Provider__c",
@@ -430,7 +602,11 @@
       "es_type": "reference",
       "confidence": "Low",
       "transformer_needed": "Y",
-      "notes": "A-location COGS provider - may derive from Last_Mile_Carrier__c if location-specific"
+      "notes": "A-location COGS provider - may derive from Last_Mile_Carrier__c if location-specific",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Zloc_COGS_Provider__c",
@@ -442,7 +618,11 @@
       "es_type": "reference",
       "confidence": "Low",
       "transformer_needed": "Y",
-      "notes": "Z-location COGS provider - may derive from Last_Mile_Carrier__c if location-specific"
+      "notes": "Z-location COGS provider - may derive from Last_Mile_Carrier__c if location-specific",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Ignore_in_MBB_Billing_Infra_Calc__c",
@@ -454,7 +634,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "BBF-specific billing control - no ES equivalent"
+      "notes": "BBF-specific billing control - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Do_Not_Backbill__c",
@@ -466,7 +650,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "BBF-specific billing control - no ES equivalent"
+      "notes": "BBF-specific billing control - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Exclude_From_Escalation__c",
@@ -478,7 +666,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Price escalation control - no ES equivalent"
+      "notes": "Price escalation control - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Next_Price_Escalation__c",
@@ -490,7 +682,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Next escalation date - no ES equivalent"
+      "notes": "Next escalation date - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Escalation_Notes__c",
@@ -502,7 +698,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Escalation notes - no ES equivalent"
+      "notes": "Escalation notes - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Escalation_Created_Charge__c",
@@ -514,7 +714,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Flag for escalation-created charges - no ES equivalent"
+      "notes": "Flag for escalation-created charges - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Off_Net__c",
@@ -526,7 +730,11 @@
       "es_type": "string",
       "confidence": "Medium",
       "transformer_needed": "Y",
-      "notes": "Off-Net relationship - derive from OrderItem OFF_NET_IDs__c field"
+      "notes": "Off-Net relationship - derive from OrderItem OFF_NET_IDs__c field",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     },
     {
       "bbf_field_api": "Price_Increase__c",
@@ -538,7 +746,11 @@
       "es_type": "",
       "confidence": "None",
       "transformer_needed": "N",
-      "notes": "Price increase flag - no ES equivalent"
+      "notes": "Price increase flag - no ES equivalent",
+      "is_placeholder": "No",
+      "es_final_field": "",
+      "include_in_migration": "TBD",
+      "business_notes": ""
     }
   ],
   "picklist_mappings": [
@@ -603,6 +815,30 @@
       "es_value": "Invoice Plan",
       "bbf_field": "Bill_Schedule_Type__c",
       "suggested_mapping": "Milestone | Standard | Usage",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "SBQQ__ChargeType__c",
+      "es_value": "One-Time",
+      "bbf_field": "Service_Type_Charge__c",
+      "suggested_mapping": "100G | 10G | 2.5G | BADGE | CALEA | CDN | COLO | Cancellation | Cloud Connect | Credit | DF | DIA | DID | DS-1 | DS-3 | ELAN | ENNI | EPL | EPLAN | EVC | EVPL | EVPLAN | Early Termination | Electrical Circuit | Equipment | Floor Space | IP Subnet | IProtect | Installation | L3VPN | NTWK | NTWK Non-LAG | OC-12 | OC-12c | OC-3 | OC-3c | OC-48 | OC-48c | PALLET | Planning Project | Power | RING | ROADM | Reserve | SDIA | SIA | SRVL | SS7 | STS-1 | STS-3c | Smart Hands | Softphone | T1 | TSP | Taxes/Fees | Toll Free | VLAN | VOICE | VPOP | Wavelength | X100M | X10G | X1GIG | XCN | XCONN | XDF | XDS0 | XDS1 | XDS3 | XEDF | XOCN | Xconnect",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "SBQQ__ChargeType__c",
+      "es_value": "Recurring",
+      "bbf_field": "Service_Type_Charge__c",
+      "suggested_mapping": "100G | 10G | 2.5G | BADGE | CALEA | CDN | COLO | Cancellation | Cloud Connect | Credit | DF | DIA | DID | DS-1 | DS-3 | ELAN | ENNI | EPL | EPLAN | EVC | EVPL | EVPLAN | Early Termination | Electrical Circuit | Equipment | Floor Space | IP Subnet | IProtect | Installation | L3VPN | NTWK | NTWK Non-LAG | OC-12 | OC-12c | OC-3 | OC-3c | OC-48 | OC-48c | PALLET | Planning Project | Power | RING | ROADM | Reserve | SDIA | SIA | SRVL | SS7 | STS-1 | STS-3c | Smart Hands | Softphone | T1 | TSP | Taxes/Fees | Toll Free | VLAN | VOICE | VPOP | Wavelength | X100M | X10G | X1GIG | XCN | XCONN | XDF | XDS0 | XDS1 | XDS3 | XEDF | XOCN | Xconnect",
+      "notes": "No Match - Select from list",
+      "bbf_final_value": ""
+    },
+    {
+      "es_field": "SBQQ__ChargeType__c",
+      "es_value": "Usage",
+      "bbf_field": "Service_Type_Charge__c",
+      "suggested_mapping": "100G | 10G | 2.5G | BADGE | CALEA | CDN | COLO | Cancellation | Cloud Connect | Credit | DF | DIA | DID | DS-1 | DS-3 | ELAN | ENNI | EPL | EPLAN | EVC | EVPL | EVPLAN | Early Termination | Electrical Circuit | Equipment | Floor Space | IP Subnet | IProtect | Installation | L3VPN | NTWK | NTWK Non-LAG | OC-12 | OC-12c | OC-3 | OC-3c | OC-48 | OC-48c | PALLET | Planning Project | Power | RING | ROADM | Reserve | SDIA | SIA | SRVL | SS7 | STS-1 | STS-3c | Smart Hands | Softphone | T1 | TSP | Taxes/Fees | Toll Free | VLAN | VOICE | VPOP | Wavelength | X100M | X10G | X1GIG | XCN | XCONN | XDF | XDS0 | XDS1 | XDS3 | XEDF | XOCN | Xconnect",
       "notes": "No Match - Select from list",
       "bbf_final_value": ""
     }
