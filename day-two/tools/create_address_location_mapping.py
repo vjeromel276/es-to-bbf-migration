@@ -181,7 +181,10 @@ def create_field_mappings(bbf_fields, es_fields):
             'es_type': es_type if es_type else '',
             'confidence': confidence,
             'transformer_needed': transformer,
-            'notes': notes
+            'notes': notes,
+            'es_final_field': '',  # Business decision: override AI suggestion if needed
+            'include_in_migration': 'Yes' if confidence == 'High' else 'TBD',  # Business decision
+            'business_notes': ''  # Business decision: reasoning for overrides
         })
 
     return mappings

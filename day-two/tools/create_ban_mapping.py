@@ -236,7 +236,10 @@ def create_field_mapping(bbf_df, es_df):
             'ES_Data_Type': es_type,
             'Match_Confidence': confidence,
             'Transformer_Needed': transformer,
-            'Notes': ' | '.join(notes)
+            'Notes': ' | '.join(notes),
+            'ES_Final_Field': '',  # Business decision: override AI suggestion if needed
+            'Include_in_Migration': 'Yes' if confidence == 'High' else 'TBD',  # Business decision
+            'Business_Notes': ''  # Business decision: reasoning for overrides
         })
 
     return pd.DataFrame(mappings)

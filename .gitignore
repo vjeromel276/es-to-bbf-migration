@@ -3,6 +3,10 @@
 *.docx
 *.tmp
 *.csv
+__pycache__/
+*.zip
+.vscode/
+nul
 
 # But track Day Two mapping files
 !day-two/mappings/*.xlsx

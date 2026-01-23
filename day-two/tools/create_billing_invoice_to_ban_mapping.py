@@ -189,7 +189,8 @@ def create_field_mapping_sheet(wb, es_df, bbf_df):
     headers = [
         'BBF_Field_API_Name', 'BBF_Field_Label', 'BBF_Data_Type', 'BBF_Is_Required',
         'ES_Field_API_Name', 'ES_Field_Label', 'ES_Data_Type',
-        'Match_Confidence', 'Transformer_Needed', 'Notes'
+        'Match_Confidence', 'Transformer_Needed', 'Notes',
+        'ES_Final_Field', 'Include_in_Migration', 'Business_Notes'
     ]
 
     # Write headers with formatting
@@ -239,7 +240,10 @@ def create_field_mapping_sheet(wb, es_df, bbf_df):
         row_data = [
             bbf_api, bbf_label, bbf_type, bbf_required,
             es_api, es_label, es_type,
-            confidence, transformer, notes
+            confidence, transformer, notes,
+            '',  # ES_Final_Field - Business decision: override AI suggestion if needed
+            'Yes' if confidence == 'High' else 'TBD',  # Include_in_Migration - Business decision
+            ''  # Business_Notes - Business decision: reasoning for overrides
         ]
 
         for col_num, value in enumerate(row_data, 1):
@@ -254,10 +258,11 @@ def create_field_mapping_sheet(wb, es_df, bbf_df):
 
         row_num += 1
 
-    # Adjust column widths
-    column_widths = [30, 30, 15, 15, 30, 30, 15, 15, 15, 60]
+    # Adjust column widths (includes new business decision columns)
+    column_widths = [30, 30, 15, 15, 30, 30, 15, 15, 15, 60, 35, 20, 40]
     for col_num, width in enumerate(column_widths, 1):
-        ws.column_dimensions[chr(64 + col_num)].width = width
+        col_letter = chr(64 + col_num) if col_num <= 26 else 'A' + chr(64 + col_num - 26)
+        ws.column_dimensions[col_letter].width = width
 
     return stats, transformer_count
 
