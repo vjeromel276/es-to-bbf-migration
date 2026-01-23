@@ -10,3 +10,4 @@ nul
 
 # But track Day Two mapping files
 !day-two/mappings/*.xlsx
+.claude/settings.local.json
