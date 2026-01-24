@@ -1,5 +1,12 @@
-*/*.xlsx
 *.xlsx
 *.log
 *.docx
 *.tmp
+*.csv
+__pycache__/
+*.zip
+.vscode/
+nul
+
+# Generated mapping files are ignored (*.xlsx rule above)
+.claude/settings.local.json

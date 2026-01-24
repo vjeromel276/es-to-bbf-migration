@@ -2,21 +2,21 @@
 import argparse
 import sys
 import pandas as pd
-from simple_salesforce import Salesforce
+from simple_salesforce import Salesforce  # type: ignore
 
 # ---------------------------------------------------------------------
 # Salesforce credentials
 # ---------------------------------------------------------------------
-sf_username = "sfdcapi@everstream.net"
-sf_password = "pV4CAxns8DQtJsBq!"
-sf_token = "r1uoYiusK19RbrflARydi86TA"
-sf_domain = "login"  # or 'test' for sandbox
+sf_username = "vlettau@everstream.net"
+sf_password = "MNlkpo0987)(*&"
+sf_token = "I4xmQLmm03cXl1O9qI2Z3XAAX"
+sf_domain = "test"  # or 'test' for sandbox
 
 # ---------------------------------------------------------------------
 # CLI setup
 # ---------------------------------------------------------------------
 parser = argparse.ArgumentParser(
-    description="Export field metadata for one or more Salesforce objects using the standard REST describe() API."
+    description="Export field metadata for one or more Salesforce objects including picklist values."
 )
 parser.add_argument(
     "--object",
@@ -26,9 +26,10 @@ parser.add_argument(
     help="One or more Object API names separated by space or comma (e.g., Account Order MyObject__c)",
 )
 parser.add_argument(
-    "--csv",
-    action="store_true",
-    help="Output results as separate CSVs instead of a single Excel workbook.",
+    "--output-dir",
+    "-d",
+    default=".",
+    help="Output directory for generated files (default: current directory)",
 )
 parser.add_argument(
     "--include-managed",
@@ -44,6 +45,11 @@ parser.add_argument(
     "--include-required-only",
     action="store_true",
     help="Include only required fields (nillable=False).",
+)
+parser.add_argument(
+    "--picklists-only",
+    action="store_true",
+    help="Include only picklist/multipicklist fields.",
 )
 args = parser.parse_args()
 
@@ -81,7 +87,7 @@ except Exception as e:
 def get_fields_for_object(sf, object_api_name):
     """
     Return a list of fields for a given object using the standard REST describe() call.
-    Includes both standard and custom (__c) fields.
+    Includes picklist values where applicable.
     """
     print(f"\n📡 Fetching field metadata for {object_api_name}...")
     try:
@@ -95,10 +101,14 @@ def get_fields_for_object(sf, object_api_name):
     filtered = []
     for f in fields:
         api_name = f.get("name", "")
+        field_type = f.get("type", "")
         is_custom = api_name.endswith("__c")
         nillable = f.get("nillable", True)
         calculated = f.get("calculated", False)
         has_namespace = "__" in api_name and not is_custom and api_name.count("__") >= 2
+
+        # Check if field is a picklist type
+        is_picklist = field_type in ["picklist", "multipicklist"]
 
         # Apply filters
         if not args.include_managed and has_namespace:
@@ -107,17 +117,48 @@ def get_fields_for_object(sf, object_api_name):
             continue
         if args.include_required_only and nillable:
             continue
+        if args.picklists_only and not is_picklist:
+            continue
+
+        # Extract picklist values if available
+        picklist_values = []
+        default_value = None
+        if is_picklist:
+            picklist_values_list = f.get("picklistValues", [])
+            for pv in picklist_values_list:
+                value = pv.get("value", "")
+                is_active = pv.get("active", False)
+                is_default = pv.get("defaultValue", False)
+
+                # Mark inactive values with (inactive) and default with (default)
+                status = []
+                if is_default:
+                    status.append("default")
+                    default_value = value
+                if not is_active:
+                    status.append("inactive")
+
+                if status:
+                    picklist_values.append(f"{value} ({', '.join(status)})")
+                else:
+                    picklist_values.append(value)
+
+        # Join picklist values with semicolon for CSV/Excel compatibility
+        picklist_str = "; ".join(picklist_values) if picklist_values else ""
 
         filtered.append(
             {
                 "Object API Name": object_api_name,
                 "Field API Name": api_name,
-                "Field Type": f.get("type", ""),
+                "Field Type": field_type,
                 "Field Label": f.get("label", ""),
                 "Length": f.get("length", ""),
                 "Is Nillable": nillable,
                 "Is Calculated": calculated,
                 "Custom": is_custom,
+                "Picklist Values": picklist_str,
+                "Default Value": default_value if default_value else "",
+                "Picklist Value Count": len(picklist_values) if picklist_values else 0,
             }
         )
 
@@ -139,20 +180,18 @@ for obj_name in object_list:
     df = pd.DataFrame(fields)
     dataframes[obj_name] = df
 
-    if args.csv:
-        filename = f"es_{obj_name}_salesforce_fields.csv"
-        df.to_csv(filename, index=False)
-        print(f"📁 CSV export complete → {filename}")
-
 # ---------------------------------------------------------------------
-# Write single Excel workbook (if not CSV)
+# Write CSV for each object (faster than Excel for intermediate files)
 # ---------------------------------------------------------------------
-if not args.csv:
-    filename = f"./data-migration/es_{obj_name}_salesforce_fields.xlsx"
-    with pd.ExcelWriter(filename, engine="openpyxl") as writer:
-        for obj_name, df in dataframes.items():
-            safe_name = obj_name[:31]  # Excel sheet name limit
-            df.to_excel(writer, index=False, sheet_name=safe_name)
-    print(f"\n📘 Excel export complete → {filename}")
+import os
 
-print("\n🏁 All objects processed successfully.")
+os.makedirs(args.output_dir, exist_ok=True)
+
+for obj_name, df in dataframes.items():
+    filename = os.path.join(
+        args.output_dir, f"bbf_{obj_name}_fields_with_picklists.csv"
+    )
+    df.to_csv(filename, index=False)
+    print(f"📄 CSV export complete → {filename}")
+
+print("\n✨ All objects processed successfully.")
