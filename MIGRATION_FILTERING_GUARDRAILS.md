@@ -2,7 +2,7 @@
 
 Quick reference for data filtering logic across all ES-to-BBF migration notebooks.
 
-**Last Synchronized:** 2026-01-14 (All 8 notebooks reviewed and documented)
+**Last Synchronized:** 2026-01-23 (All 8 notebooks reviewed - duplicate prevention logic added)
 
 ## Overview
 
@@ -17,6 +17,40 @@ This approach ensures:
 - Consistent filtering across all notebooks
 - Single source of truth for what data migrates
 - Easy to adjust scope by re-running prep with different criteria
+
+## Duplicate Prevention Strategy (All Notebooks)
+
+**As of 2026-01-23**, all migration notebooks implement duplicate prevention:
+
+1. **Pre-Insert Check**: Before inserting records to BBF, query BBF for existing records with matching `ES_Legacy_ID__c`
+2. **Sync Existing Records**: If records already exist in BBF, sync their BBF IDs back to ES (`ES.BBF_New_Id__c = BBF.Id`)
+3. **Insert Only New**: Only insert records that don't already exist in BBF
+4. **Idempotency**: Notebooks can be re-run safely without creating duplicates
+
+**Benefits:**
+- Safe re-runs after failures or partial migrations
+- Resume migrations from where they left off
+- Prevents duplicate record creation
+- Maintains ES-to-BBF ID tracking even for pre-existing records
+
+**Implementation Pattern (all notebooks):**
+```python
+# Step 1: Query BBF for existing records by ES_Legacy_ID__c
+existing_bbf_records = bbf_sf.query(f"""
+    SELECT Id, ES_Legacy_ID__c
+    FROM {BBF_Object}
+    WHERE ES_Legacy_ID__c IN ('{es_ids}')
+""")
+
+# Step 2: Sync BBF IDs back to ES for existing records
+if existing_bbf_records:
+    sync_updates = [{"Id": es_id, "BBF_New_Id__c": bbf_id}]
+    es_sf.bulk.{ES_Object}.update(sync_updates)
+
+# Step 3: Filter out already-migrated records, insert only new
+new_records = [r for r in records if r['ES_Legacy_ID__c'] not in existing_ids]
+bbf_sf.bulk.{BBF_Object}.insert(new_records)
+```
 
 ## Central Policy Reminder
 
@@ -140,8 +174,10 @@ bbf_location = {
 - Queries Orders with `BBF_Ban__c = true` on parent BAN
 - Extracts unique Address_A__c and Address_Z__c IDs
 - Queries Address__c records for those IDs (not yet migrated)
+- **NEW: Checks BBF for existing Location__c by ES_Legacy_ID__c**
+- **NEW: Syncs ES.BBF_New_Id__c for already-migrated Addresses**
 - Transforms to BBF Location__c schema
-- Inserts to BBF, updates ES with `BBF_New_Id__c`
+- Inserts only NEW Locations to BBF, updates ES with `BBF_New_Id__c`
 
 **Parent Dependencies:** None (Location is standalone)
 
@@ -207,8 +243,10 @@ bbf_account = {
 - Queries BANs with `BBF_Ban__c = true`
 - Extracts unique Account__c IDs
 - Queries Account records for those IDs (not yet migrated)
+- **NEW: Checks BBF for existing Accounts by ES_Legacy_ID__c**
+- **NEW: Syncs ES.BBF_New_Id__c for already-migrated Accounts**
 - Transforms to BBF Account schema
-- Inserts to BBF in batches of 10 (to avoid CPQ trigger limits)
+- Inserts only NEW Accounts to BBF in batches of 10 (to avoid CPQ trigger limits)
 - Updates ES with `BBF_New_Id__c`
 
 **Parent Dependencies:** None (Account is root object)
@@ -264,8 +302,10 @@ bbf_contact = {
 
 **Logic:**
 - Queries Contacts where parent Account has `BBF_New_Id__c` (Account migrated)
+- **NEW: Checks BBF for existing Contacts by ES_Legacy_ID__c**
+- **NEW: Syncs ES.BBF_New_Id__c for already-migrated Contacts**
 - Maps to BBF Account ID via `Account.BBF_New_Id__c`
-- Inserts to BBF, updates ES with `BBF_New_Id__c`
+- Inserts only NEW Contacts to BBF, updates ES with `BBF_New_Id__c`
 
 **Parent Dependencies:**
 - **REQUIRED:** Account must have `BBF_New_Id__c`
@@ -342,9 +382,11 @@ bbf_ban = {
 **Logic:**
 - Queries BANs with `BBF_Ban__c = true`
 - ONLY includes BANs where parent Account migrated
+- **NEW: Checks BBF for existing BANs by ES_Legacy_ID__c**
+- **NEW: Syncs ES.BBF_New_Id__c for already-migrated BANs**
 - Translates Payment Terms (NET30 → NET 30, etc.)
 - Skips BANs with invalid Payment Terms values
-- Inserts to BBF, updates ES with `BBF_New_Id__c`
+- Inserts only NEW BANs to BBF, updates ES with `BBF_New_Id__c`
 
 **Parent Dependencies:**
 - **REQUIRED:** Account must have `BBF_New_Id__c`
@@ -416,10 +458,12 @@ UPDATE Service__c SET Account__c = BAN.Account__c
 1. Queries Orders with full criteria (Active + NOT PA MARKET DECOM)
 2. REQUIRES parent BAN migrated (Master-Detail - BLOCKING)
 3. Optionally includes Location lookups if migrated
-4. Inserts Services with Billing_Account_Number__c (master-detail) + ES_Legacy_ID__c
-5. Updates ES Orders with `BBF_New_Id__c`
-6. **NEW:** Queries Services and populates Account__c from BAN.Account__c relationship
-7. Updates Services with Account__c
+4. **NEW: Checks BBF for existing Services by ES_Legacy_ID__c**
+5. **NEW: Syncs ES.BBF_New_Id__c for already-migrated Services**
+6. Inserts only NEW Services with Billing_Account_Number__c (master-detail) + ES_Legacy_ID__c
+7. Updates ES Orders with `BBF_New_Id__c`
+8. Queries Services and populates Account__c from BAN.Account__c relationship
+9. Updates Services with Account__c
 
 **Fields NOT Set (Why):**
 - Name: Autonumber (auto-generated by BBF)
@@ -486,7 +530,9 @@ bbf_service_charge = {
 **Logic:**
 - Queries OrderItems where parent Order migrated (Service exists)
 - Order must have `BBF_New_Id__c` (proof of Service migration)
-- Inserts with PLACEHOLDER values for required picklist fields
+- **NEW: Checks BBF for existing Service_Charges by ES_Legacy_ID__c**
+- **NEW: Syncs ES.BBF_New_Id__c for already-migrated Service_Charges**
+- Inserts only NEW Service_Charges with PLACEHOLDER values for required picklist fields
 - Updates ES with `BBF_New_Id__c`
 
 **Fields NOT Set (Why):**
@@ -558,9 +604,11 @@ if bbf_zz_location:
 **Logic:**
 - Queries Off_Net__c records where `SOF1__c` (Order) migrated
 - Order must have `BBF_New_Id__c` (proof of Service migration)
+- **NEW: Checks BBF for existing Off_Net records by ES_Legacy_ID__c**
+- **NEW: Syncs ES.BBF_New_Id__c for already-migrated Off_Net records**
 - Populates Service__c from Order.BBF_New_Id__c
 - Optionally includes Location lookups if migrated
-- Inserts to BBF, updates ES with `BBF_New_Id__c`
+- Inserts only NEW Off_Net records to BBF, updates ES with `BBF_New_Id__c`
 
 **Fields NOT Set (Why):**
 - Name: Autonumber (auto-generated by BBF)
@@ -755,7 +803,8 @@ Use this checklist for Day 1 production migration:
 
 ---
 
-**Document Version:** 2.0
-**Last Synchronized:** 2026-01-14
+**Document Version:** 2.1
+**Last Synchronized:** 2026-01-23
 **Notebooks Reviewed:** 00, 01, 02, 03, 04, 05, 06, 07, 08 (all 8 migration notebooks + 1 export tool)
+**Key Update:** All notebooks now implement duplicate prevention via ES_Legacy_ID__c check
 **Maintained By:** ES-to-BBF Migration Team

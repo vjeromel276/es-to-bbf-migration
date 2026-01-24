@@ -7,14 +7,98 @@
 - **Current Phase**: UAT Testing - POC Pipeline COMPLETE (All 7 migrations executed successfully)
 
 ## Quick Status Summary
-- **Overall Progress**: 98% complete (Day 1 migrations executed, Day 2 field mappings complete, enrichment notebooks pending)
-- **Last Session**: 2026-01-15 - Day Two field mapping completed with AI-powered semantic matching. All 7 object mappings complete, 81 transformer functions generated, 87 picklist recommendations provided, 194 values need business decision.
-- **Current Phase**: Day Two - Field Mapping & Transformer Generation (COMPLETE)
-- **Next Priority**: Business review of 194 picklist values in Excel files, then enrichment notebook development
-- **Day 1 Status**: All 7 migration notebooks successfully executed in UAT. 31 Locations, 19 Accounts, 192 Contacts, 17 BANs, 17 Services, 44 Service_Charges, 6 Off_Net records migrated to BBF sandbox.
+- **Overall Progress**: 98% complete (Day 1 migrations executed, Day 2 field mappings complete, duplicate prevention added, enrichment notebooks pending)
+- **Last Session**: 2026-01-23 - Duplicate prevention implemented across all 7 migration notebooks. 2,498 duplicate Service_Charge records deleted from BBF. Repository cleaned (Excel files removed from git tracking).
+- **Current Phase**: Day Two - Migration Hardening & Data Quality
+- **Next Priority**: Business review of 194 picklist values in Excel files, test transformer functions, develop enrichment notebooks
+- **Day 1 Status**: All 7 migration notebooks successfully executed in UAT. 31 Locations, 19 Accounts, 192 Contacts, 17 BANs, 17 Services, 44 Service_Charges, 6 Off_Net records migrated to BBF sandbox. Duplicate prevention now implemented.
 - **Day 2 Status**: All 7 object field mappings completed. 81 transformer functions generated. 87 picklist values AI-recommended, 194 need business decision. All files committed to uat-sandbox-testing branch.
-
 ## Completed Work
+
+### 2026-01-23 - Duplicate Prevention & Data Cleanup Session
+**Status**: COMPLETED - Duplicate prevention implemented, duplicate data cleaned
+**Session Duration**: ~2 hours
+**Git Commits**: 4 commits pushed to uat-sandbox-testing branch
+
+**Key Accomplishments**:
+1. ✅ Identified and deleted 2,498 duplicate Service_Charge__c records from BBF UAT sandbox
+2. ✅ Added duplicate prevention logic to all 7 migration notebooks (01-07)
+3. ✅ Updated .gitignore to properly ignore Excel mapping files
+4. ✅ Removed Excel files from git tracking (cleaned repository)
+5. ✅ All changes committed and pushed to uat-sandbox-testing branch
+
+**Git Commit History for Today's Session**:
+- `e5c2f2d`: Remove Excel mapping files from git tracking
+  - Cleaned up repository by removing large Excel files
+  - Files now properly ignored per .gitignore rules
+- `ba68838`: Remove Excel tracking exception from gitignore
+  - Fixed .gitignore to properly exclude all Excel files
+  - Ensures mapping files stay local and don't bloat repository
+- `d7f5751`: Add duplicate prevention to all migration notebooks
+  - Implemented ES_Legacy_ID__c checks before inserting records
+  - Added BBF_New_Id__c sync for records already in BBF
+  - Prevents duplicate migrations if notebooks are re-run
+- `4dfc973`: Add Product_Name__c direct mapping for Service_Charge enrichment
+  - Enhanced Service_Charge enrichment capabilities
+- `3c39b93`: Add Product_Simple__c and Service_Type_Charge__c mapping tools
+  - Tools for product field mapping
+
+**Duplicate Service_Charge Issue**:
+- **Root Cause**: Row lock failures during Service_Charge migration caused partial rollbacks, leaving duplicate records
+- **Records Deleted**: 2,498 duplicate Service_Charge__c records (keeping only records with ES_Legacy_ID__c populated)
+- **Query Used**: `SELECT Id FROM Service_Charge__c WHERE ES_Legacy_ID__c = null`
+- **Impact**: Cleaned up BBF UAT sandbox, removed orphaned records from failed transactions
+
+**Duplicate Prevention Logic Added (All 7 Notebooks)**:
+All migration notebooks (01-07) now include duplicate prevention:
+
+1. **Before Insert - Check BBF for Existing Records**:
+   ```python
+   # Query BBF for records already migrated with this ES_Legacy_ID__c
+   existing_records = bbf_sf.query(f"""
+       SELECT Id, ES_Legacy_ID__c 
+       FROM {object_name} 
+       WHERE ES_Legacy_ID__c IN ({es_ids})
+   """)
+   ```
+
+2. **Sync ES.BBF_New_Id__c for Already-Migrated Records**:
+   - If record already exists in BBF, write the BBF Id back to ES.BBF_New_Id__c
+   - Ensures ES tracks BBF Ids even if migration notebook is re-run
+
+3. **Filter Out Already-Migrated Records**:
+   - Only insert records that don't already exist in BBF
+   - Prevents duplicate record creation
+
+**Benefits**:
+- **Idempotent Migrations**: Safe to re-run notebooks multiple times without creating duplicates
+- **Recovery Support**: If migration fails mid-batch, can re-run without manual cleanup
+- **Data Integrity**: ES.BBF_New_Id__c always reflects current BBF record state
+- **Audit Trail**: ES_Legacy_ID__c provides clear lineage tracking
+
+**Migration Notebooks Updated**:
+- ✅ `01_location_migration.ipynb` - Duplicate prevention added
+- ✅ `02_account_migration.ipynb` - Duplicate prevention added
+- ✅ `03_contact_migration.ipynb` - Duplicate prevention added
+- ✅ `04_ban_migration.ipynb` - Duplicate prevention added
+- ✅ `05_service_migration.ipynb` - Duplicate prevention added
+- ✅ `06_service_charge_migration.ipynb` - Duplicate prevention added
+- ✅ `07_offnet_migration.ipynb` - Duplicate prevention added
+
+**Repository Cleanup**:
+- `.gitignore` updated to exclude all Excel files (`*.xlsx`, `*.xls`)
+- Excel mapping files removed from git tracking (still exist locally in `day-two/mappings/`)
+- Repository size reduced by removing large binary files from history
+
+**Next Steps**:
+- Business review of picklist values in Excel mapping files (194 decisions needed)
+- Test transformer functions with POC data
+- Develop enrichment notebooks using transformer modules
+- Execute Day Two enrichment pass on UAT data
+
+**No Blockers**: All migration notebooks now have robust duplicate prevention and can be safely re-run.
+
+
 
 ### 2026-01-15 - Day Two Field Mapping COMPLETED with AI-Powered Semantic Matching (FINAL SESSION)
 **Status**: COMPLETED - All 7 object mappings, 81 transformer functions, AI picklist recommendations
@@ -942,6 +1026,7 @@ Off_Net (07) ✅ EXECUTED (6/6 Off_Net) ← Service, Location (optional)
 
 | Date | Duration | Focus Area | Key Accomplishments |
 |------|----------|------------|---------------------|
+| 2026-01-23 | ~2 hours | Duplicate Prevention & Cleanup | Deleted 2,498 duplicate Service_Charge records; added duplicate prevention to all 7 notebooks; cleaned repository |
 | 2026-01-15 | ~6 hours | Day Two Field Mapping (COMPLETE) | All 7 object mappings complete; 81 transformers generated; 87 AI picklist recommendations; 194 business decisions needed; 3 commits pushed |
 | 2026-01-15 | ~30 min | Documentation Sync | Synchronized all documentation with executed notebook state; documented final POC results |
 | 2026-01-14 | ~3 hours | Service/Charge/OffNet Execution | Executed notebooks 05, 06, 07; created 08_es_product_mapping_export.ipynb; all migrations complete |
@@ -1136,7 +1221,7 @@ Off_Net (07) ✅ EXECUTED (6/6 Off_Net) ← Service, Location (optional)
 | Documentation drift from code | LOW | LOW | Migration-docs-sync agent automated validation; all docs synchronized 2026-01-15 |
 
 ---
-*Last Updated: 2026-01-15 (Final Session) - Day Two field mapping COMPLETED: All 7 object mappings done, 81 transformers generated, 87 AI picklist recommendations, 194 values need business decision. All files committed to uat-sandbox-testing branch (commits: c67c49c, 95fa7c8, 3a93c10). Ready for business review.*
+*Last Updated: 2026-01-23 - Duplicate prevention implemented across all 7 migration notebooks. 2,498 duplicate Service_Charge records cleaned. Repository cleaned (Excel files removed from tracking). All commits pushed to uat-sandbox-testing branch.*
 
 ### 2026-01-15 - Contact to Contact Field Mapping REGENERATED with AI Semantic Matching
 **Status**: COMPLETED (Regenerated using AI-powered approach)

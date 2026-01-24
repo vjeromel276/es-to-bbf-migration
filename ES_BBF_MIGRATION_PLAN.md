@@ -1,8 +1,9 @@
 # ES to BBF Migration - Master Planning Document
 
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-01-23
 **Branch:** uat-sandbox-testing
 **Current Phase:** Day Two - Field Mapping & Enrichment (Mapping Complete, Enrichment Pending)
+**Key Enhancement:** All migration notebooks now implement duplicate prevention
 
 ---
 
@@ -482,6 +483,11 @@ Order (the source of truth)
 
 | Date | Change |
 |------|--------|
+| 2026-01-23 | **ALL migration notebooks updated with duplicate prevention logic** |
+| | All notebooks now check BBF for existing ES_Legacy_ID__c before insert |
+| | Already-migrated records have their BBF IDs synced back to ES.BBF_New_Id__c |
+| | Only NEW records are inserted to BBF (idempotent re-runs) |
+| | Benefits: Safe re-runs, resume capability, no duplicate creation |
 | 2026-01-14 | Service_Charge migration updated to use PLACEHOLDER values for Product_Simple__c and Service_Type_Charge__c |
 | | Off_Net migration fixed to use SOF1__c (Order) relationship instead of deprecated Implementation__c |
 | | Off_Net now populates Service__c lookup from Order.BBF_New_Id__c |
