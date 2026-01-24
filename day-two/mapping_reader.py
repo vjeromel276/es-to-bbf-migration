@@ -69,7 +69,12 @@ def load_mapping(filename: str, mapping_dir: str = None) -> Dict[str, Any]:
         # Build field mapping dictionary
         for _, row in df_fields.iterrows():
             bbf_field = row.get('BBF_Field_API_Name') or row.get('BBF Field API Name')
-            es_field = row.get('ES_Field_API_Name') or row.get('ES Field API Name')
+            # Prefer ES_Final_Field (manual override) over ES_Field_API_Name (AI-matched)
+            # But only if ES_Final_Field contains a valid API name (not a label or note)
+            es_final = row.get('ES_Final_Field')
+            es_api = row.get('ES_Field_API_Name') or row.get('ES Field API Name')
+            es_final_str = str(es_final).strip() if pd.notna(es_final) else ''
+            es_field = es_final_str if is_valid_api_name(es_final_str) else es_api
             confidence = row.get('Match_Confidence') or row.get('Confidence') or ''
 
             if pd.notna(bbf_field) and pd.notna(es_field) and str(es_field).strip():
@@ -121,6 +126,50 @@ def load_mapping(filename: str, mapping_dir: str = None) -> Dict[str, Any]:
         print(f"Warning: Could not read Picklist_Mapping sheet: {e}")
 
     return result
+
+
+def is_valid_api_name(field_name: str) -> bool:
+    """
+    Check if a string looks like a valid Salesforce API field name.
+
+    Valid API names:
+    - Standard fields: PascalCase, no spaces (e.g., Type, BillingStreet, AccountNumber)
+    - Custom fields: end with __c (e.g., Custom_Field__c, My_Field__c)
+
+    Invalid (likely labels or notes):
+    - Contains spaces (e.g., "Business Sector", "addition for sheila")
+    - All lowercase with spaces
+
+    Args:
+        field_name: The field name to validate
+
+    Returns:
+        True if it looks like a valid API name
+    """
+    if not field_name or not isinstance(field_name, str):
+        return False
+
+    field_name = field_name.strip()
+
+    # Must not be empty
+    if not field_name:
+        return False
+
+    # Must not contain spaces (labels have spaces, API names don't)
+    if ' ' in field_name:
+        return False
+
+    # Custom fields end with __c
+    if field_name.endswith('__c'):
+        return True
+
+    # Standard fields are typically PascalCase or single words
+    # They don't have special characters except underscores
+    import re
+    if re.match(r'^[A-Za-z][A-Za-z0-9_]*$', field_name):
+        return True
+
+    return False
 
 
 def is_deprecated_field(field_label: str) -> bool:
