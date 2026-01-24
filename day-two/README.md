@@ -1,8 +1,8 @@
 # Day Two - Field Mapping & Enrichment
 
-**Status**: Field Mapping COMPLETE, Enrichment Notebooks PENDING
+**Status**: Field Mapping COMPLETE, Enrichment Notebooks CREATED, Ready for Business Review
 
-**Last Updated**: 2026-01-15
+**Last Updated**: 2026-01-24
 
 ---
 
@@ -25,13 +25,14 @@ This directory contains all Day Two field mapping work for the ES to BBF Salesfo
 - [x] 281 picklist values analyzed with 87 AI recommendations
 - [x] 3 automation tools created for mapping and transformation
 - [x] 2 Claude agents created/updated for autonomous workflows
+- [x] 7 enrichment notebooks created (01-07_*_enrichment.ipynb)
+- [x] mapping_reader.py utility with deprecated field filtering
 
 ### PENDING Work
 
 - [ ] Business review of 194 picklist values needing decisions
 - [ ] Validation of 87 AI picklist recommendations
 - [ ] Testing of 81 transformer functions with POC data
-- [ ] Development of 7 enrichment notebooks
 - [ ] Execution of enrichment pass on POC data
 
 ---
@@ -41,35 +42,40 @@ This directory contains all Day Two field mapping work for the ES to BBF Salesfo
 ```
 day-two/
 ├── README.md                           # This file
-├── mappings/                           # Field mapping Excel files (output)
-│   ├── ES_Account_to_BBF_Account_mapping.xlsx
-│   ├── ES_Address__c_to_BBF_Location__c_mapping.xlsx
-│   ├── ES_Contact_to_BBF_Contact_mapping.xlsx
-│   ├── ES_Billing_Invoice__c_to_BBF_BAN__c_mapping.xlsx
-│   ├── ES_Order_to_BBF_Service__c_mapping.xlsx
-│   ├── ES_OrderItem_to_BBF_Service_Charge__c_mapping.xlsx
-│   ├── ES_Off_Net__c_to_BBF_Off_Net__c_mapping.xlsx
+├── mapping_reader.py                   # Utility for reading mappings with deprecated field filtering
+├── 01_location_enrichment.ipynb        # Location enrichment notebook
+├── 02_account_enrichment.ipynb         # Account enrichment notebook
+├── 03_contact_enrichment.ipynb         # Contact enrichment notebook
+├── 04_ban_enrichment.ipynb             # BAN enrichment notebook
+├── 05_service_enrichment.ipynb         # Service enrichment notebook
+├── 06_service_charge_enrichment.ipynb  # Service Charge enrichment notebook
+├── 07_offnet_enrichment.ipynb          # Off Net enrichment notebook
+├── DATA_PROFILING_GUIDE.md             # Data profiling methodology guide
+├── mappings/                           # Field mapping Excel files
+│   ├── ES_*_to_BBF_*_mapping.xlsx      # 7 mapping files
 │   └── *_SUMMARY.md                    # Human-readable summaries
 ├── transformers/                       # Auto-generated transformer modules
 │   ├── __init__.py
-│   ├── account_transformers.py         # 4 functions, 325 lines
-│   ├── location_transformers.py        # 16 functions, 579 lines
-│   ├── contact_transformers.py         # 1 function, 153 lines
-│   ├── ban_transformers.py             # 3 functions, 175 lines
-│   ├── service_transformers.py         # 26 functions, 931 lines
-│   ├── service_charge_transformers.py  # 19 functions, 678 lines
-│   └── off_net_transformers.py         # 12 functions, 530 lines
+│   ├── account_transformers.py         # 4 functions
+│   ├── location_transformers.py        # 16 functions
+│   ├── contact_transformers.py         # 1 function
+│   ├── ban_transformers.py             # 3 functions
+│   ├── service_transformers.py         # 26 functions
+│   ├── service_charge_transformers.py  # 19 functions
+│   └── off_net_transformers.py         # 12 functions
 ├── tools/                              # Automation scripts
-│   ├── es_export_sf_fields_with_picklists.py
-│   ├── bbf_export_sf_fields_with_picklists.py
-│   ├── es_export_sf_picklist_values.py
-│   ├── bbf_export_sf_picklist_values.py
 │   ├── create_mapping_excel.py         # Generate formatted Excel files
 │   ├── generate_transformers.py        # Auto-generate transformer functions
 │   └── recommend_picklist_values.py    # AI picklist recommendations
-└── exports/                            # Raw metadata exports (CSV files)
-    ├── es_*.csv                        # ES field metadata
-    └── bbf_*.csv                       # BBF field metadata
+├── exports/                            # Raw metadata exports (CSV only)
+│   ├── es_*.csv                        # ES field metadata
+│   └── bbf_*.csv                       # BBF field metadata
+└── archive/                            # Archived old files
+    ├── old_scripts/                    # Superseded automation scripts
+    ├── old_mappings/                   # JSON mapping files (replaced by Excel)
+    ├── old_exports/                    # Old export formats
+    ├── enrichment_outputs/             # Previous enrichment outputs
+    └── data_profiles/                  # Data profiling outputs
 ```
 
 ---
@@ -302,6 +308,65 @@ python day-two/tools/create_mapping_excel.py \
 
 ---
 
+## mapping_reader.py Utility
+
+The `mapping_reader.py` module provides functions for reading mapping Excel files and extracting field information for enrichment notebooks. It automatically excludes deprecated fields.
+
+### Functions
+
+#### `load_mapping(mapping_file)`
+
+Loads a mapping Excel file and returns the Field_Mapping sheet as a DataFrame.
+
+```python
+from mapping_reader import load_mapping
+
+df = load_mapping('mappings/ES_Account_to_BBF_Account_mapping.xlsx')
+```
+
+#### `get_enrichment_fields(mapping_file, exclude_deprecated=True)`
+
+Returns a list of field mappings suitable for enrichment. By default, excludes fields marked as deprecated (Deprecated = 'Y').
+
+```python
+from mapping_reader import get_enrichment_fields
+
+# Get all non-deprecated fields with high/medium confidence
+fields = get_enrichment_fields('mappings/ES_Account_to_BBF_Account_mapping.xlsx')
+
+# Include deprecated fields (not recommended)
+all_fields = get_enrichment_fields('mappings/ES_Account_to_BBF_Account_mapping.xlsx', exclude_deprecated=False)
+```
+
+**Returns**: List of dicts with keys:
+- `es_field`: Source ES field API name
+- `bbf_field`: Target BBF field API name
+- `confidence`: Match confidence level
+- `transformer`: Transformer function name (if needed)
+
+#### `translate_picklist(mapping_file, es_field, es_value)`
+
+Translates an ES picklist value to the corresponding BBF value using the Picklist_Mapping sheet.
+
+```python
+from mapping_reader import translate_picklist
+
+bbf_value = translate_picklist(
+    'mappings/ES_Contact_to_BBF_Contact_mapping.xlsx',
+    'Contact_Type__c',
+    'Decision Maker'
+)
+# Returns: 'Executive'
+```
+
+### Deprecated Field Filtering
+
+The mapping Excel files have a "Deprecated" column in the Field_Mapping sheet. Fields marked with `Y` are automatically excluded when using `get_enrichment_fields()`. This ensures enrichment notebooks don't attempt to populate deprecated BBF fields.
+
+**Why deprecated fields exist**: Some BBF fields were marked as deprecated during business review but remain in the schema. The mapping files document these for completeness, but the enrichment process should skip them.
+
+---
+
 ## Next Steps
 
 ### 1. Business Review (CRITICAL - BLOCKING)
@@ -472,11 +537,14 @@ bbf_sf.bulk.Object__c.update(enriched_records)
 ## Support & Questions
 
 For questions about Day Two work, see:
-- `MIGRATION_PROGRESS.md` - Overall migration status and progress
-- `ES_BBF_MIGRATION_PLAN.md` - Master planning document
-- `MIGRATION_FILTERING_GUARDRAILS.md` - Filtering reference
-- Object-specific `*_SUMMARY.md` files in `mappings/` directory
+- Object-specific `*_SUMMARY.md` files in `mappings/` directory for field mapping details
+- `DATA_PROFILING_GUIDE.md` - Data profiling methodology and approach
+
+For archived documentation (moved during cleanup):
+- `archive/MIGRATION_PROGRESS.md` - Historical migration progress
+- `archive/ES_BBF_MIGRATION_PLAN.md` - Original planning document
+- `archive/MIGRATION_FILTERING_GUARDRAILS.md` - Filtering reference
 
 ---
 
-*Last Updated: 2026-01-15 - Day Two field mapping completed with AI-powered semantic matching*
+*Last Updated: 2026-01-24 - Enrichment notebooks created, ready for business review*
