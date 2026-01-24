@@ -80,10 +80,15 @@ def load_mapping(filename: str, mapping_dir: str = None) -> Dict[str, Any]:
 
                 # Track enrichable fields (have source and reasonable confidence)
                 # Skip deprecated fields (label contains "(dep)")
+                # Skip fields marked Include_in_Migration = 'No'
                 conf_str = str(confidence).lower()
                 is_deprecated = '(dep)' in str(bbf_label).lower()
 
-                if conf_str in ['high', 'medium', 'exact', 'semantic'] and not is_deprecated:
+                # Check Include_in_Migration column (default to Yes if missing)
+                include_in_migration = str(row.get('Include_in_Migration', 'Yes')).strip().lower()
+                should_include = include_in_migration in ['yes', 'y', '']
+
+                if conf_str in ['high', 'medium', 'exact', 'semantic'] and not is_deprecated and should_include:
                     result['enrichable_fields'].append({
                         'bbf_field': bbf_field,
                         'es_field': es_field,
