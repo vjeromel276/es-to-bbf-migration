@@ -45,6 +45,46 @@ ES_DOMAIN = "login"
 # Paths
 # ---------------------------------------------------------------------
 MAPPINGS_DIR = Path(__file__).parent.parent / "mappings"
+EXPORTS_DIR = Path(__file__).parent.parent / "exports"
+
+
+def load_bbf_picklist_values(object_name: str) -> Dict[str, List[str]]:
+    """
+    Load BBF picklist values from exports CSV.
+
+    Returns dict of field_name -> list of active picklist values.
+    """
+    # Try to find the BBF picklist export file
+    csv_path = EXPORTS_DIR / f"bbf_{object_name}_picklist_values.csv"
+    xlsx_path = EXPORTS_DIR / f"bbf_{object_name}_picklist_values.xlsx"
+
+    result = {}
+
+    if csv_path.exists():
+        df = pd.read_csv(csv_path)
+    elif xlsx_path.exists():
+        df = pd.read_excel(xlsx_path)
+    else:
+        print(f"  ⚠️ No BBF picklist export found for {object_name}")
+        return result
+
+    # Group by field and collect active values
+    for field_name in df['Field API Name'].unique():
+        field_rows = df[(df['Field API Name'] == field_name) & (df['Is Active'] == True)]
+        values = field_rows['Picklist Value'].dropna().tolist()
+        if values:
+            result[field_name] = values
+
+    return result
+
+
+def get_bbf_object_from_filename(filename: str) -> str:
+    """Extract BBF object name from mapping filename."""
+    import re
+    match = re.match(r'ES_.+?_to_BBF_(.+?)_mapping\.xlsx', filename)
+    if match:
+        return match.group(1)
+    return None
 
 
 def connect_to_es_salesforce() -> Salesforce:
@@ -189,6 +229,7 @@ def analyze_mapping_file(filepath: Path) -> Dict[str, Any]:
 def build_new_picklist_mapping(
     sf: Salesforce,
     es_object: str,
+    bbf_object: str,
     picklist_fields: List[Dict],
     current_mapping: pd.DataFrame
 ) -> pd.DataFrame:
@@ -201,15 +242,23 @@ def build_new_picklist_mapping(
     print(f"  📡 Fetching picklist values from ES {es_object}...")
     es_picklists = get_all_picklist_fields(sf, es_object)
 
-    # Build lookup of existing translations: (bbf_field, es_value) -> bbf_final_value
-    existing_translations = {}
+    # Load BBF picklist values from exports
+    print(f"  📂 Loading BBF picklist values for {bbf_object}...")
+    bbf_picklists = load_bbf_picklist_values(bbf_object)
+
+    # Build lookup of existing data: (bbf_field, es_value) -> {bbf_final_value, suggested_mapping}
+    existing_data = {}
     if current_mapping is not None and not current_mapping.empty:
         for _, row in current_mapping.iterrows():
             bbf_field = row.get('BBF_Field')
             es_value = row.get('ES_Picklist_Value')
             bbf_final = row.get('BBF_Final_Value')
-            if pd.notna(bbf_field) and pd.notna(es_value) and pd.notna(bbf_final):
-                existing_translations[(str(bbf_field), str(es_value))] = str(bbf_final)
+            suggested = row.get('Suggested_Mapping')
+            if pd.notna(bbf_field) and pd.notna(es_value):
+                existing_data[(str(bbf_field), str(es_value))] = {
+                    'bbf_final': str(bbf_final) if pd.notna(bbf_final) else '',
+                    'suggested': str(suggested) if pd.notna(suggested) else '',
+                }
 
     # Build new rows
     new_rows = []
@@ -219,6 +268,10 @@ def build_new_picklist_mapping(
 
         # Get ES picklist values for this field
         es_values = es_picklists.get(es_field, [])
+
+        # Get BBF picklist values for suggestion (pipe-separated)
+        bbf_values = bbf_picklists.get(bbf_field, [])
+        bbf_suggestion = '|'.join(bbf_values) if bbf_values else ''
 
         if not es_values:
             print(f"    ⚠️ No picklist values found for ES field: {es_field}")
@@ -234,20 +287,27 @@ def build_new_picklist_mapping(
             continue
 
         for es_value in es_values:
-            # Check for existing translation
-            existing_final = existing_translations.get((bbf_field, es_value), '')
+            # Check for existing data (translations and suggestions)
+            existing = existing_data.get((bbf_field, es_value), {})
+            existing_final = existing.get('bbf_final', '')
+            existing_suggested = existing.get('suggested', '')
 
-            # Determine notes
+            # Use existing suggested if available, otherwise use BBF values from export
+            suggested = existing_suggested if existing_suggested else bbf_suggestion
+
+            # Determine notes (use 'No Match' for compatibility with recommend_picklist_values.py)
             if existing_final:
                 notes = 'Preserved'
+            elif existing_suggested:
+                notes = 'Has Suggestion'
             else:
-                notes = 'Needs Translation'
+                notes = 'No Match'  # This triggers the AI recommendation tool
 
             new_rows.append({
                 'BBF_Field': bbf_field,
                 'ES_Field': es_field,
                 'ES_Picklist_Value': es_value,
-                'Suggested_Mapping': '',  # Could add AI suggestions later
+                'Suggested_Mapping': suggested,  # Preserve existing or populate with BBF options
                 'BBF_Final_Value': existing_final,
                 'Notes': notes,
             })
@@ -270,12 +330,14 @@ def sync_mapping_file(
     print(f"Processing: {filename}")
     print(f"{'='*60}")
 
-    # Get ES object name
+    # Get ES and BBF object names
     es_object = get_es_object_from_filename(filename)
-    if not es_object:
-        print(f"  ❌ Could not determine ES object from filename")
+    bbf_object = get_bbf_object_from_filename(filename)
+    if not es_object or not bbf_object:
+        print(f"  ❌ Could not determine object names from filename")
         return {'error': 'Invalid filename'}
     print(f"  ES Object: {es_object}")
+    print(f"  BBF Object: {bbf_object}")
 
     # Analyze current mapping
     analysis = analyze_mapping_file(filepath)
@@ -296,13 +358,13 @@ def sync_mapping_file(
         print(f"    {pf['bbf_field']:<35} <- {pf['es_field']}{indicator}")
 
     # Build new picklist mapping
-    new_mapping = build_new_picklist_mapping(sf, es_object, picklist_fields, current_mapping)
+    new_mapping = build_new_picklist_mapping(sf, es_object, bbf_object, picklist_fields, current_mapping)
 
     # Count changes
     current_count = len(current_mapping) if current_mapping is not None else 0
     new_count = len(new_mapping)
     preserved = len(new_mapping[new_mapping['Notes'] == 'Preserved']) if not new_mapping.empty else 0
-    needs_translation = len(new_mapping[new_mapping['Notes'] == 'Needs Translation']) if not new_mapping.empty else 0
+    needs_translation = len(new_mapping[new_mapping['Notes'] == 'No Match']) if not new_mapping.empty else 0
 
     print(f"\n  Summary:")
     print(f"    Current picklist rows: {current_count}")
