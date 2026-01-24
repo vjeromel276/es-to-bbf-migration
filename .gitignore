@@ -9,4 +9,12 @@ __pycache__/
 nul
 
 # Generated mapping files are ignored (*.xlsx rule above)
+# This includes:
+# - day-two/*_enrichment_*.xlsx (enrichment outputs)
+# - day-two/mappings/~$*.xlsx (Excel temp files)
+# - day-two/mappings/ES_*_mapping.xlsx (mapping files)
+
+# Archive directory contains old/deprecated files kept for reference
+# (already covered by *.xlsx and *.csv rules above)
+
 .claude/settings.local.json

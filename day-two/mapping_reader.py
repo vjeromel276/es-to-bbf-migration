@@ -75,14 +75,21 @@ def load_mapping(filename: str, mapping_dir: str = None) -> Dict[str, Any]:
             if pd.notna(bbf_field) and pd.notna(es_field) and str(es_field).strip():
                 result['field_mappings'][bbf_field] = es_field
 
+                # Get field label for deprecated check
+                bbf_label = row.get('BBF_Field_Label') or row.get('BBF Field Label') or ''
+
                 # Track enrichable fields (have source and reasonable confidence)
+                # Skip deprecated fields (label contains "(dep)")
                 conf_str = str(confidence).lower()
-                if conf_str in ['high', 'medium', 'exact', 'semantic']:
+                is_deprecated = '(dep)' in str(bbf_label).lower()
+
+                if conf_str in ['high', 'medium', 'exact', 'semantic'] and not is_deprecated:
                     result['enrichable_fields'].append({
                         'bbf_field': bbf_field,
                         'es_field': es_field,
                         'confidence': confidence,
-                        'transformer_needed': row.get('Transformer_Needed', 'N') == 'Y'
+                        'transformer_needed': row.get('Transformer_Needed', 'N') == 'Y',
+                        'bbf_label': bbf_label
                     })
     except Exception as e:
         print(f"Warning: Could not read Field_Mapping sheet: {e}")
@@ -111,13 +118,28 @@ def load_mapping(filename: str, mapping_dir: str = None) -> Dict[str, Any]:
     return result
 
 
-def get_enrichment_fields(mapping: Dict, exclude_day1_fields: List[str] = None) -> Dict[str, str]:
+def is_deprecated_field(field_label: str) -> bool:
+    """
+    Check if a field is deprecated based on its label.
+
+    Args:
+        field_label: The BBF field label to check
+
+    Returns:
+        True if the field label contains "(dep)" (case-insensitive)
+    """
+    return '(dep)' in str(field_label).lower()
+
+
+def get_enrichment_fields(mapping: Dict, exclude_day1_fields: List[str] = None,
+                          include_deprecated: bool = False) -> Dict[str, str]:
     """
     Get fields that should be enriched (have ES source, not Day 1 fields).
 
     Args:
         mapping: Result from load_mapping()
         exclude_day1_fields: List of BBF field names that were migrated on Day 1
+        include_deprecated: If True, include deprecated fields (default: False)
 
     Returns:
         Dictionary of BBF_field -> ES_field for enrichment
@@ -137,8 +159,17 @@ def get_enrichment_fields(mapping: Dict, exclude_day1_fields: List[str] = None) 
     enrichment_fields = {}
     for item in mapping.get('enrichable_fields', []):
         bbf_field = item['bbf_field']
-        if bbf_field not in all_exclude:
-            enrichment_fields[bbf_field] = item['es_field']
+        bbf_label = item.get('bbf_label', '')
+
+        # Skip excluded fields
+        if bbf_field in all_exclude:
+            continue
+
+        # Skip deprecated fields unless explicitly included
+        if not include_deprecated and is_deprecated_field(bbf_label):
+            continue
+
+        enrichment_fields[bbf_field] = item['es_field']
 
     return enrichment_fields
 
@@ -164,7 +195,33 @@ def translate_picklist(mapping: Dict, bbf_field: str, es_value: Any) -> Optional
     return picklist_map.get(es_str, es_str)
 
 
-def print_mapping_summary(mapping: Dict):
+def get_deprecated_fields(mapping: Dict) -> List[Dict]:
+    """
+    Get list of deprecated fields that were excluded from enrichment.
+
+    Args:
+        mapping: Result from load_mapping()
+
+    Returns:
+        List of deprecated field info dicts
+    """
+    deprecated = []
+    df_fields = mapping.get('all_fields')
+    if df_fields is None:
+        return deprecated
+
+    for _, row in df_fields.iterrows():
+        bbf_label = row.get('BBF_Field_Label') or row.get('BBF Field Label') or ''
+        if is_deprecated_field(bbf_label):
+            deprecated.append({
+                'bbf_field': row.get('BBF_Field_API_Name') or row.get('BBF Field API Name'),
+                'bbf_label': bbf_label,
+                'es_field': row.get('ES_Field_API_Name') or row.get('ES Field API Name')
+            })
+    return deprecated
+
+
+def print_mapping_summary(mapping: Dict, show_deprecated: bool = True):
     """Print a summary of the loaded mapping."""
     print(f"\n{'='*60}")
     print(f"Mapping: {mapping['filename']}")
@@ -172,6 +229,13 @@ def print_mapping_summary(mapping: Dict):
     print(f"Total field mappings: {len(mapping['field_mappings'])}")
     print(f"Enrichable fields: {len(mapping['enrichable_fields'])}")
     print(f"Picklist fields with translations: {len(mapping['picklist_mappings'])}")
+
+    # Show deprecated fields that were excluded
+    deprecated = get_deprecated_fields(mapping)
+    if deprecated and show_deprecated:
+        print(f"\nDeprecated fields excluded: {len(deprecated)}")
+        for item in deprecated:
+            print(f"  [DEP] {item['bbf_field']:<30} ({item['bbf_label']})")
 
     if mapping['enrichable_fields']:
         print(f"\nEnrichable Fields:")
