@@ -8,6 +8,5 @@ __pycache__/
 .vscode/
 nul
 
-# But track Day Two mapping files
-!day-two/mappings/*.xlsx
+# Generated mapping files are ignored (*.xlsx rule above)
 .claude/settings.local.json
