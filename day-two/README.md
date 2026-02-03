@@ -238,6 +238,33 @@ Mapping Excel files in `mappings/` are ready for review. Look for rows in the Pi
 
 ---
 
+## Product Mapping Support
+
+### ES Product Export (initial-day/08_es_product_mapping_export.ipynb)
+
+**Purpose**: Exports ES Product data to create Service_Charge product mapping template.
+
+**Output**: CSV file with 14 columns including:
+- Order details (Id, Number, Status, BAN)
+- OrderItem details (Id, **Bandwidth**, MRC, NRC, pricing)
+- Product details (Code, Family, Name)
+
+**Recent Update** (2026-02-02): Added `Bandwidth_NEW__c` field to support bandwidth-aware product mapping. See `NOTEBOOK_CHANGELOG.md` for details.
+
+**Usage**:
+1. Run `08_es_product_mapping_export.ipynb` to generate CSV
+2. Analyze Product Family and Product Name distributions
+3. Create mapping: ES Product → BBF Product_Simple__c + Service_Type_Charge__c
+4. Update `service_charge_product_transformer.py` with mapping
+5. Run `06_service_charge_enrichment.ipynb` to apply mappings
+
+**Data Volume** (as of 2026-02-02):
+- 22,460 OrderItems across 12,594 Orders
+- 49 unique Product Families
+- 681 unique Products
+
+---
+
 ## Tools & Automation
 
 ### 1. generate_transformers.py

@@ -2,7 +2,7 @@
 import argparse
 import sys
 import pandas as pd
-from simple_salesforce import Salesforce
+from simple_salesforce import Salesforce  # type: ignore
 
 # ---------------------------------------------------------------------
 # Salesforce credentials
@@ -144,6 +144,7 @@ for obj_name in object_list:
 # Write CSV for each object (faster than Excel for intermediate files)
 # ---------------------------------------------------------------------
 import os
+
 os.makedirs(args.output_dir, exist_ok=True)
 
 for obj_name, df in dataframes.items():
