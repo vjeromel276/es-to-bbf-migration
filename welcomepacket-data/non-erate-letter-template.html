@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Customer Welcome Letter</title>
+
+        <style>
+            /* MATCH BIRT master page margins (accountSummary) */
+            @page {
+                size: Letter;
+                margin-top: 0.25in;
+                margin-left: 0.5in;
+                margin-right: 0.5in;
+                margin-bottom: 0.5in;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: #ffffff;
+                font-family: Aptos, Calibri, Arial, Helvetica, sans-serif;
+                font-size: 11pt;
+                line-height: 1.5;
+                color: #000000;
+            }
+
+            table {
+                border-collapse: collapse;
+            }
+
+            td {
+                vertical-align: top;
+            }
+
+            a {
+                color: #0563C1;
+                text-decoration: underline;
+            }
+
+            .bold {
+                font-weight: bold;
+            }
+
+            .center {
+                text-align: center;
+            }
+
+            .justify {
+                text-align: justify;
+            }
+
+            .sp20 {
+                height: 20px;
+            }
+
+            .sp12 {
+                height: 12px;
+            }
+
+            .pt12 {
+                padding-top: 12px;
+            }
+
+            .indent {
+                padding-left: 36px;
+            }
+
+            /* MATCH BIRT address container (cell padding) */
+            .addr-cell {
+                padding-left: 1in;
+                /* BIRT: paddingLeft 1in */
+                padding-top: 0.1in;
+                /* BIRT: paddingTop 0.4in */
+                /* BIRT: paddingTop 0.4in */
+                padding-bottom: 0.1in;
+                /* BIRT: paddingBottom 0.1in */
+            }
+
+            /* MATCH BIRT text-data (Customer Address1) */
+            .addr-text {
+                margin-top: 0.125in;
+                /* BIRT: marginTop 0.125in */
+                width: 3.5in;
+                /* BIRT: width 3.5in */
+                height: 0.9in;
+                /* BIRT: height 0.9in */
+                white-space: pre-line;
+                font-weight: bold;
+                line-height: 1.25;
+            }
+        </style>
+    </head>
+
+    <body>
+        <table
+            role="presentation"
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="background:#ffffff;"
+        >
+            <tr>
+                <td align="center">
+
+                    <table
+                        role="presentation"
+                        width="624"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                    >
+
+                        <!-- HEADER LOGO -->
+                        <tr>
+                            <td
+                                class="center"
+                                style="padding: 20px 0 1px 0;"
+                            >
+                                <img
+                                    src="combinedlogo.png"
+                                    alt="Bluebird Fiber + Everstream"
+                                    style="max-width:450px; width:100%; height:auto;"
+                                />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="sp20"></td>
+                        </tr>
+
+                        <!-- DATE -->
+                        <tr>
+                            <td class="bold">
+                                February 20, 2026
+                            </td>
+                        </tr>
+
+                        <!-- NAME + ADDRESS (BIRT-matched placement) -->
+                        <tr>
+                            <td class="addr-cell">
+                                <div class="addr-text">
+                                    {{{Account.Name}}}
+                                    {{{Account.BillingAddress}}}
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- BODY STARTS BELOW HEADER (no overlap) -->
+                        <tr>
+                            <td class="sp20"></td>
+                        </tr>
+
+                        <tr>
+                            <td>Dear Valued Customer,</td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 justify">
+                                We are pleased to inform you that Bluebird Midwest, LLC dba <strong>Bluebird
+                                    Fiber</strong> has acquired your existing service agreement(s) with Everstream
+                                Solutions, LLC and/or a related Everstream affiliate. As of your next monthly billing,
+                                your service provider will be <strong>Bluebird Fiber</strong>, and all services will
+                                continue without interruption.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 bold">What This Means for You</td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 bold">1. Contract Assignment</td>
+                        </tr>
+                        <tr>
+                            <td class="pt12 justify">
+                                Your current agreement and all active services have been assumed by Bluebird Fiber.
+                                There is no action required on your part to complete the transfer of your existing
+                                services.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 bold">2. New Account Number</td>
+                        </tr>
+                        <tr>
+                            <td class="pt12 justify">
+                                As part of our system integration, your existing account number will be replaced with a
+                                <strong>new Bluebird Fiber account number</strong>. You will receive this updated
+                                account information in a separate communication or on your next invoice.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 bold">3. Updated Billing Remittance &amp; Bank Information</td>
+                        </tr>
+                        <tr>
+                            <td class="pt12 justify">
+                                All payments for invoices received after February 28, 2026, should be directed to our
+                                updated remittance address and banking details below:
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td
+                                class="pt12"
+                                style="line-height:1.4;"
+                            >
+                                <strong>New Remittance Address:</strong><br />
+                                Bluebird Midwest, LLC dba Bluebird Fiber<br />
+                                MSC 7628<br />
+                                PO Box 415000<br />
+                                Nashville, TN 37241-7628
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="sp12"></td>
+                        </tr>
+
+                        <tr>
+                            <td style="line-height:1.4;">
+                                <strong>New Banking / ACH Instructions:</strong><br />
+                                Bank: <em>Bank of America, N.A.</em><br />
+                                Routing Number: <em>081000032</em><br />
+                                Account Number: <em>355004007589</em>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td
+                                class="pt12"
+                                style="line-height:1.4;"
+                            >
+                                Please update your payment system accordingly. If you remit payment for invoices issued
+                                after the effective date of February 28, 2026, to the old Everstream account or
+                                remittance address, we may not be able to apply that payment to your Bluebird Fiber
+                                account, so please ensure you update the vendor and remittance information.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="sp12"></td>
+                        </tr>
+
+                        <tr>
+                            <td style="line-height:1.4;">
+                                All payments for invoices and balances received prior to February 28<sup>th</sup> should
+                                be remitted to the prior Everstream account and remittance address.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 bold">4. Required Customer Forms</td>
+                        </tr>
+                        <tr>
+                            <td class="pt12">Enclosed with this letter, you will find:</td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 indent">
+                                <table
+                                    role="presentation"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    border="0"
+                                    width="100%"
+                                >
+                                    <tr>
+                                        <td
+                                            valign="top"
+                                            width="18"
+                                        >&#8226;</td>
+                                        <td style="padding-bottom:8px;">
+                                            A <strong>W9 Form</strong> for your records and vendor setup. Please reach
+                                            out to
+                                            <strong>customercare@bluebirdfiber.com</strong> if you require additional
+                                            information to complete your vendor setup process.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            valign="top"
+                                            width="18"
+                                        >&#8226;</td>
+                                        <td style="padding-bottom:8px;">
+                                            A <strong>Customer Declaration Form</strong> to certify how your circuits
+                                            are used (interstate, intrastate, or both) so that the appropriate federal
+                                            or state universal service taxes and regulatory fees can be correctly
+                                            applied in compliance with USAC and FCC requirements.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12">
+                                Please complete and return the Customer Declaration Form to
+                                <strong>customercare@bluebirdfiber.com</strong> within <strong>10 business
+                                    days</strong>.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 bold">What Stays the Same</td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 indent">
+                                <table
+                                    role="presentation"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    border="0"
+                                    width="100%"
+                                >
+                                    <tr>
+                                        <td
+                                            valign="top"
+                                            width="18"
+                                        >&#8226;</td>
+                                        <td style="padding-bottom:8px;">
+                                            Your monthly recurring pricing and terms of service remain unchanged. Please
+                                            review Bluebird Fiber&#8217;s
+                                            <a
+                                                href="https://bluebirdfiber.com/wp-content/uploads/2024/10/October-2024-Taxes-Fees-and-Surcharges.pdf">Taxes,
+                                                Fees and Surcharges</a>
+                                            document for potential changes to fees on your services.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            valign="top"
+                                            width="18"
+                                        >&#8226;</td>
+                                        <td style="padding-bottom:8px;">
+                                            Your current support contacts and escalation paths remain available during
+                                            the transition period.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            valign="top"
+                                            width="18"
+                                        >&#8226;</td>
+                                        <td style="padding-bottom:8px;">
+                                            There will be <strong>no impact</strong> on the delivery of your services.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 bold">We&#8217;re Here to Help</td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12">
+                                Our team is committed to making this transition as seamless as possible. If you have any
+                                questions, please contact:
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12">
+                                <strong>Billing Support</strong><br />
+                                customercare@bluebirdfiber.com | 1-855-BLUEBIRD&#8209;2662
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12">
+                                We appreciate the opportunity to continue serving you as Bluebird Fiber and look forward
+                                to supporting your network needs.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12">
+                                <img
+                                    src="jason-signature.png"
+                                    alt="Jason W. Adkins"
+                                    style="max-width:430px; width:100%; height:auto;"
+                                />
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+
+</html>

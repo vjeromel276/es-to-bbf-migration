@@ -49,11 +49,11 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "welcomepacket-data"
 W9_PDF = DATA_DIR / "W9 - Bluebird Midwest LLC dba Bluebird Fiber.pdf"
 DECLARATION_PDF = DATA_DIR / "Bluebird Fiber Customer (BMW) Declaration Form.pdf"
-LETTER_TEMPLATE_HTML = DATA_DIR / "letter-template.html"
+LETTER_TEMPLATE_HTML = DATA_DIR / "erate-letter-template.html"
 SIGNATURE_PNG = DATA_DIR / "jason-signature.png"
 COMBINED_LOGO_PNG = DATA_DIR / "combinedlogo.png"
 
-OUTPUT_DIR = ROOT / "welcomepacket-out"
+OUTPUT_DIR = ROOT / "erate-welcomepacket-out"
 
 
 # --------------------------------------------------------------------------------------
@@ -65,6 +65,8 @@ BILLING_INVOICE_FLAG_FIELD = "BBF_Ban__c"
 
 # IMPORTANT: your query uses Account__r.*, which implies the lookup is Account__c
 BILLING_INVOICE_ACCOUNT_LOOKUP = "Account__c"
+NON_ERATE_CUSTOMER = "Account__r.E_rate_RHC__c = '' OR Account__r.E_rate_RHC__c = NULL"
+ERATE_CUSTOMER = "Account__r.E_rate_RHC__c != '' AND Account__r.E_rate_RHC__c != NULL"
 
 
 # --------------------------------------------------------------------------------------
@@ -215,14 +217,16 @@ def fetch_accounts_with_bbf_bans(sf: Salesforce) -> List[AccountRow]:
     SELECT
       {BILLING_INVOICE_ACCOUNT_LOOKUP},
       Account__r.Id,
-      Account__r.Owner.Name_Formula__c,
+      Account__r.Bill_To_Contact__r.Name,
       Account__r.BillingStreet,
       Account__r.BillingCity,
       Account__r.BillingState,
-      Account__r.BillingPostalCode
+      Account__r.BillingPostalCode,
+      Account__r.E_rate_RHC__c
     FROM {BILLING_INVOICE_OBJECT}
     WHERE {BILLING_INVOICE_FLAG_FIELD} = true
       AND {BILLING_INVOICE_ACCOUNT_LOOKUP} != null
+      AND ({ERATE_CUSTOMER})
       LIMIT 1
     """
 
@@ -238,12 +242,12 @@ def fetch_accounts_with_bbf_bans(sf: Salesforce) -> List[AccountRow]:
         if aid in seen:
             continue  # already processed this Account
 
-        owner_name_formula = (ar.get("Owner", {}) or {}).get("Name_Formula__c", "")
+        owner_name_formula = (ar.get("Bill_To_Contact__r", {}) or {}).get("Name", "")
         # NOTE: Sometimes SF returns it as a flat key on Account__r depending on API version.
         # If the above comes back empty, try flat access:
         if not owner_name_formula:
-            owner_name_formula = ar.get("Owner.Name_Formula__c", "") or ar.get(
-                "OwnerName_Formula__c", ""
+            owner_name_formula = ar.get("Bill_To_Contact__r.Name", "") or ar.get(
+                "Bill_To_Contact__rName", ""
             )
 
         row = AccountRow(
@@ -284,16 +288,19 @@ def main() -> None:
 
         demo_name = "Vincent Lettau"
         demo_address = "300 S. Washington Square Suite 140\nLansing, MI 48933"
-        rendered = render_letter_html(template_html, demo_name, demo_address)
+        # Uncomment below to test with demo data instead of live Salesforce data:
+        # rendered = render_letter_html(template_html, demo_name, demo_address)
         # Map template "Account.Name" to Owner.Name_Formula__c per your requirement
-        # rendered = render_letter_html(template_html, a.owner_name_formula, billing_addr)
+        # comment out below and uncomment above to test with demo data instead of live Salesforce data:
+        rendered = render_letter_html(template_html, a.owner_name_formula, billing_addr)
 
         # Render letter PDF
         pdf_bytes = html_to_pdf_bytes(rendered, base_url=DATA_DIR)
 
         # Merge packet: letter + W9 + Declaration
-        # out_name = f"{sanitize_filename(a.owner_name_formula)}_{a.id}.pdf"
-        out_name = f"{sanitize_filename(demo_name)}_{a.id}.pdf"
+        out_name = f"{sanitize_filename(a.owner_name_formula)}_{a.id}.pdf"
+        # Demo filename (comment above and uncomment below to test with demo data):
+        # out_name = f"{sanitize_filename(demo_name)}_{a.id}.pdf"
 
         out_path = OUTPUT_DIR / out_name
 
