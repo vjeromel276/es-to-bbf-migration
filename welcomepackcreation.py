@@ -217,6 +217,9 @@ def fetch_accounts_with_bbf_bans(sf: Salesforce) -> List[AccountRow]:
     SELECT
       {BILLING_INVOICE_ACCOUNT_LOOKUP},
       Account__r.Id,
+      Account__r.Name,
+      Bill_To_Contact__r.FirstName,
+      Bill_To_Contact__r.LastName,
       Account__r.Bill_To_Contact__r.Name,
       Account__r.BillingStreet,
       Account__r.BillingCity,

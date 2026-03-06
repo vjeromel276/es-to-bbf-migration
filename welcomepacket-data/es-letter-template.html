@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>ES Customer Invoice Notice</title>
+
+        <style>
+            /* Keep same “BIRT-ish” page margins */
+            @page {
+                size: Letter;
+                margin-top: 0.25in;
+                margin-left: 0.5in;
+                margin-right: 0.5in;
+                margin-bottom: 0.5in;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: #ffffff;
+                font-family: Aptos, Calibri, Arial, Helvetica, sans-serif;
+                font-size: 11pt;
+                line-height: 1.5;
+                color: #000000;
+            }
+
+            table {
+                border-collapse: collapse;
+            }
+
+            td {
+                vertical-align: top;
+            }
+
+            .bold {
+                font-weight: bold;
+            }
+
+            .center {
+                text-align: center;
+            }
+
+            .justify {
+                text-align: justify;
+            }
+
+            .sp20 {
+                height: 20px;
+            }
+
+            .sp12 {
+                height: 12px;
+            }
+
+            .pt12 {
+                padding-top: 12px;
+            }
+
+            /* Address block: consistent with your other templates (in-flow, no overlap) */
+            .addr-cell {
+                padding-left: 1in;
+                padding-top: 0.10in;
+                /* tuned previously */
+                padding-bottom: 0.10in;
+            }
+
+            .addr-text {
+                margin-top: 0.125in;
+                width: 3.5in;
+                white-space: pre-line;
+                font-weight: bold;
+                line-height: 1.25;
+            }
+
+            .header-img {
+                max-width: 624px;
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+        </style>
+    </head>
+
+    <body>
+        <table
+            role="presentation"
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="background:#ffffff;"
+        >
+            <tr>
+                <td align="center">
+
+                    <table
+                        role="presentation"
+                        width="624"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        style="font-family: Aptos, Calibri, Arial, Helvetica, sans-serif; font-size:11pt; line-height:1.5; color:#000000;"
+                    >
+
+                        <!-- HEADER IMAGE (embedded base64 extracted from your DOCX) -->
+                        <tr>
+                            <td
+                                align="right"
+                                style="padding: 10px 0 10px 0;"
+                            >
+                                <img
+                                    alt="Everstream / Invoice Notice Header"
+                                    src="es-header-logo.png"
+                                    style="max-width:260px; width:260px; height:auto; display:block;"
+                                />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="sp20"></td>
+                        </tr>
+
+                        <!-- DATE -->
+                        <tr>
+                            <td class="bold">
+                                XX February 2026
+                            </td>
+                        </tr>
+
+                        <!-- NAME + ADDRESS (added; same placement pattern) -->
+                        <tr>
+                            <td class="addr-cell">
+                                <div class="addr-text">
+                                    {{{Account.Name}}}
+                                    {{{Account.BillingAddress}}}
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="sp20"></td>
+                        </tr>
+
+                        <!-- BODY -->
+                        <tr>
+                            <td>Dear Valued Customer,</td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 justify">
+                                On Friday, Feb. 20, 2025, Everstream expects to close its announced transaction with
+                                Bluebird Fiber at which time you will receive services from Bluebird.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 justify">
+                                In order to ensure that your account is credited properly, you should pay invoices from
+                                February 2026 and earlier according to the written instructions on those invoices. For
+                                ease of reference, Everstream’s wire instructions follow:
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12">
+                                Routing #: 041000124;<br />
+                                Account #: 4130129468
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12 justify">
+                                Bluebird will provide new payment instructions that will go in effect for services after
+                                the transaction closes. You should direct your payments to them at that time for only
+                                services invoiced by Bluebird.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt12">
+                                If you have questions, please contact John Behr at Jbehr@everstream.net.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="sp20"></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Regards,<br />
+                                Everstream
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="sp20"></td>
+                        </tr>
+
+                        <!-- OPTIONAL: If you want your standard signature image at the end instead, uncomment:
+          <tr>
+            <td class="pt12">
+              <img src="jason-signature.png"
+                   alt="Signature block"
+                   style="max-width:430px; width:100%; height:auto;" />
+            </td>
+          </tr>
+          -->
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+
+</html>
